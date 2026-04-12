@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -10,6 +11,7 @@ const CHANNELS = [
   { name: "Paid Social Playbook", slug: "paid-social", starter: 149 },
   { name: "SEM / Google Ads", slug: "sem-google-ads", starter: 399 },
   { name: "Analytics & Tracking", slug: "analytics-tracking", starter: 199 },
+  { name: "Automation", slug: "automation", starter: 599 },
 ];
 
 const STEPS = [
@@ -67,8 +69,18 @@ export default function HomePage() {
       <Nav />
 
       {/* ── HERO ── */}
-      <section className="min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8">
-        <div className="max-w-7xl mx-auto w-full">
+      <section className="relative min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8 overflow-hidden">
+        {/* Ghost llama watermark */}
+        <div className="pointer-events-none select-none absolute right-0 top-0 h-full flex items-center pr-8 lg:pr-24" aria-hidden="true">
+          <Image
+            src="/logo.png"
+            alt=""
+            width={520}
+            height={520}
+            className="opacity-[0.07]"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto w-full relative z-10">
           <p
             className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
             style={{ animationDelay: "0ms" }}
@@ -87,7 +99,7 @@ export default function HomePage() {
               Stop stalling.
             </span>
             <span
-              className="block animate-slide-up overflow-hidden"
+              className="block animate-slide-up overflow-hidden pb-5"
               style={{ animationDelay: "220ms" }}
             >
               <span className="relative inline-block">
@@ -136,10 +148,10 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-        </div>
+        </div>{/* end z-10 content */}
 
         {/* Divider line at bottom of hero */}
-        <div className="max-w-7xl mx-auto w-full mt-20">
+        <div className="max-w-7xl mx-auto w-full mt-20 relative z-10">
           <div className="h-px bg-[#EBEBEB]" />
         </div>
       </section>
@@ -212,7 +224,7 @@ export default function HomePage() {
             className="font-black text-[#0D0D0D] mb-3"
             style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
           >
-            7 channels. Pick yours.
+            8 channels. Pick yours.
           </h2>
           <p className="text-[#6B7280] text-lg mb-12">
             Starter, Growth, or Pro. One-time price. Full setup.
@@ -325,7 +337,8 @@ export default function HomePage() {
             style={{ fontSize: "clamp(3rem, 8vw, 7.5rem)" }}
           >
             Stop stalling.<br />
-            <span className="text-[#2563EB]">Let the llamas handle it.</span>
+            Let the llamas<br />
+            <span className="text-[#2563EB]">handle it.</span>
           </h2>
           <p className="text-[#6B7280] mt-8 text-lg max-w-sm">
             Pick a channel. Pay once. Done in 5–7 days.

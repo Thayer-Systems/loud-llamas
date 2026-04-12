@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 
 const CHANNELS = [
   { name: "Website Build", slug: "website-build", starter: 499 },
@@ -63,33 +65,7 @@ const FAQS = [
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-[#1F2937]" style={{ fontFamily: "var(--font-geist-sans), Arial, sans-serif" }}>
-
-      {/* NAV */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-[#E5E7EB]">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Loud Llamas" width={40} height={40} className="rounded" />
-            <span className="font-bold text-lg text-[#1F2937] hidden sm:block">Loud Llamas</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/packages" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors">
-              Packages
-            </Link>
-            <Link href="#how-it-works" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors hidden sm:block">
-              How It Works
-            </Link>
-            <Link href="#faq" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors hidden sm:block">
-              FAQ
-            </Link>
-            <Link
-              href="/packages"
-              className="bg-[#2563EB] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Get started
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Nav />
 
       {/* HERO */}
       <section className="bg-[#1F2937] text-white">
@@ -246,26 +222,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-[#1F2937] text-gray-400 py-12">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Loud Llamas" width={36} height={36} className="rounded" />
-            <div>
-              <p className="text-white font-bold">Loud Llamas</p>
-              <p className="text-xs">A Thayer Systems Company</p>
-            </div>
-          </div>
-          <div className="flex gap-6 text-sm">
-            <Link href="/packages" className="hover:text-white transition-colors">Packages</Link>
-            <Link href="#how-it-works" className="hover:text-white transition-colors">How It Works</Link>
-            <Link href="#faq" className="hover:text-white transition-colors">FAQ</Link>
-            <Link href="/support" className="hover:text-white transition-colors">Support</Link>
-          </div>
-          <p className="text-xs">Marketing Setup. Done Once. Done Right.</p>
-        </div>
-      </footer>
-
+      <Footer />
     </div>
   );
 }

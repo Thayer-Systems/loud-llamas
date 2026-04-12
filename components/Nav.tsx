@@ -3,28 +3,43 @@ import Link from "next/link";
 
 export default function Nav() {
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-[#E5E7EB]">
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Loud Llamas" width={40} height={40} className="rounded" />
-          <span className="font-bold text-lg text-[#1F2937] hidden sm:block">Loud Llamas</span>
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#F0F0F0]">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image src="/logo.png" alt="Loud Llamas" width={36} height={36} className="rounded" />
+          <span className="font-black text-base text-[#0D0D0D] hidden sm:block tracking-tight">
+            Loud Llamas
+          </span>
         </Link>
-        <div className="flex items-center gap-6">
-          <Link href="/packages" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors">
+
+        <div className="flex items-center gap-8">
+          <Link
+            href="/packages"
+            className="text-sm font-medium text-[#6B7280] hover:text-[#0D0D0D] transition-colors hidden md:block"
+          >
             Packages
           </Link>
-          <Link href="/blog" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors hidden sm:block">
-            Blog
+          <Link
+            href="/#how-it-works"
+            className="text-sm font-medium text-[#6B7280] hover:text-[#0D0D0D] transition-colors hidden md:block"
+          >
+            How It Works
           </Link>
-          <Link href="/resources" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors hidden sm:block">
-            Resources
+          <Link
+            href="/#faq"
+            className="text-sm font-medium text-[#6B7280] hover:text-[#0D0D0D] transition-colors hidden md:block"
+          >
+            FAQ
           </Link>
-          <Link href="/support" className="text-sm font-medium text-[#6B7280] hover:text-[#1F2937] transition-colors hidden md:block">
+          <Link
+            href="/support"
+            className="text-sm font-medium text-[#6B7280] hover:text-[#0D0D0D] transition-colors hidden lg:block"
+          >
             Support
           </Link>
           <Link
             href="/packages"
-            className="bg-[#2563EB] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-[#0D0D0D] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#2563EB] transition-colors duration-300"
           >
             Get started
           </Link>

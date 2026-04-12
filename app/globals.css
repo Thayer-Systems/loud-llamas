@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #1F2937;
+  --foreground: #0D0D0D;
 }
 
 @theme inline {
@@ -13,9 +13,9 @@
 
   /* Loud Llamas brand colors */
   --color-brand-blue: #2563EB;
-  --color-brand-dark: #1F2937;
+  --color-brand-dark: #0D0D0D;
   --color-brand-gray: #6B7280;
-  --color-brand-light: #F3F4F6;
+  --color-brand-light: #F8F8F8;
   --color-brand-mid: #E5E7EB;
 }
 
@@ -23,4 +23,50 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ── Slide-up animation for hero headline lines ── */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Fade-in for supporting content ── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── SVG scribble underline draw-on ── */
+@keyframes draw-underline {
+  from { stroke-dashoffset: 600; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 0.8s ease both;
+}
+
+/* SVG scribble positioned under a word/phrase */
+.scribble-underline {
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  pointer-events: none;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw-underline 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
 }

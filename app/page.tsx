@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -64,141 +63,253 @@ const FAQS = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-[#1F2937]" style={{ fontFamily: "var(--font-geist-sans), Arial, sans-serif" }}>
+    <div className="min-h-screen bg-white text-[#0D0D0D]">
       <Nav />
 
-      {/* HERO */}
-      <section className="bg-[#1F2937] text-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1">
-            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-              Stop stalling.<br />Start marketing.
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-lg">
+      {/* ── HERO ── */}
+      <section className="min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8">
+        <div className="max-w-7xl mx-auto w-full">
+          <p
+            className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
+            style={{ animationDelay: "0ms" }}
+          >
+            Marketing Setup Studio
+          </p>
+
+          <h1
+            className="font-black leading-[0.92] tracking-tight"
+            style={{ fontSize: "clamp(3.5rem, 9.5vw, 8.5rem)" }}
+          >
+            <span
+              className="block animate-slide-up overflow-hidden"
+              style={{ animationDelay: "80ms" }}
+            >
+              Stop stalling.
+            </span>
+            <span
+              className="block animate-slide-up overflow-hidden"
+              style={{ animationDelay: "220ms" }}
+            >
+              <span className="relative inline-block">
+                Start marketing.
+                {/* Scribble underline in brand blue */}
+                <svg
+                  className="scribble-underline"
+                  viewBox="0 0 520 12"
+                  fill="none"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 9 C70 2, 140 12, 260 6 S430 1, 518 9"
+                    stroke="#2563EB"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+            </span>
+          </h1>
+
+          <div className="mt-10 max-w-xl">
+            <p
+              className="text-xl text-[#6B7280] leading-relaxed animate-fade-in"
+              style={{ animationDelay: "480ms" }}
+            >
               Pick your channel. Pay once. Get it done in 5–7 days.
             </p>
-            <Link
-              href="/packages"
-              className="inline-block bg-[#2563EB] text-white font-bold text-lg px-8 py-4 rounded-xl hover:bg-blue-600 transition-colors"
+            <div
+              className="mt-8 flex flex-wrap gap-4 animate-fade-in"
+              style={{ animationDelay: "620ms" }}
             >
-              Build your setup
-            </Link>
+              <Link
+                href="/packages"
+                className="bg-[#0D0D0D] text-white font-semibold text-base px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300"
+              >
+                Build your setup
+              </Link>
+              <Link
+                href="/#how-it-works"
+                className="text-[#0D0D0D] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#0D0D0D] transition-colors duration-300"
+              >
+                How it works
+              </Link>
+            </div>
           </div>
-          <div className="flex-shrink-0">
-            <Image src="/logo.png" alt="Loud Llamas" width={260} height={260} className="rounded-2xl" priority />
-          </div>
+        </div>
+
+        {/* Divider line at bottom of hero */}
+        <div className="max-w-7xl mx-auto w-full mt-20">
+          <div className="h-px bg-[#EBEBEB]" />
         </div>
       </section>
 
-      {/* PROBLEM BLOCK */}
-      <section className="bg-[#F3F4F6] py-20">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="text-2xl md:text-3xl font-semibold text-[#1F2937] leading-relaxed">
+      {/* ── PROBLEM BLOCK ── */}
+      <section className="px-6 md:px-12 lg:px-20 py-24">
+        <div className="max-w-7xl mx-auto">
+          <p
+            className="font-semibold text-[#0D0D0D] leading-tight max-w-4xl"
+            style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}
+          >
             You know you need to do it. You&apos;ve been putting it off. We get it.
           </p>
-          <p className="mt-6 text-lg text-[#6B7280]">
+          <p className="mt-6 text-lg text-[#6B7280] max-w-2xl leading-relaxed">
             Here&apos;s what we do: set it all up, hand you the keys, and get out of your way.
           </p>
         </div>
       </section>
 
-      {/* PULL QUOTE */}
-      <section className="bg-[#2563EB] py-16">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <blockquote className="text-3xl md:text-4xl font-extrabold text-white">
-            &ldquo;We&apos;re not your agency.<br />We&apos;re your launch crew.&rdquo;
+      {/* ── PULL QUOTE ── */}
+      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <blockquote
+            className="font-black text-white leading-tight max-w-4xl"
+            style={{ fontSize: "clamp(2rem, 5vw, 4.25rem)" }}
+          >
+            &ldquo;We&apos;re not your agency.{" "}
+            <span className="text-[#2563EB]">We&apos;re your launch crew.&rdquo;</span>
           </blockquote>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-extrabold text-center mb-16">How it works</h2>
-          <div className="grid md:grid-cols-3 gap-10">
+      {/* ── HOW IT WORKS ── */}
+      <section id="how-it-works" className="px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">
+            The Process
+          </p>
+          <h2
+            className="font-black text-[#0D0D0D] mb-16"
+            style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
+          >
+            How it works
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-12 md:gap-16">
             {STEPS.map((step) => (
-              <div key={step.number} className="flex flex-col gap-4">
-                <span className="text-6xl font-extrabold text-[#2563EB] opacity-20 leading-none">{step.number}</span>
-                <h3 className="text-xl font-bold">{step.title}</h3>
-                <p className="text-[#6B7280] leading-relaxed">{step.desc}</p>
+              <div key={step.number}>
+                <span
+                  className="font-black text-[#0D0D0D] opacity-[0.05] leading-none block select-none"
+                  style={{ fontSize: "5.5rem" }}
+                >
+                  {step.number}
+                </span>
+                <h3 className="text-xl font-bold text-[#0D0D0D] mt-3">{step.title}</h3>
+                <p className="text-[#6B7280] mt-3 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PACKAGE PREVIEW */}
-      <section className="bg-[#F3F4F6] py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-extrabold text-center mb-4">7 channels. Pick yours.</h2>
-          <p className="text-center text-[#6B7280] mb-12 text-lg">Starter, Growth, or Pro. One-time price. Full setup.</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      {/* ── PACKAGE PREVIEW ── */}
+      <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">
+            What We Set Up
+          </p>
+          <h2
+            className="font-black text-[#0D0D0D] mb-3"
+            style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
+          >
+            7 channels. Pick yours.
+          </h2>
+          <p className="text-[#6B7280] text-lg mb-12">
+            Starter, Growth, or Pro. One-time price. Full setup.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {CHANNELS.map((ch) => (
               <Link
                 key={ch.slug}
                 href={`/configure/${ch.slug}`}
-                className="bg-white rounded-2xl p-6 border border-[#E5E7EB] hover:border-[#2563EB] hover:shadow-md transition-all group"
+                className="bg-white rounded-2xl p-6 border border-[#EBEBEB] hover:border-[#2563EB] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
               >
-                <h3 className="font-bold text-lg mb-2 group-hover:text-[#2563EB] transition-colors">{ch.name}</h3>
-                <p className="text-sm text-[#6B7280] mb-4">
-                  from <span className="font-semibold text-[#1F2937]">${ch.starter}</span>
+                <h3 className="font-bold text-base text-[#0D0D0D] mb-3 group-hover:text-[#2563EB] transition-colors">
+                  {ch.name}
+                </h3>
+                <p className="text-sm text-[#6B7280] mb-5">
+                  from{" "}
+                  <span className="font-semibold text-[#0D0D0D]">${ch.starter}</span>
                 </p>
-                <span className="text-sm font-semibold text-[#2563EB]">Get started →</span>
+                <span className="text-sm font-semibold text-[#2563EB] flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+                  Get started <span aria-hidden="true">→</span>
+                </span>
               </Link>
             ))}
           </div>
-          <div className="text-center mt-10">
+
+          <div className="mt-12">
             <Link
               href="/packages"
-              className="inline-block border-2 border-[#2563EB] text-[#2563EB] font-bold px-8 py-3 rounded-xl hover:bg-[#2563EB] hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-[#0D0D0D] font-semibold border-b-2 border-[#0D0D0D] pb-0.5 hover:border-[#2563EB] hover:text-[#2563EB] transition-colors duration-300"
             >
-              See all packages &amp; pricing
+              See all packages &amp; pricing <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* POSITIONING BLOCK */}
-      <section className="py-24">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-[#1F2937] leading-snug">
-            No retainers. No monthly fees.<br />No 18-month contracts.
+      {/* ── POSITIONING BLOCK ── */}
+      <section className="px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <h2
+            className="font-black text-[#0D0D0D] leading-[1.0] max-w-4xl"
+            style={{ fontSize: "clamp(2.5rem, 5.5vw, 5.5rem)" }}
+          >
+            No retainers.<br />
+            No monthly fees.<br />
+            <span className="text-[#BEBEBE]">No 18-month contracts.</span>
           </h2>
-          <p className="mt-6 text-xl text-[#6B7280]">Just a clean setup and a handoff.</p>
+          <p className="mt-8 text-xl text-[#6B7280] max-w-md">
+            Just a clean setup and a handoff.
+          </p>
         </div>
       </section>
 
-      {/* PAID SOCIAL CALLOUT */}
-      <section className="bg-[#1F2937] text-white py-20">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="inline-block bg-yellow-400 text-[#1F2937] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-6">
+      {/* ── PAID SOCIAL CALLOUT ── */}
+      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <span className="inline-block bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-10">
             Honest talk about Meta
-          </div>
-          <p className="text-lg text-gray-300 leading-relaxed">
-            Meta makes it nearly impossible for third parties to configure ad accounts on behalf of clients.
-            We&apos;re not going to pretend otherwise. So instead of a half-baked setup, we built something
-            better:{" "}
-            <strong className="text-white">The Paid Social Playbook.</strong> Years of paid social experience
-            packaged into a step-by-step implementation guide. You run it. We built it. Same outcome, no access
-            headaches.
+          </span>
+          <p
+            className="text-[#9CA3AF] leading-relaxed max-w-3xl"
+            style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}
+          >
+            Meta makes it nearly impossible for third parties to configure ad accounts on behalf
+            of clients. We&apos;re not going to pretend otherwise. So instead of a half-baked
+            setup, we built something better:{" "}
+            <span className="text-white font-semibold">The Paid Social Playbook.</span>{" "}
+            Years of paid social experience packaged into a step-by-step implementation guide.
+            You run it. We built it. Same outcome, no access headaches.
           </p>
           <Link
             href="/configure/paid-social"
-            className="inline-block mt-8 bg-[#2563EB] text-white font-bold px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors"
+            className="inline-block mt-10 bg-[#2563EB] text-white font-semibold px-8 py-4 rounded-full hover:bg-blue-500 transition-colors duration-300"
           >
             Get the playbook
           </Link>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section id="faq" className="py-24 bg-[#F3F4F6]">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-4xl font-extrabold mb-12 text-center">FAQ</h2>
-          <div className="flex flex-col gap-5">
+      {/* ── FAQ ── */}
+      <section id="faq" className="px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">
+            Got questions
+          </p>
+          <h2
+            className="font-black text-[#0D0D0D] mb-16"
+            style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
+          >
+            FAQ
+          </h2>
+
+          <div className="divide-y divide-[#EBEBEB] max-w-3xl">
             {FAQS.map((faq) => (
-              <div key={faq.q} className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                <p className="font-bold text-[#1F2937] mb-2">{faq.q}</p>
+              <div key={faq.q} className="py-7">
+                <p className="font-bold text-[#0D0D0D] text-lg mb-2">{faq.q}</p>
                 <p className="text-[#6B7280] leading-relaxed">{faq.a}</p>
               </div>
             ))}
@@ -206,16 +317,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER CTA */}
-      <section className="bg-[#2563EB] py-20">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-            Stop stalling.<br />Let the llamas handle it.
+      {/* ── FOOTER CTA ── */}
+      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <h2
+            className="font-black text-white leading-[0.92] tracking-tight"
+            style={{ fontSize: "clamp(3rem, 8vw, 7.5rem)" }}
+          >
+            Stop stalling.<br />
+            <span className="text-[#2563EB]">Let the llamas handle it.</span>
           </h2>
-          <p className="text-blue-100 mb-8 text-lg">Pick a channel. Pay once. Done in 5–7 days.</p>
+          <p className="text-[#6B7280] mt-8 text-lg max-w-sm">
+            Pick a channel. Pay once. Done in 5–7 days.
+          </p>
           <Link
             href="/packages"
-            className="inline-block bg-white text-[#2563EB] font-bold text-lg px-10 py-4 rounded-xl hover:bg-blue-50 transition-colors"
+            className="inline-block mt-10 bg-white text-[#0D0D0D] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
           >
             Build your setup
           </Link>

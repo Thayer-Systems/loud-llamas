@@ -8,6 +8,7 @@ type QuestionType = "grid" | "multiselect" | "text";
 type Question = {
   key: string;
   question: string;
+  subtitle?: string;
   type: QuestionType;
   options?: string[];
   critical: boolean;
@@ -130,6 +131,7 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
       { key: "outcome", question: "What should happen at the end? What's the result you want?", type: "text", critical: true },
       { key: "existing_automations", question: "Do you have any existing automations you want us to replace or add to?", type: "grid", options: ["Yes", "No — starting from scratch"], critical: true },
       { key: "tech_level", question: "How comfortable is your team with tech?", type: "grid", options: ["Not very — keep it simple", "Somewhat comfortable", "Very technical — go deep"], critical: false },
+      { key: "tell_us_more", question: "Tell us more", subtitle: "Automations can be hard to explain in a few words. Give us as much detail as you can — walk us through it like you're telling a coworker. The more we know, the better we build it. Let's make your systems run without you having to babysit.", type: "text", critical: false },
     ],
   },
 };
@@ -247,7 +249,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
       <div className="flex flex-col gap-10">
         {config.questions.map((q) => (
           <div key={q.key}>
-            <p className="font-bold text-[#0D0D0D] mb-3">
+            <p className="font-bold text-[#0D0D0D] mb-1">
               {q.question}
               {q.critical && (
                 <span className="ml-2 text-xs font-semibold text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-full">
@@ -255,12 +257,16 @@ export default function ConfigureForm({ channel }: { channel: string }) {
                 </span>
               )}
             </p>
+            {q.subtitle && (
+              <p className="text-sm text-[#6B7280] leading-relaxed mb-3">{q.subtitle}</p>
+            )}
+            {!q.subtitle && <div className="mb-3" />}
 
             {q.type === "text" ? (
               <textarea
                 className="w-full border-2 border-[#EBEBEB] rounded-xl p-4 text-[#0D0D0D] placeholder-[#BEBEBE] focus:border-[#2563EB] focus:outline-none transition-colors resize-none"
-                rows={3}
-                placeholder="Type your answer here…"
+                rows={q.key === "tell_us_more" ? 6 : 3}
+                placeholder={q.key === "tell_us_more" ? "Walk us through it — the more detail, the better…" : "Type your answer here…"}
                 value={(answers[q.key] as string) || ""}
                 onChange={(e) => setAnswer(q.key, e.target.value)}
               />

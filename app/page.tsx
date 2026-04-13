@@ -79,42 +79,18 @@ const TICKER_ITEMS = [
 
 /* ── Inline SVG illustrations ── */
 
-function RaceCarSVG() {
+function LlamaJumpSVG() {
   return (
-    <svg
-      viewBox="0 0 340 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-64 lg:w-80 h-auto shrink-0"
-      aria-hidden="true"
-    >
-      {/* Body */}
-      <path
-        d="M55 90 L68 58 C74 42 92 36 115 33 L210 30 C232 30 250 37 262 52 L285 68 L298 82 L298 90 Z"
-        fill="white"
+    <div className="w-64 lg:w-80 shrink-0 flex items-center justify-center" aria-hidden="true">
+      <Image
+        src="/black-and-white-llama-outline-illustration-with-llama-and-glama-clipart-vector.jpg"
+        alt=""
+        width={320}
+        height={320}
+        className="object-contain"
+        style={{ filter: "invert(1)" }}
       />
-      {/* Cockpit */}
-      <path
-        d="M118 33 L107 57 L205 57 L202 30 Z"
-        fill="white"
-        fillOpacity="0.22"
-      />
-      {/* Rear spoiler blade */}
-      <rect x="278" y="44" width="48" height="7" rx="3.5" fill="white" />
-      {/* Spoiler mount */}
-      <rect x="293" y="44" width="7" height="24" rx="3.5" fill="white" />
-      {/* Front wheel */}
-      <circle cx="98" cy="94" r="24" fill="white" />
-      <circle cx="98" cy="94" r="13" fill="#0D0D0D" fillOpacity="0.16" />
-      <circle cx="98" cy="94" r="5" fill="white" />
-      {/* Rear wheel */}
-      <circle cx="248" cy="94" r="24" fill="white" />
-      <circle cx="248" cy="94" r="13" fill="#0D0D0D" fillOpacity="0.16" />
-      <circle cx="248" cy="94" r="5" fill="white" />
-      {/* Blue racing stripe */}
-      <path d="M145 33 L142 57" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
-      <path d="M162 32 L159 57" stroke="#2563EB" strokeWidth="4" strokeLinecap="round" />
-    </svg>
+    </div>
   );
 }
 
@@ -204,8 +180,8 @@ export default function HomePage() {
             <span className="block animate-slide-up overflow-hidden pb-5" style={{ animationDelay: "220ms" }}>
               <span className="relative inline-block">
                 Start marketing.
-                <svg className="scribble-underline" viewBox="0 0 520 12" fill="none" preserveAspectRatio="none" aria-hidden="true">
-                  <path d="M2 9 C70 2, 140 12, 260 6 S430 1, 518 9" stroke="#2563EB" strokeWidth="3.5" strokeLinecap="round" />
+                <svg className="scribble-underline" viewBox="0 0 520 10" preserveAspectRatio="none" aria-hidden="true">
+                  <polygon points="0,0 520,4 520,6 0,10" fill="#2563EB" />
                 </svg>
               </span>
             </span>
@@ -276,7 +252,7 @@ export default function HomePage() {
             &ldquo;We&apos;re not your agency.{" "}
             <span className="text-[#2563EB]">We&apos;re your launch crew.&rdquo;</span>
           </blockquote>
-          <RaceCarSVG />
+          <LlamaJumpSVG />
         </div>
       </section>
 

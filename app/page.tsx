@@ -18,7 +18,7 @@ const STEPS = [
   {
     number: "01",
     title: "Pick your package",
-    desc: "7 channels. 3 tiers each. You know what you need — or let the configurator figure it out.",
+    desc: "8 channels. 3 tiers each. You know what you need — or let the configurator figure it out.",
   },
   {
     number: "02",
@@ -30,6 +30,13 @@ const STEPS = [
     title: "We build it, you own it",
     desc: "5–7 business days. Full handoff. Yours forever. No dependency, no retainer, no monthly fee.",
   },
+];
+
+const STATS = [
+  { value: "8", label: "Marketing Channels" },
+  { value: "5–7", label: "Day Turnaround" },
+  { value: "3", label: "Tiers Per Channel" },
+  { value: "$79", label: "Break Fix Fee" },
 ];
 
 const FAQS = [
@@ -63,6 +70,12 @@ const FAQS = [
   },
 ];
 
+const TICKER_ITEMS = [
+  "Website Build", "Email / Lifecycle", "Organic Social", "SEO / AEO Foundation",
+  "Paid Social Playbook", "SEM / Google Ads", "Analytics & Tracking", "Automation",
+  "5–7 Day Turnaround", "One-Time Price", "Full Handoff", "No Retainers",
+];
+
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-[#0D0D0D]">
@@ -70,16 +83,20 @@ export default function HomePage() {
 
       {/* ── HERO ── */}
       <section className="relative min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8 overflow-hidden">
-        {/* Ghost llama watermark */}
-        <div className="pointer-events-none select-none absolute right-0 top-0 h-full flex items-center pr-8 lg:pr-24" aria-hidden="true">
+        {/* Solid dark llama image on the right */}
+        <div
+          className="absolute right-0 top-0 h-full pointer-events-none select-none hidden lg:flex items-center"
+          aria-hidden="true"
+        >
           <Image
-            src="/logo.png"
+            src="/logo-dark.png"
             alt=""
-            width={520}
-            height={520}
-            className="opacity-[0.07]"
+            width={560}
+            height={560}
+            className="object-contain"
           />
         </div>
+
         <div className="max-w-7xl mx-auto w-full relative z-10">
           <p
             className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
@@ -104,7 +121,6 @@ export default function HomePage() {
             >
               <span className="relative inline-block">
                 Start marketing.
-                {/* Scribble underline in brand blue */}
                 <svg
                   className="scribble-underline"
                   viewBox="0 0 520 12"
@@ -148,13 +164,43 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-        </div>{/* end z-10 content */}
+        </div>
 
-        {/* Divider line at bottom of hero */}
         <div className="max-w-7xl mx-auto w-full mt-20 relative z-10">
           <div className="h-px bg-[#EBEBEB]" />
         </div>
       </section>
+
+      {/* ── STATS BAR ── */}
+      <section className="px-6 md:px-12 lg:px-20 py-16 bg-[#0D0D0D]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {STATS.map((stat) => (
+              <div key={stat.label}>
+                <p
+                  className="font-black text-white leading-none"
+                  style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
+                >
+                  {stat.value}
+                </p>
+                <p className="text-[#6B7280] text-sm mt-2 font-medium">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TICKER ── */}
+      <div className="border-y border-[#EBEBEB] py-4 overflow-hidden bg-white">
+        <div className="ticker-track flex gap-12 whitespace-nowrap">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} className="text-sm font-semibold text-[#0D0D0D] flex items-center gap-3 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] inline-block" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ── PROBLEM BLOCK ── */}
       <section className="px-6 md:px-12 lg:px-20 py-24">
@@ -199,14 +245,9 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-3 gap-12 md:gap-16">
             {STEPS.map((step) => (
-              <div key={step.number}>
-                <span
-                  className="font-black text-[#0D0D0D] opacity-[0.05] leading-none block select-none"
-                  style={{ fontSize: "5.5rem" }}
-                >
-                  {step.number}
-                </span>
-                <h3 className="text-xl font-bold text-[#0D0D0D] mt-3">{step.title}</h3>
+              <div key={step.number} className="border-t-2 border-[#0D0D0D] pt-6">
+                <span className="text-4xl font-black text-[#2563EB]">{step.number}</span>
+                <h3 className="text-xl font-bold text-[#0D0D0D] mt-4">{step.title}</h3>
                 <p className="text-[#6B7280] mt-3 leading-relaxed">{step.desc}</p>
               </div>
             ))}

@@ -59,6 +59,18 @@ body {
 }
 
 /* SVG scribble positioned under a word/phrase */
+/* ── Horizontal ticker scroll ── */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  animation: ticker 30s linear infinite;
+  width: max-content;
+}
+
+/* SVG scribble positioned under a word/phrase */
 .scribble-underline {
   position: absolute;
   bottom: -6px;

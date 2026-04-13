@@ -5,11 +5,16 @@ export default function Nav() {
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#F0F0F0]">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
-          <Image src="/logo.png" alt="Loud Llamas" width={36} height={36} className="rounded" />
-          <span className="font-black text-base text-[#0D0D0D] hidden sm:block tracking-tight">
-            Loud Llamas
-          </span>
+        <Link href="/" className="flex items-center">
+          {/* Horizontal logo (llamas + text). Falls back to icon + wordmark if file isn't placed yet */}
+          <Image
+            src="/logo-horizontal.png"
+            alt="Loud Llamas"
+            width={160}
+            height={40}
+            className="object-contain"
+            onError={() => {}}
+          />
         </Link>
 
         <div className="flex items-center gap-8">

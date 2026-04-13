@@ -73,6 +73,16 @@ const CHANNELS = [
     growth: { price: 399, features: ["GA4 + GTM full setup", "3 platform pixels", "Full conversion event map", "Custom dimensions", "Dashboard setup"] },
     pro: { price: 699, features: ["Full analytics stack", "All platform pixels", "Advanced event tracking", "Custom reporting", "Data layer setup", "Attribution model config", "Up to 5 team members"] },
   },
+  {
+    name: "Automation",
+    slug: "automation",
+    emoji: "⚡",
+    description: "Custom AI-powered workflows to automate whatever process is slowing you down.",
+    access: "We connect to your existing tools — CRM, email, Slack, spreadsheets, and more.",
+    starter: { price: 599, features: ["1 automation workflow", "Up to 3 connected tools", "Single trigger type", "Basic conditional logic", "Handoff + documentation"] },
+    growth: { price: 999, features: ["2–3 automation workflows", "Up to 6 connected tools", "Multiple trigger types", "Advanced branching logic", "Error handling", "Test + deploy"] },
+    pro: { price: 1799, features: ["Full workflow system", "Unlimited tool connections", "Multi-step orchestration", "AI decision nodes", "Monitoring setup", "Up to 5 team members", "Full documentation"] },
+  },
 ];
 
 const ADD_ONS = [
@@ -110,7 +120,7 @@ const TIERS = [
 
 export const metadata = {
   title: "Packages — Loud Llamas",
-  description: "7 marketing channels. 3 tiers each. One-time price. Full setup in 5–7 days.",
+  description: "8 marketing channels. 3 tiers each. One-time price. Full setup in 5–7 days.",
 };
 
 export default function PackagesPage() {
@@ -123,7 +133,7 @@ export default function PackagesPage() {
         <div className="max-w-6xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4">All packages</h1>
           <p className="text-xl text-gray-300 max-w-2xl">
-            7 channels. 3 tiers each. One-time price. Full setup in 5–7 business days.
+            8 channels. 3 tiers each. One-time price. Full setup in 5–7 business days.
             Pick what you need. Pay once. Own it forever.
           </p>
         </div>

@@ -13,7 +13,6 @@ export default function Nav() {
             width={160}
             height={40}
             className="object-contain"
-            onError={() => {}}
           />
         </Link>
 

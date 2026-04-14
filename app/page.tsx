@@ -120,7 +120,7 @@ export default function HomePage() {
             <span className="block animate-slide-up overflow-hidden" style={{ animationDelay: "80ms" }}>
               Stop stalling.
             </span>
-            <span className="block animate-slide-up overflow-hidden pb-5" style={{ animationDelay: "220ms" }}>
+            <span className="block animate-slide-up overflow-hidden pb-10" style={{ animationDelay: "220ms" }}>
               <span className="relative inline-block">
                 Start marketing.
                 <svg className="scribble-underline" viewBox="0 0 520 10" preserveAspectRatio="none" aria-hidden="true">

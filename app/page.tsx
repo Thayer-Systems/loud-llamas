@@ -117,7 +117,7 @@ export default function HomePage() {
             Marketing Setup Studio
           </p>
           <h1 className="font-black leading-[0.92] tracking-tight" style={{ fontSize: "clamp(3.5rem, 9.5vw, 8.5rem)" }}>
-            <span className="block animate-slide-up overflow-hidden" style={{ animationDelay: "80ms" }}>
+            <span className="block animate-slide-up overflow-hidden pb-3" style={{ animationDelay: "80ms" }}>
               Stop stalling.
             </span>
             <span className="block animate-slide-up overflow-hidden pb-10" style={{ animationDelay: "220ms" }}>

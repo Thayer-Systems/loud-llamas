@@ -103,13 +103,13 @@ export default function HomePage() {
       {/* ── HERO ── */}
       <section className="relative min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8 overflow-hidden">
         <div
-          className="absolute right-0 top-0 h-full pointer-events-none select-none hidden lg:flex items-center"
+          className="absolute right-0 top-0 h-full pointer-events-none select-none hidden lg:flex items-center pr-8"
           aria-hidden="true"
         >
           <Image src="/logo-dark.png" alt="" width={560} height={560} className="object-contain" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10">
+        <div className="max-w-7xl mx-auto w-full relative z-10 lg:pr-[520px]">
           <p
             className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
             style={{ animationDelay: "0ms" }}
@@ -188,12 +188,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PULL QUOTE + RACE CAR ── */}
+      {/* ── PULL QUOTE + LLAMA ── */}
       <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
           <blockquote className="font-black text-white leading-tight max-w-3xl" style={{ fontSize: "clamp(2rem, 5vw, 4.25rem)" }}>
-            &ldquo;We&apos;re not your agency.{" "}
-            <span className="text-[#2563EB]">We&apos;re your launch crew.&rdquo;</span>
+            We&apos;re not your agency.{" "}
+            <span className="text-[#2563EB]">We&apos;re your launch crew.</span>
           </blockquote>
           <LlamaJumpSVG />
         </div>
@@ -284,7 +284,7 @@ export default function HomePage() {
 
       {/* ── PAID SOCIAL CALLOUT + PLAYBOOK ── */}
       <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-between gap-16">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
           <div className="flex-1">
             <span className="inline-block bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-10">
               Honest talk about Meta

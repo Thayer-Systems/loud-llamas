@@ -129,7 +129,7 @@ export default function PackagesPage() {
       <Nav />
 
       {/* HEADER */}
-      <section className="bg-[#1F2937] text-white py-16">
+      <section className="bg-[#0D0D0D] text-white py-16">
         <div className="max-w-6xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4">All packages</h1>
           <p className="text-xl text-gray-300 max-w-2xl">

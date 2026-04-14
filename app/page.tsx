@@ -137,7 +137,7 @@ export default function HomePage() {
               <Link href="/packages" className="bg-[#0D0D0D] text-white font-semibold text-base px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
                 Build your setup
               </Link>
-              <Link href="/#how-it-works" className="text-[#0D0D0D] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#0D0D0D] transition-colors duration-300">
+              <Link href="/how-it-works" className="text-[#0D0D0D] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#0D0D0D] transition-colors duration-300">
                 How it works
               </Link>
             </div>
@@ -259,7 +259,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
           <div className="flex justify-center lg:justify-start shrink-0">
             <Image
-              src="/llama-party.png"
+              src="/llama-gum.png"
               alt=""
               width={340}
               height={340}
@@ -306,12 +306,11 @@ export default function HomePage() {
           </div>
           <div className="flex justify-center lg:justify-end pt-4 shrink-0">
             <Image
-              src="/meta-logo.png"
+              src="/meta-logo-white.png"
               alt=""
               width={220}
               height={220}
               className="object-contain"
-              style={{ filter: "invert(1)" }}
             />
           </div>
         </div>

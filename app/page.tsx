@@ -94,63 +94,6 @@ function LlamaJumpSVG() {
   );
 }
 
-function PlaybookSVG() {
-  return (
-    <svg
-      viewBox="0 0 180 220"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-36 lg:w-44 h-auto shrink-0"
-      aria-hidden="true"
-    >
-      {/* Shadow */}
-      <rect x="30" y="26" width="138" height="183" rx="8" fill="white" fillOpacity="0.12" />
-      {/* Cover */}
-      <rect x="22" y="18" width="138" height="183" rx="8" fill="white" />
-      {/* Spine */}
-      <rect x="22" y="18" width="18" height="183" rx="6" fill="white" fillOpacity="0.65" />
-      {/* Header bar */}
-      <rect x="50" y="32" width="92" height="15" rx="4" fill="#2563EB" fillOpacity="0.35" />
-      {/* Text lines */}
-      <rect x="50" y="62" width="92" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.13" />
-      <rect x="50" y="76" width="70" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.09" />
-      <rect x="50" y="90" width="82" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.09" />
-      <rect x="50" y="110" width="92" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.13" />
-      <rect x="50" y="124" width="62" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.09" />
-      <rect x="50" y="138" width="78" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.09" />
-      <rect x="50" y="156" width="92" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.13" />
-      <rect x="50" y="170" width="68" height="6" rx="3" fill="#0D0D0D" fillOpacity="0.09" />
-    </svg>
-  );
-}
-
-function NoContractSVG() {
-  return (
-    <svg
-      viewBox="0 0 180 220"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-36 lg:w-44 h-auto shrink-0"
-      aria-hidden="true"
-    >
-      {/* Document */}
-      <rect x="18" y="15" width="138" height="185" rx="10" fill="#F3F4F6" stroke="#E5E7EB" strokeWidth="2" />
-      {/* Folded corner */}
-      <path d="M126 15 L156 45 L126 45 Z" fill="#E5E7EB" />
-      {/* Text lines */}
-      <rect x="36" y="66" width="95" height="6" rx="3" fill="#E5E7EB" />
-      <rect x="36" y="82" width="75" height="6" rx="3" fill="#E5E7EB" />
-      <rect x="36" y="98" width="88" height="6" rx="3" fill="#E5E7EB" />
-      <rect x="36" y="114" width="64" height="6" rx="3" fill="#E5E7EB" />
-      <rect x="36" y="130" width="92" height="6" rx="3" fill="#E5E7EB" />
-      <rect x="36" y="146" width="78" height="6" rx="3" fill="#E5E7EB" />
-      <rect x="36" y="162" width="55" height="6" rx="3" fill="#E5E7EB" />
-      {/* Big red X */}
-      <path d="M28 22 L164 193" stroke="#EF4444" strokeWidth="11" strokeLinecap="round" />
-      <path d="M164 22 L28 193" stroke="#EF4444" strokeWidth="11" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 export default function HomePage() {
   return (
@@ -311,11 +254,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── POSITIONING BLOCK — right-aligned, all black, contract art left ── */}
+      {/* ── POSITIONING BLOCK — right-aligned, all black, llama party left ── */}
       <section className="px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-          <div className="flex justify-center lg:justify-start">
-            <NoContractSVG />
+          <div className="flex justify-center lg:justify-start shrink-0">
+            <Image
+              src="/llama-party.png"
+              alt=""
+              width={340}
+              height={340}
+              className="object-contain rounded-2xl"
+            />
           </div>
           <div className="lg:ml-auto text-left lg:text-right">
             <h2
@@ -355,8 +304,15 @@ export default function HomePage() {
               Get the playbook
             </Link>
           </div>
-          <div className="flex justify-center lg:justify-end pt-4">
-            <PlaybookSVG />
+          <div className="flex justify-center lg:justify-end pt-4 shrink-0">
+            <Image
+              src="/meta-logo.png"
+              alt=""
+              width={220}
+              height={220}
+              className="object-contain"
+              style={{ filter: "invert(1)" }}
+            />
           </div>
         </div>
       </section>

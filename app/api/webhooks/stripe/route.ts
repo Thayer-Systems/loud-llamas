@@ -71,8 +71,8 @@ export async function POST(req: NextRequest) {
         to: customerEmail,
         subject: "You're in. Setup starts soon. 🦙",
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #0D0D0D;">
-            <div style="background: #0D0D0D; padding: 32px; text-align: center;">
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #000000;">
+            <div style="background: #000000; padding: 32px; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 28px;">Loud Llamas</h1>
               <p style="color: #2563EB; margin: 8px 0 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Order Confirmed</p>
             </div>

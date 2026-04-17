@@ -66,8 +66,8 @@ export async function POST(
     to: fulfillmentEmail,
     subject: `New order ready — ${order.channel} ${order.tier} — ${order.customer_name ?? order.customer_email ?? "Unknown"}`,
     html: `
-      <div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto;color:#0D0D0D;">
-        <div style="background:#0D0D0D;padding:24px 32px;display:flex;align-items:center;gap:16px;">
+      <div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto;color:#000000;">
+        <div style="background:#000000;padding:24px 32px;display:flex;align-items:center;gap:16px;">
           <div>
             <h1 style="color:white;margin:0;font-size:20px;">New order — ready to build</h1>
             <p style="color:#2563EB;margin:4px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:1px;">Loud Llamas Fulfillment</p>
@@ -87,7 +87,7 @@ export async function POST(
 
           <h3 style="margin-bottom:12px;">Intake answers</h3>
           <table style="width:100%;border-collapse:collapse;border:1px solid #EBEBEB;border-radius:8px;overflow:hidden;">
-            <thead><tr style="background:#0D0D0D;color:white;"><th style="padding:10px 12px;text-align:left;font-size:13px;">Question</th><th style="padding:10px 12px;text-align:left;font-size:13px;">Answer</th></tr></thead>
+            <thead><tr style="background:#000000;color:white;"><th style="padding:10px 12px;text-align:left;font-size:13px;">Question</th><th style="padding:10px 12px;text-align:left;font-size:13px;">Answer</th></tr></thead>
             <tbody>${answerRows}</tbody>
           </table>
 

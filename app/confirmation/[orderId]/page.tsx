@@ -53,11 +53,11 @@ export default async function ConfirmationPage({
   ];
 
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
       {/* HERO */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-24">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-5xl mb-6">🎉</p>
           <h1 className="font-black text-white leading-tight mb-4" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
@@ -120,14 +120,14 @@ export default async function ConfirmationPage({
             <div className="space-y-6">
               {CHECKLIST.map((item, i) => (
                 <div key={i} className="flex items-start gap-4">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${item.done ? "bg-[#0D0D0D]" : "bg-[#F0F0F0]"}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${item.done ? "bg-[#000000]" : "bg-[#F0F0F0]"}`}>
                     {item.done
                       ? <span className="text-white text-sm">✓</span>
                       : <span className="text-[#9CA3AF] text-xs font-bold">{i + 1}</span>
                     }
                   </div>
                   <div>
-                    <p className={`font-semibold ${item.done ? "text-[#0D0D0D]" : "text-[#9CA3AF]"}`}>{item.text}</p>
+                    <p className={`font-semibold ${item.done ? "text-[#000000]" : "text-[#9CA3AF]"}`}>{item.text}</p>
                     {i === 1 && !item.done && (
                       <Link
                         href={`/intake/${orderId}`}
@@ -155,14 +155,14 @@ export default async function ConfirmationPage({
       </section>
 
       {/* CTA */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-20 text-center">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-20 text-center">
         <h2 className="font-black text-white mb-4" style={{ fontSize: "clamp(1.75rem, 3vw, 2.75rem)" }}>
           Want to add another channel?
         </h2>
         <p className="text-[#9CA3AF] mb-8">Each setup is its own sprint. Mix and match.</p>
         <Link
           href="/packages"
-          className="inline-block bg-white text-[#0D0D0D] font-bold px-8 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
+          className="inline-block bg-white text-[#000000] font-bold px-8 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
         >
           See all packages
         </Link>

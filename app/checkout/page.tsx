@@ -41,6 +41,7 @@ function CheckoutContent() {
   const channel = params.get("channel") ?? "";
   const tier    = params.get("tier") ?? "";
   const addOns  = params.get("addons")?.split(",").filter(Boolean) ?? [];
+  const queue   = params.get("queue") ?? "";
 
   const [name,  setName]  = useState("");
   const [email, setEmail] = useState("");
@@ -69,7 +70,7 @@ function CheckoutContent() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ channel, tier, addOns, customerName: name, customerEmail: email }),
+        body: JSON.stringify({ channel, tier, addOns, customerName: name, customerEmail: email, queue }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
@@ -81,7 +82,7 @@ function CheckoutContent() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
       <section className="px-6 md:px-12 lg:px-20 py-20">
@@ -164,7 +165,7 @@ function CheckoutContent() {
               <button
                 onClick={handlePay}
                 disabled={loading}
-                className="mt-8 w-full bg-[#0D0D0D] text-white font-bold text-base py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-8 w-full bg-[#000000] text-white font-bold text-base py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Redirecting to payment…" : `Pay $${totalPrice.toLocaleString()} →`}
               </button>

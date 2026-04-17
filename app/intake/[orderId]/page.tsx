@@ -17,10 +17,13 @@ const CHANNEL_NAMES: Record<string, string> = {
 
 export default async function IntakePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ orderId: string }>;
+  searchParams: Promise<{ paid?: string; queue?: string }>;
 }) {
   const { orderId } = await params;
+  const { queue } = await searchParams;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,13 +41,13 @@ export default async function IntakePage({
   // Already submitted
   if (order.status === "intake_complete") {
     return (
-      <div className="min-h-screen bg-white text-[#0D0D0D]">
+      <div className="min-h-screen bg-white text-[#000000]">
         <Nav />
         <section className="px-6 md:px-12 lg:px-20 py-32 text-center">
           <p className="text-5xl mb-6">🦙</p>
           <h1 className="font-black text-3xl mb-4">Already submitted</h1>
           <p className="text-[#6B7280] mb-8">We already have your intake for this order. We&apos;re on it.</p>
-          <a href={`/confirmation/${orderId}`} className="inline-block bg-[#0D0D0D] text-white font-bold px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors">View your order →</a>
+          <a href={`/confirmation/${orderId}`} className="inline-block bg-[#000000] text-white font-bold px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors">View your order →</a>
         </section>
         <Footer />
       </div>
@@ -55,10 +58,10 @@ export default async function IntakePage({
   const tierLabel = order.tier.charAt(0).toUpperCase() + order.tier.slice(1);
 
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-16">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-16">
         <div className="max-w-3xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-3">Step 2 of 2</p>
           <h1 className="font-black text-white leading-tight" style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)" }}>
@@ -77,7 +80,7 @@ export default async function IntakePage({
 
       <section className="px-6 md:px-12 lg:px-20 py-16">
         <div className="max-w-3xl mx-auto">
-          <IntakeForm orderId={orderId} channel={order.channel} />
+          <IntakeForm orderId={orderId} channel={order.channel} queue={queue} />
         </div>
       </section>
 

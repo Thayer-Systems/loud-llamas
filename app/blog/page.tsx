@@ -16,7 +16,7 @@ export default function BlogPage() {
       <Nav />
 
       {/* HEADER */}
-      <section className="bg-[#0D0D0D] text-white py-16">
+      <section className="bg-[#000000] text-white py-16">
         <div className="max-w-6xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4">The Llama Blog</h1>
           <p className="text-xl text-gray-300 max-w-2xl">
@@ -99,7 +99,7 @@ export default function BlogPage() {
       </section>
 
       {/* NEWSLETTER CTA */}
-      <section className="bg-[#0D0D0D] py-16">
+      <section className="bg-[#000000] py-16">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-extrabold text-white mb-3">Get the good stuff in your inbox</h2>
           <p className="text-gray-400 mb-8">

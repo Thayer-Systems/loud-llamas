@@ -15,7 +15,7 @@ export default function FAQAccordion({ faqs }: { faqs: FAQ[] }) {
             onClick={() => setOpen(open === i ? null : i)}
             className="w-full py-6 flex items-center justify-between text-left gap-6 group"
           >
-            <span className="font-bold text-[#0D0D0D] text-lg leading-snug">{faq.q}</span>
+            <span className="font-bold text-[#000000] text-lg leading-snug">{faq.q}</span>
             <span
               className={`text-[#2563EB] text-3xl font-light leading-none shrink-0 transition-transform duration-300 ${
                 open === i ? "rotate-45" : ""

@@ -28,15 +28,18 @@ export async function generateMetadata({
 
 export default async function ConfigurePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ channel: string }>;
+  searchParams: Promise<{ tier?: string; queue?: string }>;
 }) {
   const { channel } = await params;
+  const { tier, queue } = await searchParams;
 
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
-      <ConfigureForm channel={channel} />
+      <ConfigureForm channel={channel} initialTier={tier} queue={queue} />
       <Footer />
     </div>
   );

@@ -71,11 +71,11 @@ const WHAT_WE_NEED = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
       {/* HEADER */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-24">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">The Process</p>
           <h1 className="font-black text-white leading-tight" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
@@ -102,12 +102,12 @@ export default function HowItWorksPage() {
 
               {/* Content */}
               <div className="flex-1">
-                <h2 className="text-3xl font-black text-[#0D0D0D] mb-1">{step.title}</h2>
+                <h2 className="text-3xl font-black text-[#000000] mb-1">{step.title}</h2>
                 <p className="text-[#2563EB] font-semibold mb-4">{step.tagline}</p>
                 <p className="text-[#6B7280] text-lg leading-relaxed mb-8 max-w-2xl">{step.description}</p>
                 <ul className="flex flex-col gap-3">
                   {step.details.map((d) => (
-                    <li key={d} className="flex items-start gap-3 text-[#0D0D0D]">
+                    <li key={d} className="flex items-start gap-3 text-[#000000]">
                       <span className="text-[#2563EB] mt-1 shrink-0">✓</span>
                       <span>{d}</span>
                     </li>
@@ -123,13 +123,13 @@ export default function HowItWorksPage() {
       <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Your side of the deal</p>
-          <h2 className="font-black text-[#0D0D0D] mb-12" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
+          <h2 className="font-black text-[#000000] mb-12" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
             What we need from you
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {WHAT_WE_NEED.map((w) => (
               <div key={w.item} className="bg-white rounded-2xl p-6 border border-[#EBEBEB]">
-                <p className="font-bold text-[#0D0D0D] mb-2">{w.item}</p>
+                <p className="font-bold text-[#000000] mb-2">{w.item}</p>
                 <p className="text-[#6B7280] leading-relaxed">{w.note}</p>
               </div>
             ))}
@@ -141,7 +141,7 @@ export default function HowItWorksPage() {
       <section className="px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Timeline</p>
-          <h2 className="font-black text-[#0D0D0D] mb-12" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
+          <h2 className="font-black text-[#000000] mb-12" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
             What to expect, day by day
           </h2>
           <div className="max-w-2xl flex flex-col gap-0 divide-y divide-[#EBEBEB]">
@@ -154,7 +154,7 @@ export default function HowItWorksPage() {
             ].map((t) => (
               <div key={t.day} className="flex items-center gap-8 py-5">
                 <span className="text-sm font-black text-[#2563EB] w-20 shrink-0">{t.day}</span>
-                <span className="text-[#0D0D0D] font-medium">{t.label}</span>
+                <span className="text-[#000000] font-medium">{t.label}</span>
               </div>
             ))}
           </div>
@@ -165,7 +165,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-24">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <h2 className="font-black text-white leading-tight mb-4" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}>
             Ready to stop putting it off?
@@ -175,7 +175,7 @@ export default function HowItWorksPage() {
           </p>
           <Link
             href="/packages"
-            className="inline-block bg-white text-[#0D0D0D] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
+            className="inline-block bg-white text-[#000000] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
           >
             See all packages
           </Link>

@@ -38,7 +38,7 @@ const ADD_ON_NAMES: Record<string, string> = {
 
 export async function POST(req: NextRequest) {
   try {
-    const { channel, tier, addOns = [], customerName, customerEmail } = await req.json();
+    const { channel, tier, addOns = [], customerName, customerEmail, queue = "" } = await req.json();
 
     if (!channel || !tier) {
       return NextResponse.json({ error: "Missing channel or tier" }, { status: 400 });
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       customer_email: customerEmail || undefined,
       metadata: { order_id: order.id },
-      success_url: `${appUrl}/intake/${order.id}?paid=1`,
+      success_url: `${appUrl}/intake/${order.id}?paid=1${queue ? `&queue=${encodeURIComponent(queue)}` : ""}`,
       cancel_url: `${appUrl}/configure/${channel}`,
     });
 

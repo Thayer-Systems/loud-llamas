@@ -97,7 +97,7 @@ function LlamaJumpSVG() {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
       {/* ── HERO ── */}
@@ -134,10 +134,10 @@ export default function HomePage() {
               Pick your channel. Pay once. Get it done in 5–7 days.
             </p>
             <div className="mt-8 flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: "620ms" }}>
-              <Link href="/packages" className="bg-[#0D0D0D] text-white font-semibold text-base px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
+              <Link href="/packages" className="bg-[#000000] text-white font-semibold text-base px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
                 Build your setup
               </Link>
-              <Link href="/how-it-works" className="text-[#0D0D0D] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#0D0D0D] transition-colors duration-300">
+              <Link href="/how-it-works" className="text-[#000000] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#000000] transition-colors duration-300">
                 How it works
               </Link>
             </div>
@@ -149,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* ── STATS BAR ── */}
-      <section className="px-6 md:px-12 lg:px-20 py-16 bg-[#0D0D0D]">
+      <section className="px-6 md:px-12 lg:px-20 py-16 bg-[#000000]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {STATS.map((stat) => (
@@ -168,7 +168,7 @@ export default function HomePage() {
       <div className="border-y border-[#EBEBEB] py-4 overflow-hidden bg-white">
         <div className="ticker-track flex gap-12 whitespace-nowrap">
           {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-            <span key={i} className="text-sm font-semibold text-[#0D0D0D] flex items-center gap-3 shrink-0">
+            <span key={i} className="text-sm font-semibold text-[#000000] flex items-center gap-3 shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] inline-block" />
               {item}
             </span>
@@ -179,8 +179,9 @@ export default function HomePage() {
       {/* ── PROBLEM BLOCK ── */}
       <section className="px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="font-semibold text-[#0D0D0D] leading-tight max-w-3xl mx-auto" style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}>
-            You know you need to do it. You&apos;ve been putting it off. We get it.
+          <p className="font-semibold text-[#000000] leading-tight max-w-3xl mx-auto" style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}>
+            You know you need to do it.<br />
+            You&apos;ve been putting it off. We get it.
           </p>
           <p className="mt-6 text-lg text-[#6B7280] max-w-xl mx-auto leading-relaxed">
             Here&apos;s what we do: set it all up, hand you the keys, and get out of your way.
@@ -189,7 +190,7 @@ export default function HomePage() {
       </section>
 
       {/* ── PULL QUOTE + LLAMA ── */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
           <blockquote className="font-black text-white leading-tight max-w-3xl" style={{ fontSize: "clamp(2rem, 5vw, 4.25rem)" }}>
             We&apos;re not your agency.{" "}
@@ -203,14 +204,14 @@ export default function HomePage() {
       <section id="how-it-works" className="px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">The Process</p>
-          <h2 className="font-black text-[#0D0D0D] mb-16" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
+          <h2 className="font-black text-[#000000] mb-16" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
             How it works
           </h2>
           <div className="grid md:grid-cols-3 gap-12 md:gap-16">
             {STEPS.map((step) => (
-              <div key={step.number} className="border-t-2 border-[#0D0D0D] pt-6">
+              <div key={step.number} className="border-t-2 border-[#000000] pt-6">
                 <span className="text-4xl font-black text-[#2563EB]">{step.number}</span>
-                <h3 className="text-xl font-bold text-[#0D0D0D] mt-4">{step.title}</h3>
+                <h3 className="text-xl font-bold text-[#000000] mt-4">{step.title}</h3>
                 <p className="text-[#6B7280] mt-3 leading-relaxed">{step.desc}</p>
               </div>
             ))}
@@ -222,7 +223,7 @@ export default function HomePage() {
       <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">What We Set Up</p>
-          <h2 className="font-black text-[#0D0D0D] mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
+          <h2 className="font-black text-[#000000] mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
             8 channels. Pick yours.
           </h2>
           <p className="text-[#6B7280] text-lg mb-12">Starter, Growth, or Pro. One-time price. Full setup.</p>
@@ -233,9 +234,9 @@ export default function HomePage() {
                 href={`/configure/${ch.slug}`}
                 className="bg-white rounded-2xl p-6 border border-[#EBEBEB] hover:border-[#2563EB] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
               >
-                <h3 className="font-bold text-base text-[#0D0D0D] mb-3 group-hover:text-[#2563EB] transition-colors">{ch.name}</h3>
+                <h3 className="font-bold text-base text-[#000000] mb-3 group-hover:text-[#2563EB] transition-colors">{ch.name}</h3>
                 <p className="text-sm text-[#6B7280] mb-5">
-                  from <span className="font-semibold text-[#0D0D0D]">${ch.starter}</span>
+                  from <span className="font-semibold text-[#000000]">${ch.starter}</span>
                 </p>
                 <span className="text-sm font-semibold text-[#2563EB] flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
                   Get started <span aria-hidden="true">→</span>
@@ -246,7 +247,7 @@ export default function HomePage() {
           <div className="mt-12">
             <Link
               href="/packages"
-              className="inline-flex items-center gap-2 text-[#0D0D0D] font-semibold border-b-2 border-[#0D0D0D] pb-0.5 hover:border-[#2563EB] hover:text-[#2563EB] transition-colors duration-300"
+              className="inline-flex items-center gap-2 text-[#000000] font-semibold border-b-2 border-[#000000] pb-0.5 hover:border-[#2563EB] hover:text-[#2563EB] transition-colors duration-300"
             >
               See all packages &amp; pricing <span aria-hidden="true">→</span>
             </Link>
@@ -268,7 +269,7 @@ export default function HomePage() {
           </div>
           <div className="lg:ml-auto text-left lg:text-right">
             <h2
-              className="font-black text-[#0D0D0D] leading-[1.0]"
+              className="font-black text-[#000000] leading-[1.0]"
               style={{ fontSize: "clamp(2.5rem, 5.5vw, 5.5rem)" }}
             >
               No retainers.<br />
@@ -283,20 +284,31 @@ export default function HomePage() {
       </section>
 
       {/* ── PAID SOCIAL CALLOUT + PLAYBOOK ── */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
           <div className="flex-1">
             <span className="inline-block bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-10">
               Honest talk about Meta
             </span>
-            <p className="text-[#9CA3AF] leading-relaxed max-w-3xl" style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}>
-              Meta makes it nearly impossible for third parties to configure ad accounts on behalf
-              of clients. We&apos;re not going to pretend otherwise. So instead of a half-baked
-              setup, we built something better:{" "}
-              <span className="text-white font-semibold">The Paid Social Playbook.</span>{" "}
-              Years of paid social experience packaged into a step-by-step implementation guide.
-              You run it. We built it. Same outcome, no access headaches.
-            </p>
+            <div className="max-w-3xl space-y-4" style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}>
+              <p className="text-[#9CA3AF] leading-relaxed">
+                Meta makes it nearly impossible for third parties to configure ad accounts on behalf
+                of clients. We&apos;re not going to pretend otherwise. So instead of a half-baked
+                setup, we built something better:
+              </p>
+              <p>
+                <Link
+                  href="/configure/paid-social"
+                  className="text-white font-bold hover:text-[#2563EB] transition-colors duration-200"
+                >
+                  The Paid Social Playbook.
+                </Link>
+              </p>
+              <p className="text-[#9CA3AF] leading-relaxed">
+                Years of paid social experience packaged into a step-by-step implementation guide.
+                You run it. We built it. Same outcome, no access headaches.
+              </p>
+            </div>
             <Link
               href="/configure/paid-social"
               className="inline-block mt-10 bg-[#2563EB] text-white font-semibold px-8 py-4 rounded-full hover:bg-blue-500 transition-colors duration-300"
@@ -317,10 +329,10 @@ export default function HomePage() {
       </section>
 
       {/* ── FAQ — accordion, centered ── */}
-      <section id="faq" className="px-6 md:px-12 lg:px-20 py-28">
+      <section id="faq" className="px-6 md:px-12 lg:px-20 py-14">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Got questions</p>
-          <h2 className="font-black text-[#0D0D0D] mb-16" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
+          <h2 className="font-black text-[#000000] mb-16" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
             FAQ
           </h2>
           <FAQAccordion faqs={FAQS} />
@@ -328,7 +340,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FOOTER CTA — centered with party icons ── */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-28">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-start justify-center gap-6 md:gap-10">
             <span className="text-5xl md:text-7xl mt-2 hidden sm:block" aria-hidden="true">🎉</span>
@@ -345,7 +357,7 @@ export default function HomePage() {
           <p className="text-[#6B7280] mt-8 text-lg">Pick a channel. Pay once. Done in 5–7 days.</p>
           <Link
             href="/packages"
-            className="inline-block mt-10 bg-white text-[#0D0D0D] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
+            className="inline-block mt-10 bg-white text-[#000000] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
           >
             Build your setup
           </Link>

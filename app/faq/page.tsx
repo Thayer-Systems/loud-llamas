@@ -61,11 +61,11 @@ const FAQS = [
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
       {/* HEADER */}
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-24">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Got questions</p>
           <h1 className="font-black text-white leading-tight" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
@@ -89,7 +89,7 @@ export default function FAQPage() {
         <div className="max-w-7xl mx-auto">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Still unsure?</p>
-            <h2 className="font-black text-[#0D0D0D] mb-6" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
+            <h2 className="font-black text-[#000000] mb-6" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
               We&apos;re not a robot.
             </h2>
             <p className="text-[#6B7280] text-lg leading-relaxed mb-8">
@@ -99,13 +99,13 @@ export default function FAQPage() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/support"
-                className="inline-block bg-[#0D0D0D] text-white font-bold px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300"
+                className="inline-block bg-[#000000] text-white font-bold px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300"
               >
                 Contact us
               </Link>
               <Link
                 href="/packages"
-                className="inline-block border border-[#DEDEDE] text-[#0D0D0D] font-bold px-8 py-4 rounded-full hover:border-[#0D0D0D] transition-colors duration-300"
+                className="inline-block border border-[#DEDEDE] text-[#000000] font-bold px-8 py-4 rounded-full hover:border-[#000000] transition-colors duration-300"
               >
                 See all packages
               </Link>

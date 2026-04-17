@@ -33,10 +33,10 @@ export default function SupportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#0D0D0D]">
+    <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
-      <section className="bg-[#0D0D0D] px-6 md:px-12 lg:px-20 py-20">
+      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Get in touch</p>
           <h1 className="font-black text-white leading-tight" style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}>
@@ -98,7 +98,7 @@ export default function SupportPage() {
 
                 <button
                   type="submit" disabled={loading}
-                  className="w-full bg-[#0D0D0D] text-white font-bold py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-50"
+                  className="w-full bg-[#000000] text-white font-bold py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-50"
                 >
                   {loading ? "Sending…" : "Send message →"}
                 </button>
@@ -124,7 +124,7 @@ export default function SupportPage() {
             <div>
               <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-3">Break-fix</p>
               <p className="text-[#6B7280] leading-relaxed">
-                Something stopped working after handoff? It happens. Flat <span className="font-bold text-[#0D0D0D]">$79 fee</span> per incident.
+                Something stopped working after handoff? It happens. Flat <span className="font-bold text-[#000000]">$79 fee</span> per incident.
                 Describe the issue in the form above and we&apos;ll get back to you with next steps.
               </p>
             </div>

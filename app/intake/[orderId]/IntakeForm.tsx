@@ -88,7 +88,15 @@ const CHANNEL_QUESTIONS: Record<string, Question[]> = {
 
 type AnswerState = Record<string, { answer?: string; llamas_decide?: boolean; is_critical: boolean }>;
 
-export default function IntakeForm({ orderId, channel }: { orderId: string; channel: string }) {
+export default function IntakeForm({
+  orderId,
+  channel,
+  queue,
+}: {
+  orderId: string;
+  channel: string;
+  queue?: string;
+}) {
   const router = useRouter();
   const questions = CHANNEL_QUESTIONS[channel] ?? [];
   const [answers, setAnswers] = useState<AnswerState>(() =>
@@ -128,7 +136,16 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
         body: JSON.stringify({ answers }),
       });
       if (!res.ok) throw new Error("Submission failed");
-      router.push(`/confirmation/${orderId}`);
+      // If there are more packages queued, continue to the next configure page
+      if (queue) {
+        const [next, ...rest] = decodeURIComponent(queue).split(",");
+        const [nextSlug, nextTier] = next.split(":");
+        const remaining = rest.join(",");
+        const url = `/configure/${nextSlug}?tier=${nextTier}${remaining ? `&queue=${encodeURIComponent(remaining)}` : ""}`;
+        router.push(url);
+      } else {
+        router.push(`/confirmation/${orderId}`);
+      }
     } catch {
       setError("Something went wrong. Please try again.");
       setLoading(false);
@@ -149,7 +166,7 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
                   <span className="text-xs font-bold text-[#9CA3AF]">{String(i + 1).padStart(2, "0")}</span>
                   {q.critical && <span className="text-xs font-bold text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-full">Required</span>}
                 </div>
-                <p className="font-semibold text-[#0D0D0D]">{q.label}</p>
+                <p className="font-semibold text-[#000000]">{q.label}</p>
                 {q.subtitle && <p className="text-sm text-[#6B7280] mt-1 max-w-lg leading-relaxed">{q.subtitle}</p>}
               </div>
               {answered && <span className="text-green-500 text-lg shrink-0">✓</span>}
@@ -168,8 +185,8 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
                         selected
                           ? isLlamas
                             ? "bg-[#2563EB] text-white border-[#2563EB]"
-                            : "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                          : "bg-white text-[#0D0D0D] border-[#DEDEDE] hover:border-[#0D0D0D]"
+                            : "bg-[#000000] text-white border-[#000000]"
+                          : "bg-white text-[#000000] border-[#DEDEDE] hover:border-[#000000]"
                       }`}
                     >
                       {opt}
@@ -187,8 +204,8 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
                     onClick={() => setAnswer(q.key, opt)}
                     className={`px-6 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
                       a?.answer === opt
-                        ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                        : "bg-white text-[#0D0D0D] border-[#DEDEDE] hover:border-[#0D0D0D]"
+                        ? "bg-[#000000] text-white border-[#000000]"
+                        : "bg-white text-[#000000] border-[#DEDEDE] hover:border-[#000000]"
                     }`}
                   >
                     {opt}
@@ -219,8 +236,8 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
                       onClick={() => toggleMulti(q.key, opt)}
                       className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
                         selected
-                          ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                          : "bg-white text-[#0D0D0D] border-[#DEDEDE] hover:border-[#0D0D0D]"
+                          ? "bg-[#000000] text-white border-[#000000]"
+                          : "bg-white text-[#000000] border-[#DEDEDE] hover:border-[#000000]"
                       }`}
                     >
                       {opt}
@@ -256,7 +273,7 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
       <div className="border-t border-[#EBEBEB] pt-10">
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-[#6B7280]">
-            <span className="font-bold text-[#0D0D0D]">{answeredCritical.length}/{criticalQuestions.length}</span> required questions answered
+            <span className="font-bold text-[#000000]">{answeredCritical.length}/{criticalQuestions.length}</span> required questions answered
           </p>
         </div>
 
@@ -265,7 +282,7 @@ export default function IntakeForm({ orderId, channel }: { orderId: string; chan
         <button
           onClick={handleSubmit}
           disabled={!allCriticalAnswered || loading}
-          className="bg-[#0D0D0D] text-white font-bold px-10 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="bg-[#000000] text-white font-bold px-10 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {loading ? "Submitting…" : "Submit intake →"}
         </button>

@@ -141,16 +141,28 @@ const LLAMAS_DECIDE = "Let The Llamas Decide";
 
 type Answers = Record<string, string | string[]>;
 
-export default function ConfigureForm({ channel }: { channel: string }) {
+export default function ConfigureForm({
+  channel,
+  initialTier,
+  queue,
+}: {
+  channel: string;
+  initialTier?: string;
+  queue?: string;
+}) {
   const config = CHANNEL_CONFIGS[channel];
   const router = useRouter();
-  const [tier, setTier] = useState<string>("");
+  const [tier, setTier] = useState<string>(
+    initialTier
+      ? config?.tiers.find((t) => t.name.toLowerCase() === initialTier.toLowerCase())?.name ?? ""
+      : ""
+  );
   const [answers, setAnswers] = useState<Answers>({});
 
   if (!config) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center px-6">
-        <p className="text-2xl font-bold text-[#0D0D0D] mb-4">Channel not found.</p>
+        <p className="text-2xl font-bold text-[#000000] mb-4">Channel not found.</p>
         <Link href="/packages" className="text-[#2563EB] font-semibold underline">
           Back to packages
         </Link>
@@ -182,7 +194,8 @@ export default function ConfigureForm({ channel }: { channel: string }) {
   const allCriticalAnswered = tier && answeredCritical.length === criticalQuestions.length;
 
   function handleGoToCheckout() {
-    router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}`);
+    const queueParam = queue ? `&queue=${encodeURIComponent(queue)}` : "";
+    router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}${queueParam}`);
   }
 
   return (
@@ -192,7 +205,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
         Configure
       </p>
       <h1
-        className="font-black text-[#0D0D0D] mb-3"
+        className="font-black text-[#000000] mb-3"
         style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
       >
         {config.name}
@@ -201,7 +214,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
 
       {/* Tier selector */}
       <div className="mb-12">
-        <p className="font-bold text-[#0D0D0D] mb-4">Choose your tier</p>
+        <p className="font-bold text-[#000000] mb-4">Choose your tier</p>
         <div className="grid grid-cols-3 gap-3">
           {config.tiers.map((t) => (
             <button
@@ -213,7 +226,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
                   : "border-[#EBEBEB] hover:border-[#BEBEBE]"
               }`}
             >
-              <p className={`font-bold text-sm ${tier === t.name ? "text-[#2563EB]" : "text-[#0D0D0D]"}`}>
+              <p className={`font-bold text-sm ${tier === t.name ? "text-[#2563EB]" : "text-[#000000]"}`}>
                 {t.name}
               </p>
               <p className="text-[#6B7280] text-sm mt-1">${t.price}</p>
@@ -226,7 +239,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
       <div className="flex flex-col gap-10">
         {config.questions.map((q) => (
           <div key={q.key}>
-            <p className="font-bold text-[#0D0D0D] mb-1">
+            <p className="font-bold text-[#000000] mb-1">
               {q.question}
               {q.critical && (
                 <span className="ml-2 text-xs font-semibold text-[#2563EB] bg-blue-50 px-2 py-0.5 rounded-full">
@@ -241,7 +254,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
 
             {q.type === "text" ? (
               <textarea
-                className="w-full border-2 border-[#EBEBEB] rounded-xl p-4 text-[#0D0D0D] placeholder-[#BEBEBE] focus:border-[#2563EB] focus:outline-none transition-colors resize-none"
+                className="w-full border-2 border-[#EBEBEB] rounded-xl p-4 text-[#000000] placeholder-[#BEBEBE] focus:border-[#2563EB] focus:outline-none transition-colors resize-none"
                 rows={q.key === "tell_us_more" ? 6 : 3}
                 placeholder={q.key === "tell_us_more" ? "Walk us through it — the more detail, the better…" : "Type your answer here…"}
                 value={(answers[q.key] as string) || ""}
@@ -263,7 +276,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
                       className={`px-5 py-2.5 rounded-full border-2 font-medium text-sm transition-all ${
                         selected
                           ? "border-[#2563EB] bg-[#2563EB] text-white"
-                          : "border-[#EBEBEB] text-[#0D0D0D] hover:border-[#2563EB]"
+                          : "border-[#EBEBEB] text-[#000000] hover:border-[#2563EB]"
                       }`}
                     >
                       {opt}
@@ -282,8 +295,8 @@ export default function ConfigureForm({ channel }: { channel: string }) {
                       (q.type === "multiselect"
                         ? ((answers[q.key] as string[]) || []).includes(LLAMAS_DECIDE)
                         : answers[q.key] === LLAMAS_DECIDE)
-                        ? "border-[#0D0D0D] bg-[#0D0D0D] text-white"
-                        : "border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white"
+                        ? "border-[#000000] bg-[#000000] text-white"
+                        : "border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-white"
                     }`}
                   >
                     Let The Llamas Decide
@@ -311,7 +324,7 @@ export default function ConfigureForm({ channel }: { channel: string }) {
           onClick={handleGoToCheckout}
           className={`w-full py-4 rounded-full font-bold text-lg transition-all ${
             allCriticalAnswered
-              ? "bg-[#0D0D0D] text-white hover:bg-[#2563EB]"
+              ? "bg-[#000000] text-white hover:bg-[#2563EB]"
               : "bg-[#F3F4F6] text-[#BEBEBE] cursor-not-allowed"
           }`}
         >

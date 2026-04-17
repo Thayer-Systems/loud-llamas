@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type QuestionType = "grid" | "multiselect" | "text";
@@ -142,9 +143,9 @@ type Answers = Record<string, string | string[]>;
 
 export default function ConfigureForm({ channel }: { channel: string }) {
   const config = CHANNEL_CONFIGS[channel];
+  const router = useRouter();
   const [tier, setTier] = useState<string>("");
   const [answers, setAnswers] = useState<Answers>({});
-  const [submitted, setSubmitted] = useState(false);
 
   if (!config) {
     return (
@@ -180,32 +181,8 @@ export default function ConfigureForm({ channel }: { channel: string }) {
   });
   const allCriticalAnswered = tier && answeredCritical.length === criticalQuestions.length;
 
-  if (submitted) {
-    const selectedTier = config.tiers.find((t) => t.name === tier);
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center px-6 text-center">
-        <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">
-          You&apos;re in
-        </p>
-        <h2
-          className="font-black text-[#0D0D0D] mb-4"
-          style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
-        >
-          Setup received.
-        </h2>
-        <p className="text-[#6B7280] text-lg max-w-md mb-8">
-          You picked <strong className="text-[#0D0D0D]">{config.name} — {tier}</strong> starting at{" "}
-          <strong className="text-[#0D0D0D]">${selectedTier?.price}</strong>. We&apos;ll be in
-          touch to confirm and kick off your sprint.
-        </p>
-        <Link
-          href="/packages"
-          className="bg-[#0D0D0D] text-white font-semibold px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors"
-        >
-          See other packages
-        </Link>
-      </div>
-    );
+  function handleGoToCheckout() {
+    router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}`);
   }
 
   return (
@@ -331,17 +308,17 @@ export default function ConfigureForm({ channel }: { channel: string }) {
 
         <button
           disabled={!allCriticalAnswered}
-          onClick={() => setSubmitted(true)}
+          onClick={handleGoToCheckout}
           className={`w-full py-4 rounded-full font-bold text-lg transition-all ${
             allCriticalAnswered
               ? "bg-[#0D0D0D] text-white hover:bg-[#2563EB]"
               : "bg-[#F3F4F6] text-[#BEBEBE] cursor-not-allowed"
           }`}
         >
-          Build my setup →
+          Continue to checkout →
         </button>
         <p className="text-xs text-[#6B7280] text-center mt-3">
-          We&apos;ll confirm the details and kick off your sprint within 1 business day.
+          Review your order before paying. One-time payment, no surprises.
         </p>
       </div>
     </div>

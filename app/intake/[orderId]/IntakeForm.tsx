@@ -91,11 +91,11 @@ type AnswerState = Record<string, { answer?: string; llamas_decide?: boolean; is
 export default function IntakeForm({
   orderId,
   channel,
-  queue,
+  nextOrders,
 }: {
   orderId: string;
   channel: string;
-  queue?: string;
+  nextOrders?: string;
 }) {
   const router = useRouter();
   const questions = CHANNEL_QUESTIONS[channel] ?? [];
@@ -136,13 +136,11 @@ export default function IntakeForm({
         body: JSON.stringify({ answers }),
       });
       if (!res.ok) throw new Error("Submission failed");
-      // If there are more packages queued, continue to the next configure page
-      if (queue) {
-        const [next, ...rest] = decodeURIComponent(queue).split(",");
-        const [nextSlug, nextTier] = next.split(":");
+      // If more packages purchased together, chain to the next intake
+      if (nextOrders) {
+        const [nextId, ...rest] = decodeURIComponent(nextOrders).split(",");
         const remaining = rest.join(",");
-        const url = `/configure/${nextSlug}?tier=${nextTier}${remaining ? `&queue=${encodeURIComponent(remaining)}` : ""}`;
-        router.push(url);
+        router.push(`/intake/${nextId}${remaining ? `?nextOrders=${encodeURIComponent(remaining)}` : ""}`);
       } else {
         router.push(`/confirmation/${orderId}`);
       }

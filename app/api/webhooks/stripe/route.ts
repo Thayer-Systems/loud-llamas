@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
     if (webhookSecret && sig) {
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } else {
-      // Allow unsigned events in dev when webhook secret not yet set
       event = JSON.parse(body) as Stripe.Event;
     }
   } catch (err) {
@@ -27,11 +26,22 @@ export async function POST(req: NextRequest) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const orderId = session.metadata?.order_id;
 
-    if (!orderId) {
-      console.error("No order_id in session metadata");
-      return NextResponse.json({ error: "Missing order_id" }, { status: 400 });
+    // Support both legacy single order_id and new multi-order order_ids
+    let orderIds: string[] = [];
+    if (session.metadata?.order_ids) {
+      try {
+        orderIds = JSON.parse(session.metadata.order_ids);
+      } catch {
+        console.error("Failed to parse order_ids metadata");
+      }
+    } else if (session.metadata?.order_id) {
+      orderIds = [session.metadata.order_id];
+    }
+
+    if (orderIds.length === 0) {
+      console.error("No order IDs in session metadata");
+      return NextResponse.json({ error: "Missing order IDs" }, { status: 400 });
     }
 
     const supabase = createClient(
@@ -39,33 +49,39 @@ export async function POST(req: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // Mark order as paid
-    const { data: order, error } = await supabase
-      .from("orders")
-      .update({
-        stripe_payment_status: "paid",
-        status: "paid",
-        customer_email: session.customer_details?.email ?? null,
-        customer_name: session.customer_details?.name ?? null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", orderId)
-      .select()
-      .single();
-
-    if (error || !order) {
-      console.error("Failed to update order:", error);
-      return NextResponse.json({ error: "DB update failed" }, { status: 500 });
-    }
-
-    // Send confirmation email to customer
-    const customerEmail = order.customer_email ?? session.customer_details?.email;
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-    const deliveryDate = new Date();
-    deliveryDate.setDate(deliveryDate.getDate() + (order.delivery_days ?? 7));
-    const deliveryStr = deliveryDate.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
-    if (customerEmail) {
+    // Mark all orders as paid and send a confirmation email for each
+    for (const orderId of orderIds) {
+      const { data: order, error } = await supabase
+        .from("orders")
+        .update({
+          stripe_payment_status: "paid",
+          status: "paid",
+          customer_email: session.customer_details?.email ?? null,
+          customer_name: session.customer_details?.name ?? null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", orderId)
+        .select()
+        .single();
+
+      if (error || !order) {
+        console.error(`Failed to update order ${orderId}:`, error);
+        continue; // try remaining orders even if one fails
+      }
+
+      const customerEmail = order.customer_email ?? session.customer_details?.email;
+      if (!customerEmail) continue;
+
+      const deliveryDate = new Date();
+      deliveryDate.setDate(deliveryDate.getDate() + (order.delivery_days ?? 7));
+      const deliveryStr = deliveryDate.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      });
+
       await resend.emails.send({
         from: "Loud Llamas <hello@loudllamas.org>",
         to: customerEmail,

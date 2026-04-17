@@ -20,10 +20,10 @@ export default async function IntakePage({
   searchParams,
 }: {
   params: Promise<{ orderId: string }>;
-  searchParams: Promise<{ paid?: string; queue?: string }>;
+  searchParams: Promise<{ paid?: string; nextOrders?: string }>;
 }) {
   const { orderId } = await params;
-  const { queue } = await searchParams;
+  const { nextOrders } = await searchParams;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -63,7 +63,13 @@ export default async function IntakePage({
 
       <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-16">
         <div className="max-w-3xl mx-auto">
-          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-3">Step 2 of 2</p>
+          {nextOrders ? (
+            <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-3">
+              Package intake ({nextOrders.split(",").length + 1} remaining after this)
+            </p>
+          ) : (
+            <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-3">Step 2 of 2</p>
+          )}
           <h1 className="font-black text-white leading-tight" style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)" }}>
             Tell us about your business
           </h1>
@@ -80,7 +86,7 @@ export default async function IntakePage({
 
       <section className="px-6 md:px-12 lg:px-20 py-16">
         <div className="max-w-3xl mx-auto">
-          <IntakeForm orderId={orderId} channel={order.channel} queue={queue} />
+          <IntakeForm orderId={orderId} channel={order.channel} nextOrders={nextOrders} />
         </div>
       </section>
 

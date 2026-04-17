@@ -36,94 +36,135 @@ const ADD_ON_NAMES: Record<string, string> = {
   playbook:   "Paid Social Playbook Bundle",
 };
 
+type PkgInput = { channel: string; tier: string; addOns?: string[] };
+
 export async function POST(req: NextRequest) {
   try {
-    const { channel, tier, addOns = [], customerName, customerEmail, queue = "" } = await req.json();
+    const body = await req.json();
+    const { customerName, customerEmail } = body;
 
-    if (!channel || !tier) {
-      return NextResponse.json({ error: "Missing channel or tier" }, { status: 400 });
+    // Support both { packages: [...] } and legacy { channel, tier, addOns }
+    const packages: PkgInput[] = body.packages ?? [
+      { channel: body.channel, tier: body.tier, addOns: body.addOns ?? [] },
+    ];
+
+    if (!packages.length) {
+      return NextResponse.json({ error: "No packages provided" }, { status: 400 });
     }
 
-    const basePrice = PRICES[channel]?.[tier];
-    if (!basePrice) {
-      return NextResponse.json({ error: "Invalid channel or tier" }, { status: 400 });
+    // Validate all
+    for (const pkg of packages) {
+      if (!pkg.channel || !pkg.tier || !PRICES[pkg.channel]?.[pkg.tier]) {
+        return NextResponse.json(
+          { error: `Invalid package: ${pkg.channel}/${pkg.tier}` },
+          { status: 400 }
+        );
+      }
     }
 
-    const addOnTotal = (addOns as string[]).reduce((sum, a) => sum + (ADD_ON_PRICES[a] ?? 0), 0);
-    const totalPrice = basePrice + addOnTotal;
-    const deliveryDays = (addOns as string[]).includes("rush") ? 3 : 7;
-
-    // Create pending order in Supabase
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    const { data: order, error: orderError } = await supabase
-      .from("orders")
-      .insert({
-        channel,
-        tier,
-        price: totalPrice,
-        add_ons: addOns,
-        delivery_days: deliveryDays,
-        status: "pending",
-        customer_name: customerName || null,
-        customer_email: customerEmail || null,
-      })
-      .select()
-      .single();
+    // Create one Supabase order per package
+    const createdOrders: Array<{ id: string; channel: string; tier: string; addOns: string[]; basePrice: number; deliveryDays: number }> = [];
 
-    if (orderError || !order) {
-      console.error("Order creation failed:", orderError);
-      return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+    for (const pkg of packages) {
+      const addOns = pkg.addOns ?? [];
+      const basePrice = PRICES[pkg.channel][pkg.tier];
+      const addOnTotal = addOns.reduce((sum, a) => sum + (ADD_ON_PRICES[a] ?? 0), 0);
+      const deliveryDays = addOns.includes("rush") ? 3 : 7;
+
+      const { data: order, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          channel: pkg.channel,
+          tier: pkg.tier,
+          price: basePrice + addOnTotal,
+          add_ons: addOns,
+          delivery_days: deliveryDays,
+          status: "pending",
+          customer_name: customerName || null,
+          customer_email: customerEmail || null,
+        })
+        .select()
+        .single();
+
+      if (orderError || !order) {
+        console.error("Order creation failed:", orderError);
+        return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+      }
+
+      createdOrders.push({ id: order.id, channel: pkg.channel, tier: pkg.tier, addOns, basePrice, deliveryDays });
     }
 
-    // Build line items
-    const lineItems = [
-      {
+    // Build Stripe line items for all packages
+    const lineItems: {
+      price_data: {
+        currency: "usd";
+        product_data: { name: string; description: string };
+        unit_amount: number;
+      };
+      quantity: 1;
+    }[] = [];
+
+    for (const o of createdOrders) {
+      lineItems.push({
         price_data: {
-          currency: "usd" as const,
+          currency: "usd",
           product_data: {
-            name: `${CHANNEL_NAMES[channel]} — ${tier.charAt(0).toUpperCase() + tier.slice(1)}`,
-            description: `Full setup handoff in ${deliveryDays} business days. You own it forever.`,
+            name: `${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}`,
+            description: `Full setup handoff in ${o.deliveryDays} business days. You own it forever.`,
           },
-          unit_amount: basePrice * 100,
+          unit_amount: o.basePrice * 100,
         },
         quantity: 1,
-      },
-    ];
+      });
 
-    for (const addOn of addOns as string[]) {
-      if (ADD_ON_PRICES[addOn]) {
-        lineItems.push({
-          price_data: {
-            currency: "usd" as const,
-            product_data: { name: ADD_ON_NAMES[addOn] ?? addOn, description: "Add-on service" },
-            unit_amount: ADD_ON_PRICES[addOn] * 100,
-          },
-          quantity: 1,
-        });
+      for (const addOn of o.addOns) {
+        if (ADD_ON_PRICES[addOn]) {
+          lineItems.push({
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: ADD_ON_NAMES[addOn] ?? addOn,
+                description: `Add-on for ${CHANNEL_NAMES[o.channel]}`,
+              },
+              unit_amount: ADD_ON_PRICES[addOn] * 100,
+            },
+            quantity: 1,
+          });
+        }
       }
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+    // Build intake chain URL: first order's intake, rest queued as nextOrders
+    const [firstOrder, ...remaining] = createdOrders;
+    const nextOrdersParam = remaining.length
+      ? `&nextOrders=${encodeURIComponent(remaining.map((o) => o.id).join(","))}`
+      : "";
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
       customer_email: customerEmail || undefined,
-      metadata: { order_id: order.id },
-      success_url: `${appUrl}/intake/${order.id}?paid=1${queue ? `&queue=${encodeURIComponent(queue)}` : ""}`,
-      cancel_url: `${appUrl}/configure/${channel}`,
+      metadata: {
+        // Store all order IDs so the webhook can mark them all paid
+        order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
+      },
+      success_url: `${appUrl}/intake/${firstOrder.id}?paid=1${nextOrdersParam}`,
+      cancel_url: `${appUrl}/packages`,
     });
 
-    // Save session ID back to order
+    // Save Stripe session ID back to all orders
     await supabase
       .from("orders")
       .update({ stripe_session_id: session.id })
-      .eq("id", order.id);
+      .in("id", createdOrders.map((o) => o.id));
 
     return NextResponse.json({ url: session.url });
   } catch (err) {

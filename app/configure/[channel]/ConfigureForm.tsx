@@ -144,11 +144,9 @@ type Answers = Record<string, string | string[]>;
 export default function ConfigureForm({
   channel,
   initialTier,
-  queue,
 }: {
   channel: string;
   initialTier?: string;
-  queue?: string;
 }) {
   const config = CHANNEL_CONFIGS[channel];
   const router = useRouter();
@@ -194,8 +192,7 @@ export default function ConfigureForm({
   const allCriticalAnswered = tier && answeredCritical.length === criticalQuestions.length;
 
   function handleGoToCheckout() {
-    const queueParam = queue ? `&queue=${encodeURIComponent(queue)}` : "";
-    router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}${queueParam}`);
+    router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}`);
   }
 
   return (

@@ -154,10 +154,14 @@ export default function PackagesContent() {
 
   function handleConfigure() {
     if (selected.length === 0) return;
-    const [first, ...rest] = selected;
-    const queue = rest.map((p) => `${p.slug}:${p.tier}`).join(",");
-    const url = `/configure/${first.slug}?tier=${first.tier}${queue ? `&queue=${encodeURIComponent(queue)}` : ""}`;
-    router.push(url);
+    if (selected.length === 1) {
+      // Single package — go through the configure page (intake preview + tier confirm)
+      router.push(`/configure/${selected[0].slug}?tier=${selected[0].tier}`);
+    } else {
+      // Multiple packages — skip individual configure pages, go straight to combined checkout
+      const packagesParam = selected.map((p) => `${p.slug}:${p.tier}`).join(",");
+      router.push(`/checkout?packages=${encodeURIComponent(packagesParam)}`);
+    }
   }
 
   const totalSelected = selected.reduce((sum, p) => sum + p.price, 0);

@@ -31,15 +31,15 @@ export default async function ConfigurePage({
   searchParams,
 }: {
   params: Promise<{ channel: string }>;
-  searchParams: Promise<{ tier?: string; queue?: string }>;
+  searchParams: Promise<{ tier?: string }>;
 }) {
   const { channel } = await params;
-  const { tier, queue } = await searchParams;
+  const { tier } = await searchParams;
 
   return (
     <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
-      <ConfigureForm channel={channel} initialTier={tier} queue={queue} />
+      <ConfigureForm channel={channel} initialTier={tier} />
       <Footer />
     </div>
   );

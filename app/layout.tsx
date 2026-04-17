@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   title: "Loud Llamas — Marketing Setup. Done Once. Done Right.",
   description:
     "Pick your marketing channel. Pay once. Get a fully configured setup in 5–7 business days. No retainers. No calls. No subscriptions.",
+  icons: {
+    icon: [{ url: "/favicon.png", sizes: "64x64", type: "image/png" }],
+    apple: [{ url: "/favicon.png" }],
+  },
 };
 
 export default function RootLayout({

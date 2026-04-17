@@ -29,6 +29,11 @@ export async function POST(
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
+  // Require payment before accepting intake
+  if (order.stripe_payment_status !== "paid" && order.status !== "paid") {
+    return NextResponse.json({ error: "Payment required" }, { status: 402 });
+  }
+
   // Save intake answers
   const rows = Object.entries(answers as Record<string, { answer?: string; llamas_decide?: boolean; is_critical?: boolean }>).map(
     ([question_key, val]) => ({

@@ -28,65 +28,93 @@ const CHANNEL_NAMES: Record<string, string> = {
 };
 
 const ADD_ON_PRICES: Record<string, number> = { rush: 299, automation: 499, playbook: 99 };
-const ADD_ON_NAMES: Record<string, string> = {
-  rush:       "Rush Delivery (3 business days)",
-  automation: "Automation Upgrade",
-  playbook:   "Paid Social Playbook Bundle",
-};
 
 type PkgItem = { channel: string; tier: string; addOns: string[] };
 
-function pkgPrice(pkg: PkgItem) {
-  const base = PRICES[pkg.channel]?.[pkg.tier] ?? 0;
-  const addOns = pkg.addOns.reduce((s, a) => s + (ADD_ON_PRICES[a] ?? 0), 0);
-  return { base, addOns, total: base + addOns };
+function pkgBase(pkg: PkgItem) {
+  return PRICES[pkg.channel]?.[pkg.tier] ?? 0;
 }
 
 function CheckoutContent() {
   const params = useSearchParams();
   const router = useRouter();
 
-  // Multi-package mode: ?packages=ch1:tier1,ch2:tier2
-  // Single-package mode: ?channel=ch&tier=t[&addons=a,b][&queue=ch2:t2,...]
+  // Multi-package: ?packages=ch1:tier1,ch2:tier2
+  // Single-package: ?channel=ch&tier=t[&addons=a,b]
   const packagesParam = params.get("packages");
   const channel = params.get("channel") ?? "";
   const tier    = params.get("tier") ?? "";
   const addOnsParam = params.get("addons")?.split(",").filter(Boolean) ?? [];
-  const queueParam  = params.get("queue") ?? "";
 
-  const allPackages: PkgItem[] = packagesParam
+  const basePackages: PkgItem[] = packagesParam
     ? packagesParam.split(",").map((p) => {
         const [ch, t] = p.split(":");
         return { channel: ch, tier: t, addOns: [] };
       })
-    : [
-        { channel, tier, addOns: addOnsParam },
-        ...queueParam.split(",").filter(Boolean).map((p) => {
-          const [ch, t] = p.split(":");
-          return { channel: ch, tier: t, addOns: [] };
-        }),
-      ];
+    : [{ channel, tier, addOns: addOnsParam }];
 
-  const grandTotal = allPackages.reduce((sum, pkg) => sum + pkgPrice(pkg).total, 0);
-  const isMulti = allPackages.length > 1;
+  // Add-on state: rush is global (one fee regardless of package count)
+  // automation & playbook are per-package (keyed by index)
+  const [rushEnabled, setRushEnabled] = useState(addOnsParam.includes("rush"));
+  // per-package add-ons: { [pkgIndex]: Set of addon keys }
+  const [pkgAddOns, setPkgAddOns] = useState<Record<number, Set<string>>>(() => {
+    const init: Record<number, Set<string>> = {};
+    basePackages.forEach((_, i) => { init[i] = new Set(); });
+    return init;
+  });
 
   const [name,    setName]    = useState("");
   const [email,   setEmail]   = useState("");
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
 
-  // Guard: redirect if no valid packages
+  const isMulti = basePackages.length > 1;
+
+  // Build final packages array with add-ons resolved
+  const allPackages: PkgItem[] = basePackages.map((pkg, i) => {
+    const addOns: string[] = [];
+    if (rushEnabled) addOns.push("rush");
+    pkgAddOns[i]?.forEach((a) => addOns.push(a));
+    return { ...pkg, addOns };
+  });
+
+  // Per-package add-on options (what's eligible for each channel)
+  function eligibleAddOns(pkg: PkgItem) {
+    const opts: { key: string; label: string; price: number; desc: string }[] = [];
+    if (pkg.channel !== "automation") {
+      opts.push({ key: "automation", label: "Automation Upgrade", price: 499, desc: "Add automated workflows to this package" });
+    }
+    if (pkg.channel !== "paid-social") {
+      opts.push({ key: "playbook", label: "Paid Social Playbook Bundle", price: 99, desc: "Add the full paid social guide to this package" });
+    }
+    return opts;
+  }
+
+  function togglePkgAddOn(pkgIndex: number, key: string) {
+    setPkgAddOns((prev) => {
+      const next = new Set(prev[pkgIndex]);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return { ...prev, [pkgIndex]: next };
+    });
+  }
+
+  // Totals
+  const rushFee = rushEnabled ? ADD_ON_PRICES.rush : 0;
+  const packageSubtotals = basePackages.map((pkg, i) => {
+    const extras = Array.from(pkgAddOns[i] ?? []).reduce((s, a) => s + (ADD_ON_PRICES[a] ?? 0), 0);
+    return pkgBase(pkg) + extras;
+  });
+  const grandTotal = packageSubtotals.reduce((s, x) => s + x, 0) + rushFee;
+  const deliveryDays = rushEnabled ? 3 : 7;
+
   useEffect(() => {
-    const valid = allPackages.every((p) => p.channel && p.tier && PRICES[p.channel]?.[p.tier]);
+    const valid = basePackages.every((p) => p.channel && p.tier && PRICES[p.channel]?.[p.tier]);
     if (!valid) router.replace("/packages");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handlePay() {
-    if (!name.trim() || !email.trim()) {
-      setError("Please enter your name and email.");
-      return;
-    }
+    if (!name.trim() || !email.trim()) { setError("Please enter your name and email."); return; }
     setError("");
     setLoading(true);
     try {
@@ -120,66 +148,109 @@ function CheckoutContent() {
           </h1>
 
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* LEFT — order summary */}
+            {/* LEFT — order summary + add-ons */}
             <div>
               <h2 className="font-bold text-lg mb-6">
                 Order summary
                 {isMulti && (
                   <span className="ml-2 text-sm font-normal text-[#6B7280]">
-                    ({allPackages.length} packages)
+                    ({basePackages.length} packages)
                   </span>
                 )}
               </h2>
 
-              <div className="border border-[#EBEBEB] rounded-2xl overflow-hidden">
-                {allPackages.map((pkg, i) => {
-                  const { base, addOns: addOnTotal } = pkgPrice(pkg);
+              {/* Packages */}
+              <div className="border border-[#EBEBEB] rounded-2xl overflow-hidden mb-6">
+                {basePackages.map((pkg, i) => {
                   const tierLabel = pkg.tier.charAt(0).toUpperCase() + pkg.tier.slice(1);
-                  const delivery = pkg.addOns.includes("rush") ? 3 : 7;
+                  const eligible = eligibleAddOns(pkg);
+                  const isLast = i === basePackages.length - 1;
                   return (
-                    <div
-                      key={`${pkg.channel}-${pkg.tier}`}
-                      className={`p-5 ${i < allPackages.length - 1 ? "border-b border-[#EBEBEB]" : ""}`}
-                    >
-                      <div className="flex items-start justify-between gap-4">
+                    <div key={`${pkg.channel}-${i}`} className={isLast ? "" : "border-b border-[#EBEBEB]"}>
+                      {/* Package row */}
+                      <div className="p-5 flex items-start justify-between gap-4">
                         <div>
                           <p className="font-bold">{CHANNEL_NAMES[pkg.channel] ?? pkg.channel}</p>
-                          <p className="text-[#6B7280] text-sm mt-0.5">
-                            {tierLabel} · {delivery}-day delivery
-                          </p>
-                          {pkg.addOns.length > 0 && (
-                            <div className="mt-1 space-y-0.5">
-                              {pkg.addOns.map((a) => (
-                                <p key={a} className="text-xs text-[#6B7280]">
-                                  + {ADD_ON_NAMES[a] ?? a} (+${ADD_ON_PRICES[a]})
-                                </p>
-                              ))}
-                            </div>
-                          )}
+                          <p className="text-[#6B7280] text-sm mt-0.5">{tierLabel} · {deliveryDays}-day delivery</p>
                         </div>
-                        <p className="font-semibold shrink-0">
-                          ${(base + addOnTotal).toLocaleString()}
-                        </p>
+                        <p className="font-semibold shrink-0">${pkgBase(pkg).toLocaleString()}</p>
                       </div>
+
+                      {/* Per-package add-ons */}
+                      {eligible.length > 0 && (
+                        <div className="px-5 pb-4 space-y-2">
+                          {eligible.map((addon) => {
+                            const active = pkgAddOns[i]?.has(addon.key);
+                            return (
+                              <button
+                                key={addon.key}
+                                onClick={() => togglePkgAddOn(i, addon.key)}
+                                className={`w-full flex items-center justify-between text-left rounded-xl border px-4 py-3 transition-all ${
+                                  active
+                                    ? "border-[#2563EB] bg-blue-50"
+                                    : "border-[#EBEBEB] hover:border-[#BEBEBE]"
+                                }`}
+                              >
+                                <div>
+                                  <p className={`text-sm font-semibold ${active ? "text-[#2563EB]" : "text-[#000000]"}`}>
+                                    {active ? "✓ " : "+ "}{addon.label}
+                                  </p>
+                                  <p className="text-xs text-[#6B7280] mt-0.5">{addon.desc}</p>
+                                </div>
+                                <p className={`text-sm font-bold shrink-0 ml-4 ${active ? "text-[#2563EB]" : "text-[#6B7280]"}`}>
+                                  +${addon.price}
+                                </p>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
 
-                <div className="p-5 bg-[#F8F8F8] border-t border-[#EBEBEB] flex justify-between items-center">
+                {/* Rush delivery — global toggle */}
+                <div className="border-t border-[#EBEBEB] p-5">
+                  <button
+                    onClick={() => setRushEnabled((v) => !v)}
+                    className={`w-full flex items-center justify-between text-left rounded-xl border px-4 py-3 transition-all ${
+                      rushEnabled
+                        ? "border-[#2563EB] bg-blue-50"
+                        : "border-[#EBEBEB] hover:border-[#BEBEBE]"
+                    }`}
+                  >
+                    <div>
+                      <p className={`text-sm font-semibold ${rushEnabled ? "text-[#2563EB]" : "text-[#000000]"}`}>
+                        {rushEnabled ? "✓ " : "+ "}Rush Delivery
+                      </p>
+                      <p className="text-xs text-[#6B7280] mt-0.5">
+                        {rushEnabled
+                          ? "3-business-day turnaround on all packages"
+                          : "Upgrade to 3-business-day turnaround (all packages)"}
+                      </p>
+                    </div>
+                    <p className={`text-sm font-bold shrink-0 ml-4 ${rushEnabled ? "text-[#2563EB]" : "text-[#6B7280]"}`}>
+                      +$299
+                    </p>
+                  </button>
+                </div>
+
+                {/* Grand total */}
+                <div className="border-t border-[#EBEBEB] bg-[#F8F8F8] p-5 flex justify-between items-center">
                   <span className="font-bold">Total</span>
                   <span className="font-black text-2xl">${grandTotal.toLocaleString()}</span>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-2 text-sm text-[#6B7280]">
+              <div className="space-y-2 text-sm text-[#6B7280]">
                 <p>✓ One-time payment — no subscriptions, no retainers</p>
-                <p>✓ Full setup + handoff per package in 5–7 business days</p>
+                <p>✓ Full setup + handoff in {deliveryDays} business days</p>
                 <p>✓ You own everything — credentials, assets, accounts</p>
-                <p>✓ $79 flat break-fix fee if anything ever goes sideways</p>
+                <p>✓ $79 flat break-fix if anything ever goes sideways</p>
               </div>
             </div>
 
-            {/* RIGHT — contact info + pay */}
+            {/* RIGHT — contact + pay */}
             <div>
               <h2 className="font-bold text-lg mb-6">Your details</h2>
 
@@ -210,27 +281,23 @@ function CheckoutContent() {
               </div>
 
               {isMulti && (
-                <div className="mt-5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-[#2563EB]">
-                  <p className="font-semibold mb-1">After you pay</p>
+                <div className="mt-5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm">
+                  <p className="font-semibold text-[#2563EB] mb-1">After you pay</p>
                   <p className="text-[#6B7280]">
                     You&apos;ll fill out a short intake form for each package — one at a time.
-                    Takes about 5 minutes per package. We&apos;ll kick off all of them in parallel.
+                    Takes about 5 minutes each. We kick off all of them in parallel.
                   </p>
                 </div>
               )}
 
-              {error && (
-                <p className="mt-4 text-sm text-red-600 font-medium">{error}</p>
-              )}
+              {error && <p className="mt-4 text-sm text-red-600 font-medium">{error}</p>}
 
               <button
                 onClick={handlePay}
                 disabled={loading}
                 className="mt-6 w-full bg-[#000000] text-white font-bold text-base py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading
-                  ? "Redirecting to payment…"
-                  : `Pay $${grandTotal.toLocaleString()} →`}
+                {loading ? "Redirecting to payment…" : `Pay $${grandTotal.toLocaleString()} →`}
               </button>
 
               <p className="text-xs text-[#9CA3AF] text-center mt-4">

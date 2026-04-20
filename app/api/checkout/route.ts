@@ -152,6 +152,7 @@ export async function POST(req: NextRequest) {
       line_items: lineItems,
       mode: "payment",
       allow_promotion_codes: true,
+      payment_intent_data: { statement_descriptor: "LOUD LLAMAS" },
       customer_email: customerEmail || undefined,
       metadata: {
         // Store all order IDs so the webhook can mark them all paid

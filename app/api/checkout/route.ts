@@ -151,6 +151,7 @@ export async function POST(req: NextRequest) {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
+      allow_promotion_codes: true,
       customer_email: customerEmail || undefined,
       metadata: {
         // Store all order IDs so the webhook can mark them all paid

@@ -264,8 +264,18 @@ export async function POST(req: NextRequest) {
 
       const cancelAt = Math.floor(Date.now() / 1000) + THREE_MONTHS_SECONDS;
 
-      // Cast: add_invoice_items is a real Stripe API param the SDK's TS types
-      // don't surface yet. The runtime API accepts this shape.
+      // The Stripe API supports cancel_at and add_invoice_items on
+      // subscription_data for Checkout Sessions, but stripe-node v22's TS
+      // types don't surface them. Build the subscription_data with full
+      // shape and attach via cast.
+      const subscriptionDataExtended = {
+        cancel_at: cancelAt,
+        add_invoice_items: addInvoiceItems,
+        metadata: {
+          order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
+          mgmt_subs: JSON.stringify(mgmtSubsMeta),
+        },
+      };
       const subscriptionParams: CreateSessionParams = {
         payment_method_types: ["card"],
         line_items: lineItems,
@@ -277,18 +287,10 @@ export async function POST(req: NextRequest) {
           has_mgmt_sub: "true",
           mgmt_subs: JSON.stringify(mgmtSubsMeta),
         },
-        subscription_data: {
-          cancel_at: cancelAt,
-          metadata: {
-            order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
-            mgmt_subs: JSON.stringify(mgmtSubsMeta),
-          },
-        },
+        subscription_data: subscriptionDataExtended as unknown as CreateSessionParams["subscription_data"],
         success_url: `${appUrl}/intake/${firstOrder.id}?paid=1${nextOrdersParam}`,
         cancel_url: `${appUrl}/packages`,
       };
-      // Attach add_invoice_items via cast since the SDK types lag the API.
-      (subscriptionParams.subscription_data as unknown as { add_invoice_items: AddInvoiceItem[] }).add_invoice_items = addInvoiceItems;
       session = await stripe.checkout.sessions.create(subscriptionParams);
     }
 

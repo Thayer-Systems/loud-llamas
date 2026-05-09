@@ -13,11 +13,11 @@ const STEPS = [
     title: "Pick your package",
     tagline: "You know what you need. Or you don't — that's fine too.",
     description:
-      "Browse 8 marketing channels and 3 tiers each. Not sure which one to pick? Start with whatever's been on your to-do list the longest. You can always add more later — each one is its own sprint.",
+      "Browse 6 marketing channels plus Burnrate. Not sure which one to pick? Start with whatever's been on your to-do list the longest. You can always add more later — each one is its own sprint.",
     details: [
-      "Website Build, Email, Organic Social, SEO, Paid Social, Google Ads, Analytics, or Automation",
+      "Website Build, SEM / Google Ads, Analytics, Email, Paid Social Playbook, or Automation",
       "Starter, Growth, or Pro tiers — scaled by scope, not by time",
-      "One-time price, no surprise invoices",
+      "One-time price, no surprise invoices (Burnrate is the only recurring product)",
       "Mix and match — buy as many channels as you want",
     ],
   },

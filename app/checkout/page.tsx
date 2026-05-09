@@ -6,14 +6,14 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 const PRICES: Record<string, Record<string, number>> = {
-  "website-build":      { starter: 499,  growth: 899,  pro: 1499 },
-  "email-lifecycle":    { starter: 249,  growth: 499,  pro: 899  },
-  "organic-social":     { starter: 249,  growth: 499,  pro: 899  },
-  "seo-aeo":            { starter: 349,  growth: 699,  pro: 1199 },
-  "paid-social":        { starter: 149,  growth: 299,  pro: 499  },
-  "sem-google-ads":     { starter: 399,  growth: 799,  pro: 1399 },
-  "analytics-tracking": { starter: 199,  growth: 399,  pro: 699  },
-  "automation":         { starter: 599,  growth: 999,  pro: 1799 },
+  "website-build":      { starter: 179, growth: 299, pro: 449 },
+  "email-lifecycle":    { starter: 99,  growth: 179, pro: 279 },
+  "organic-social":     { starter: 249, growth: 499, pro: 899 },
+  "seo-aeo":            { starter: 349, growth: 699, pro: 1199 },
+  "paid-social":        { starter: 59,  growth: 99,  pro: 149 },
+  "sem-google-ads":     { starter: 149, growth: 249, pro: 399 },
+  "analytics-tracking": { starter: 99,  growth: 179, pro: 279 },
+  "automation":         { starter: 79,  growth: 199, pro: 399 },
 };
 
 const CHANNEL_NAMES: Record<string, string> = {
@@ -29,10 +29,31 @@ const CHANNEL_NAMES: Record<string, string> = {
 
 const ADD_ON_PRICES: Record<string, number> = { rush: 299, automation: 499, playbook: 99 };
 
-type PkgItem = { channel: string; tier: string; addOns: string[] };
+// Optional 3-month management subscription per channel/tier (USD/month)
+const MGMT_SUB_PRICES: Record<string, Record<string, number>> = {
+  "sem-google-ads":     { starter: 99, growth: 149, pro: 199 },
+  "analytics-tracking": { starter: 49, growth: 79,  pro: 99  },
+  "email-lifecycle":    { starter: 49, growth: 79,  pro: 99  },
+};
+
+const MGMT_SUB_INCLUDES: Record<string, string> = {
+  "sem-google-ads":     "Weekly bid adjustments · 1 campaign change/wk · monthly report",
+  "analytics-tracking": "Monthly review · alert monitoring · dashboard updates",
+  "email-lifecycle":    "Deliverability monitoring · 1 new email/mo · performance report",
+};
+
+type PkgItem = { channel: string; tier: string; addOns: string[]; mgmtSub?: boolean };
 
 function pkgBase(pkg: PkgItem) {
   return PRICES[pkg.channel]?.[pkg.tier] ?? 0;
+}
+
+function mgmtSubPrice(pkg: PkgItem) {
+  return MGMT_SUB_PRICES[pkg.channel]?.[pkg.tier] ?? 0;
+}
+
+function isMgmtEligible(pkg: PkgItem) {
+  return mgmtSubPrice(pkg) > 0;
 }
 
 function CheckoutContent() {
@@ -62,6 +83,12 @@ function CheckoutContent() {
     basePackages.forEach((_, i) => { init[i] = new Set(); });
     return init;
   });
+  // 3-month management subscription opt-in per package
+  const [mgmtSubs, setMgmtSubs] = useState<Record<number, boolean>>(() => {
+    const init: Record<number, boolean> = {};
+    basePackages.forEach((_, i) => { init[i] = false; });
+    return init;
+  });
 
   const [name,    setName]    = useState("");
   const [email,   setEmail]   = useState("");
@@ -75,7 +102,8 @@ function CheckoutContent() {
     const addOns: string[] = [];
     if (rushEnabled) addOns.push("rush");
     pkgAddOns[i]?.forEach((a) => addOns.push(a));
-    return { ...pkg, addOns };
+    const mgmtSub = !!mgmtSubs[i] && isMgmtEligible(pkg);
+    return { ...pkg, addOns, mgmtSub };
   });
 
   // Per-package add-on options (what's eligible for each channel)
@@ -98,6 +126,10 @@ function CheckoutContent() {
     });
   }
 
+  function toggleMgmtSub(pkgIndex: number) {
+    setMgmtSubs((prev) => ({ ...prev, [pkgIndex]: !prev[pkgIndex] }));
+  }
+
   // Totals
   const rushFee = rushEnabled ? ADD_ON_PRICES.rush : 0;
   const packageSubtotals = basePackages.map((pkg, i) => {
@@ -106,6 +138,16 @@ function CheckoutContent() {
   });
   const grandTotal = packageSubtotals.reduce((s, x) => s + x, 0) + rushFee;
   const deliveryDays = rushEnabled ? 3 : 7;
+
+  // Monthly recurring total (only counts subs that are toggled ON for eligible packages)
+  const monthlyTotal = basePackages.reduce((sum, pkg, i) => {
+    return sum + (mgmtSubs[i] && isMgmtEligible(pkg) ? mgmtSubPrice(pkg) : 0);
+  }, 0);
+  const hasAnyMgmtSub = monthlyTotal > 0;
+  // First-charge total = setup + first month of any subs
+  const firstChargeTotal = grandTotal + monthlyTotal;
+  // Total over 3 months = setup + 3x monthly
+  const threeMonthTotal = grandTotal + monthlyTotal * 3;
 
   useEffect(() => {
     const valid = basePackages.every((p) => p.channel && p.tier && PRICES[p.channel]?.[p.tier]);
@@ -205,6 +247,34 @@ function CheckoutContent() {
                           })}
                         </div>
                       )}
+
+                      {/* 3-mo management subscription toggle (eligible channels only) */}
+                      {isMgmtEligible(pkg) && (
+                        <div className="px-5 pb-5">
+                          <button
+                            onClick={() => toggleMgmtSub(i)}
+                            className={`w-full flex items-center justify-between text-left rounded-xl border-2 px-4 py-3 transition-all ${
+                              mgmtSubs[i]
+                                ? "border-[#2563EB] bg-blue-50"
+                                : "border-[#EBEBEB] hover:border-[#BEBEBE]"
+                            }`}
+                          >
+                            <div>
+                              <p className={`text-sm font-bold ${mgmtSubs[i] ? "text-[#2563EB]" : "text-[#000000]"}`}>
+                                {mgmtSubs[i] ? "✓ " : "+ "}Add 3-month management
+                              </p>
+                              <p className="text-xs text-[#6B7280] mt-0.5">{MGMT_SUB_INCLUDES[pkg.channel]}</p>
+                              <p className="text-[10px] text-[#9CA3AF] mt-1 uppercase tracking-widest font-semibold">
+                                Auto-cancels after 3 months · billed monthly
+                              </p>
+                            </div>
+                            <p className={`text-sm font-bold shrink-0 ml-4 text-right ${mgmtSubs[i] ? "text-[#2563EB]" : "text-[#6B7280]"}`}>
+                              +${mgmtSubPrice(pkg)}
+                              <span className="block text-xs font-normal">/mo · 3 mo</span>
+                            </p>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -236,14 +306,33 @@ function CheckoutContent() {
                 </div>
 
                 {/* Grand total */}
-                <div className="border-t border-[#EBEBEB] bg-[#F8F8F8] p-5 flex justify-between items-center">
-                  <span className="font-bold">Total</span>
-                  <span className="font-black text-2xl">${grandTotal.toLocaleString()}</span>
+                <div className="border-t border-[#EBEBEB] bg-[#F8F8F8] p-5">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold">Setup total{hasAnyMgmtSub ? " (one-time)" : ""}</span>
+                    <span className="font-black text-2xl">${grandTotal.toLocaleString()}</span>
+                  </div>
+                  {hasAnyMgmtSub && (
+                    <>
+                      <div className="flex justify-between items-center mt-3 text-[#2563EB]">
+                        <span className="font-bold">Management</span>
+                        <span className="font-black text-lg">${monthlyTotal.toLocaleString()}/mo · 3 mo</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-3 pt-3 border-t border-[#EBEBEB]">
+                        <span className="text-sm text-[#6B7280]">Charged today (setup + first month)</span>
+                        <span className="font-bold">${firstChargeTotal.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-1 text-xs text-[#9CA3AF]">
+                        <span>Total over 3 months</span>
+                        <span>${threeMonthTotal.toLocaleString()}</span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-2 text-sm text-[#6B7280]">
-                <p>✓ One-time payment — no subscriptions, no retainers</p>
+                {!hasAnyMgmtSub && <p>✓ One-time payment — no subscriptions, no retainers</p>}
+                {hasAnyMgmtSub && <p>✓ Setup is one-time. Management auto-cancels after 3 months.</p>}
                 <p>✓ Full setup + handoff in {deliveryDays} business days</p>
                 <p>✓ You own everything — credentials, assets, accounts</p>
                 <p>✓ $79 flat break-fix if anything ever goes sideways</p>
@@ -297,7 +386,11 @@ function CheckoutContent() {
                 disabled={loading}
                 className="mt-6 w-full bg-[#000000] text-white font-bold text-base py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Redirecting to payment…" : `Pay $${grandTotal.toLocaleString()} →`}
+                {loading
+                  ? "Redirecting to payment…"
+                  : hasAnyMgmtSub
+                    ? `Pay $${firstChargeTotal.toLocaleString()} today →`
+                    : `Pay $${grandTotal.toLocaleString()} →`}
               </button>
 
               <p className="text-xs text-[#9CA3AF] text-center mt-4">

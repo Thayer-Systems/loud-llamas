@@ -4,161 +4,223 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const CHANNELS = [
-  {
-    name: "Paid Social Playbook",
-    slug: "paid-social",
-    emoji: "📣",
-    mostPopular: "starter" as const,
-    description: "We can't touch your Meta ad account (nobody can — Meta won't allow it). So instead we built something better: a step-by-step guide you execute yourself, built from real campaigns.",
-    access: "No account access needed — we deliver a complete guide you run yourself.",
-    starter: { price: 149, features: ["Step-by-step guide for 1 platform (Meta, TikTok, etc.)", "How to structure your campaigns", "Who to target and how", "What your ads should look like (brief + examples)", "How to split your budget"] },
-    growth: { price: 299, features: ["Step-by-step guides for 2 platforms", "Full campaign setup walkthrough", "Who to target + how to retarget people who already visited", "Ad creative guide with examples", "How to test what's working", "What numbers to aim for (industry benchmarks)"] },
-    pro: { price: 499, features: ["All platforms covered", "Full campaign guides for each", "The full customer journey mapped (awareness → purchase)", "Ad creative system you can repeat", "Testing playbook so you keep improving", "How to measure what's actually driving sales", "Competitor breakdown"] },
-  },
-  {
-    name: "Automation",
-    slug: "automation",
-    emoji: "⚡",
-    mostPopular: "pro" as const,
-    description: "Tell us what you do manually every day — we build a system that does it for you. New lead comes in? Notify Slack, add to your CRM, send a welcome email. All automatic.",
-    access: "We connect to your existing tools — CRM, email, Slack, spreadsheets, and more.",
-    starter: { price: 599, features: ["1 automated workflow built", "Connect up to 3 of your tools", "Triggered by one event (e.g. a form submission)", "Basic if/then logic (e.g. if they picked X, do Y)", "Full walkthrough so you know how it works"] },
-    growth: { price: 999, features: ["2–3 automated workflows built", "Connect up to 6 of your tools", "Multiple trigger events", "Complex branching (different paths based on different inputs)", "What happens if a step fails (so nothing gets lost)", "Fully tested before we hand it off"] },
-    pro: { price: 1799, features: ["Full automation system built", "Connect as many tools as you need", "Multi-step workflows with many connected pieces", "AI-powered decision making inside your workflows", "Alerts set up so you know if anything breaks", "Up to 5 team members", "Full written documentation of everything we built"] },
-  },
+type Tier = "starter" | "growth" | "pro";
+
+type SetupChannel = {
+  name: string;
+  slug: string;
+  emoji: string;
+  description: string;
+  pitch: string;
+  setupIncludes: string[];
+  subIncludes?: string[];
+  starter: { price: number; sub?: number; features: string[] };
+  growth: { price: number; sub?: number; features: string[] };
+  pro: { price: number; sub?: number; features: string[] };
+  mostPopular: Tier;
+};
+
+const ONE_TIME_CHANNELS: SetupChannel[] = [
   {
     name: "Website Build",
     slug: "website-build",
     emoji: "🌐",
-    mostPopular: "growth" as const,
-    description: "A fast, good-looking website that turns visitors into customers. Built from scratch or rebuilt the right way.",
-    access: "You give us access to your current site, or we build a brand new one and hand you the keys.",
-    starter: { price: 499, features: ["1–3 pages", "Pre-built design template", "Works on phones & tablets", "Contact form so people can reach you", "Published and live on the internet"] },
-    growth: { price: 899, features: ["4–6 pages", "Custom design made for your brand", "Connect a blog or product system you can edit yourself", "Forms that capture visitor info (name, email, etc.)", "Basic setup so Google can find you", "2 rounds of changes"] },
-    pro: { price: 1499, features: ["7–10 pages", "Fully custom design", "Connect your other tools (CRM, bookings, payments, etc.)", "Google Analytics installed so you can track visitors", "Full Google-ranking foundation", "Up to 5 team members", "3 rounds of changes"] },
+    description: "Fully custom site. No WordPress. No templates. No page builders.",
+    pitch: "Built once. Yours forever. We hand over the code.",
+    setupIncludes: [],
+    starter: {
+      price: 179,
+      features: [
+        "5 pages",
+        "Mobile ready",
+        "Contact form",
+        "Meta titles & descriptions",
+        "H1 structure",
+        "Schema markup",
+      ],
+    },
+    growth: {
+      price: 299,
+      features: [
+        "8 pages",
+        "Everything in Starter",
+        "Image optimization",
+        "Internal linking",
+        "Google Search Console setup",
+      ],
+    },
+    pro: {
+      price: 449,
+      features: [
+        "12 pages",
+        "Everything in Growth",
+        "Page speed optimization",
+        "Local SEO signals",
+        "GA4 connected",
+      ],
+    },
+    mostPopular: "growth",
   },
   {
-    name: "Organic Social",
-    slug: "organic-social",
-    emoji: "📱",
-    mostPopular: "starter" as const,
-    description: "Get your social profiles looking sharp, a bank of ready-to-post content, and a 3-month plan so you always know what to post next.",
-    access: "You add us as an admin on your social accounts so we can set everything up.",
-    starter: { price: 249, features: ["1 platform (Instagram, LinkedIn, etc.)", "Profile cleaned up and optimized", "10 ready-to-use post templates", "Weekly posting schedule", "Hashtag plan to help people find you"] },
-    growth: { price: 499, features: ["2 platforms", "Profile cleaned up and optimized", "20 ready-to-use post templates", "3-month content calendar (so you always know what to post)", "Scheduling tool set up so posts go out automatically", "Bio and profile visuals refreshed"] },
-    pro: { price: 899, features: ["3 platforms", "Full profile rebuild", "30+ ready-to-use post templates", "3-month content calendar", "Scheduling tool set up", "Core content themes defined (what your brand talks about)", "Up to 5 team members"] },
+    name: "Paid Social Playbook",
+    slug: "paid-social",
+    emoji: "📣",
+    description: "Custom playbook built around your ICP and offer. Not a template.",
+    pitch: "Meta won't let agencies touch your ad account. So we built something better — a roadmap you run.",
+    setupIncludes: [],
+    starter: {
+      price: 59,
+      features: [
+        "Meta only",
+        "Custom campaign framework",
+        "Audience guide",
+        "Ad copy templates",
+        "Creative brief",
+      ],
+    },
+    growth: {
+      price: 99,
+      features: [
+        "Meta + 1 platform (X, Reddit, or TikTok)",
+        "ICP-specific angle for each platform",
+        "Custom campaign framework",
+        "Audience guide",
+        "Ad copy templates",
+      ],
+    },
+    pro: {
+      price: 149,
+      features: [
+        "Meta + 2 or more platforms",
+        "X, Reddit, TikTok, Pinterest, LinkedIn",
+        "Full multi-platform playbook",
+        "Platform-specific creative briefs",
+        "Sequencing guide",
+      ],
+    },
+    mostPopular: "growth",
   },
+];
+
+const SETUP_PLUS_SUB_CHANNELS: SetupChannel[] = [
   {
     name: "SEM / Google Ads",
     slug: "sem-google-ads",
     emoji: "📊",
-    mostPopular: "growth" as const,
-    description: "We build your Google Ads account from the ground up — the right keywords, the right structure, tracking set up so you know what's working. Ready to spend on day one.",
-    access: "You connect us to your Google Ads account. May require a quick Google identity check (24–48 hrs).",
-    starter: { price: 399, features: ["1 ad type set up (e.g. search ads)", "Find the right keywords to bid on", "Write 2 versions of your ad copy", "Set up conversion tracking (know when someone buys or signs up)", "Basic bidding strategy so you don't overspend"] },
-    growth: { price: 799, features: ["2 ad types set up", "Full keyword map for your business", "Write 4 versions of your ad copy", "Conversion tracking with specific goals set", "Audience targeting set up", "Block irrelevant searches so you don't waste money"] },
-    pro: { price: 1399, features: ["All ad types set up", "Complete account structure built for scale", "Full library of ad copy variations", "Advanced conversion tracking across your whole funnel", "Target multiple audience segments", "Let Google automatically optimize your bids over time", "Monthly report template so you can track results"] },
+    description: "Built from scratch. Right keywords. Right structure. Tracking that works.",
+    pitch: "Setup gets you live. Optional 3-month management keeps it tuned.",
+    setupIncludes: [
+      "Campaign structure",
+      "Keyword research",
+      "Ad copy",
+      "Conversion tracking",
+    ],
+    subIncludes: [
+      "Weekly bid adjustments",
+      "1 campaign change per week",
+      "Monthly report",
+    ],
+    starter: { price: 149, sub: 99, features: [] },
+    growth: { price: 249, sub: 149, features: [] },
+    pro: { price: 399, sub: 199, features: [] },
+    mostPopular: "growth",
   },
   {
     name: "Analytics & Tracking",
     slug: "analytics-tracking",
     emoji: "📈",
-    mostPopular: "starter" as const,
-    description: "Install Google Analytics, Facebook Pixel, and every other tracking tool — then connect them so you can actually see what's driving sales.",
-    access: "You add us to your Google Analytics account via email invite. Simple.",
-    starter: { price: 199, features: ["Google Analytics 4 installed & configured", "Track key actions (form fills, button clicks, purchases)", "1 ad platform tracking code installed (Facebook, TikTok, etc.)", "Google Tag Manager set up (one place to manage all your tracking)", "Verified it's all working in real time"] },
-    growth: { price: 399, features: ["Google Analytics + Tag Manager fully configured", "3 ad platform tracking codes installed", "Every important action on your site tracked", "Custom data points tracked for your specific business", "Dashboard so you can see everything in one place"] },
-    pro: { price: 699, features: ["Full tracking stack installed and connected", "All ad platforms tracked", "Advanced event tracking across your whole site", "Custom reports built for your business", "Behind-the-scenes data layer so tracking is reliable long-term", "See which channels are actually driving sales (not just last click)", "Up to 5 team members"] },
+    description: "GA4, conversion events, dashboards. Know what's actually driving sales.",
+    pitch: "One-time setup. Optional 3-month babysitting if you want it watched.",
+    setupIncludes: [
+      "GA4",
+      "Conversion events",
+      "Dashboard build",
+    ],
+    subIncludes: [
+      "Monthly review",
+      "Alert monitoring",
+      "Dashboard updates",
+    ],
+    starter: { price: 99, sub: 49, features: [] },
+    growth: { price: 179, sub: 79, features: [] },
+    pro: { price: 279, sub: 99, features: [] },
+    mostPopular: "growth",
   },
   {
     name: "Email / Lifecycle",
     slug: "email-lifecycle",
     emoji: "📧",
-    mostPopular: "growth" as const,
-    description: "Automated emails that go out at the right time — welcoming new subscribers, re-engaging cold leads, keeping customers coming back. Set up once, runs on its own.",
-    access: "You invite us to your email platform (Klaviyo, Mailchimp, etc.) and we set it up for you.",
-    starter: { price: 249, features: ["1 automated email series", "Up to 3 emails in the series", "Pre-built email template", "Basic list sorting (e.g. new vs. returning)", "Connected to your email platform"] },
-    growth: { price: 499, features: ["2 automated email series", "Up to 5 emails per series", "Emails designed to match your brand", "Sort your list by behavior (clicked, didn't open, etc.)", "Test 2 subject lines to see which gets more opens", "Emails that trigger automatically based on what people do"] },
-    pro: { price: 899, features: ["3+ automated email series", "Full email journey mapped out (new lead → loyal customer)", "Smart list sorting based on interests & actions", "Emails that fire based on specific actions (bought, clicked, abandoned)", "Everything automated end-to-end", "Up to 5 team members", "Dashboard so you can see what's working"] },
-  },
-  {
-    name: "SEO / AEO Foundation",
-    slug: "seo-aeo",
-    emoji: "🔍",
-    mostPopular: "growth" as const,
-    description: "Get your site found on Google — and now AI tools like ChatGPT. We find the right keywords, fix hidden errors, and set up the tools that track your rankings.",
-    access: "We just need read-only access to your Google Search Console and website. No shared passwords.",
-    starter: { price: 349, features: ["Find 20 keywords your customers are searching for", "Set up Google Search Console (so Google knows your site exists)", "Add page titles & descriptions that show up in search results", "Create a sitemap (a map of your site that Google can read)", "Check for basic errors hurting your rankings"] },
-    growth: { price: 699, features: ["Find 50 keywords your customers are searching for", "Full Google Search Console + Google Analytics setup", "Optimize your existing pages to rank higher", "Fix technical errors found in the audit", "Plan your content so each page targets the right searches", "Add structured data so Google understands your pages better"] },
-    pro: { price: 1199, features: ["Find 100+ keywords your customers are searching for", "Deep technical audit with every issue fixed", "Every page optimized for search", "Content plan so you keep ranking over time", "Strategy to get other websites to link to yours", "Optimized to show up in AI search tools like ChatGPT & Perplexity", "Monthly reporting template so you can track progress"] },
-  },
-];
-
-const ADD_ONS = [
-  {
-    id: "automation",
-    name: "Automation Upgrade",
-    price: "+$499",
-    per: "per channel",
-    description: "Add automation to ANY channel package — turn your setup into a hands-free machine. Advanced sequences, conditional logic, and multi-step workflows built on top of whatever you're getting done.",
-  },
-  {
-    id: "rush",
-    name: "Rush Delivery",
-    price: "+$299",
-    per: "one-time",
-    description: "Need it faster? Rush gets you a 3-business-day turnaround instead of the standard 5–7.",
-  },
-  {
-    id: "playbook",
-    name: "Paid Social Playbook Bundle",
-    price: "+$99",
-    per: "add to any package",
-    description: "Add the complete Paid Social Playbook to any other setup package. Years of paid social experience, packaged for you to execute.",
-  },
-  {
-    id: "break-fix",
-    name: "Troubleshooting / Break Fix",
-    price: "$79",
-    per: "per incident",
-    description: "Something broke after handoff? Flat-fee fix. No drama, no retainer, no guessing.",
+    description: "Platform config, welcome sequence, list segmentation. Set up once.",
+    pitch: "Setup is one-time. Add 3 months of management if you want a hand on the wheel.",
+    setupIncludes: [
+      "Platform config",
+      "Welcome sequence",
+      "List segmentation",
+    ],
+    subIncludes: [
+      "Deliverability monitoring",
+      "1 new email per month",
+      "Performance report",
+    ],
+    starter: { price: 99, sub: 49, features: [] },
+    growth: { price: 179, sub: 79, features: [] },
+    pro: { price: 279, sub: 99, features: [] },
+    mostPopular: "growth",
   },
 ];
 
-const TIERS = [
-  { name: "Starter", color: "border-[#E5E7EB]", badge: "bg-[#F3F4F6] text-[#6B7280]", users: "1 user", scope: "Single use case, template-based, minimal integrations" },
-  { name: "Growth", color: "border-[#2563EB]", badge: "bg-blue-50 text-[#2563EB]", users: "2–3 users", scope: "Multiple use cases, basic automations, light integrations" },
-  { name: "Pro", color: "border-[#000000]", badge: "bg-[#000000] text-white", users: "Up to 5 users", scope: "Full feature setup, advanced config, integrations" },
+const TIERS: { key: Tier; name: string; users: string; scope: string; color: string; badge: string }[] = [
+  { key: "starter", name: "Starter", color: "border-[#E5E7EB]", badge: "bg-[#F3F4F6] text-[#6B7280]", users: "Solo / 1 use case", scope: "Single use case, lean setup" },
+  { key: "growth", name: "Growth", color: "border-[#2563EB]", badge: "bg-blue-50 text-[#2563EB]", users: "Small team", scope: "Multiple use cases, more depth" },
+  { key: "pro", name: "Pro", color: "border-[#000000]", badge: "bg-[#000000] text-white", users: "Full team", scope: "Full feature setup, advanced config" },
 ];
 
-type SelectedPackage = { slug: string; tier: "starter" | "growth" | "pro"; name: string; price: number };
+const AUTOMATION_RANGES = [
+  {
+    name: "Simple",
+    range: "$79–$149",
+    desc: "One trigger, one action.",
+    examples: "Lead notification, form to CRM, welcome email trigger.",
+  },
+  {
+    name: "Medium",
+    range: "$199–$349",
+    desc: "Multi-step flows.",
+    examples: "Onboarding sequence, review request chain, appointment reminders.",
+  },
+  {
+    name: "Complex",
+    range: "$399–$599",
+    desc: "Cross-platform, conditional logic, multiple triggers and actions.",
+    examples: "Anything you've been hand-stitching across 4+ tools.",
+  },
+];
+
+type Selection = { slug: string; tier: Tier; name: string; price: number };
 
 export default function PackagesContent() {
   const router = useRouter();
-  const [selected, setSelected] = useState<SelectedPackage[]>([]);
+  const [selected, setSelected] = useState<Selection[]>([]);
 
-  function togglePackage(slug: string, tier: "starter" | "growth" | "pro", name: string, price: number) {
+  function toggle(channel: SetupChannel, tier: Tier) {
+    const data = channel[tier];
     setSelected((prev) => {
-      const exists = prev.find((p) => p.slug === slug && p.tier === tier);
-      if (exists) return prev.filter((p) => !(p.slug === slug && p.tier === tier));
-      // Remove any other tier of the same channel
-      const filtered = prev.filter((p) => p.slug !== slug);
-      return [...filtered, { slug, tier, name, price }];
+      const exists = prev.find((p) => p.slug === channel.slug && p.tier === tier);
+      if (exists) return prev.filter((p) => !(p.slug === channel.slug && p.tier === tier));
+      const filtered = prev.filter((p) => p.slug !== channel.slug);
+      return [...filtered, { slug: channel.slug, tier, name: channel.name, price: data.price }];
     });
   }
 
-  function isSelected(slug: string, tier: "starter" | "growth" | "pro") {
+  function isSelected(slug: string, tier: Tier) {
     return selected.some((p) => p.slug === slug && p.tier === tier);
   }
 
   function handleConfigure() {
     if (selected.length === 0) return;
     if (selected.length === 1) {
-      // Single package — go through the configure page (intake preview + tier confirm)
       router.push(`/configure/${selected[0].slug}?tier=${selected[0].tier}`);
     } else {
-      // Multiple packages — skip individual configure pages, go straight to combined checkout
       const packagesParam = selected.map((p) => `${p.slug}:${p.tier}`).join(",");
       router.push(`/checkout?packages=${encodeURIComponent(packagesParam)}`);
     }
@@ -169,12 +231,15 @@ export default function PackagesContent() {
   return (
     <div className="min-h-screen bg-white text-[#000000]">
       {/* HEADER */}
-      <section className="bg-[#000000] text-white py-16">
+      <section className="bg-[#000000] text-white py-20">
         <div className="max-w-6xl mx-auto px-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">All packages</h1>
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">All packages</p>
+          <h1 className="text-5xl md:text-6xl font-black mb-6 leading-[0.95]">
+            One-time setups.<br />
+            <span className="text-[#2563EB]">Zero ongoing nonsense.</span>
+          </h1>
           <p className="text-xl text-gray-300 max-w-2xl">
-            8 channels. 3 tiers each. One-time price. Full setup in 5–7 business days.
-            Pick what you need. Pay once. Own it forever.
+            Pick what you need. Pay once. Own it forever. Optional management on a few — clearly priced, never hidden.
           </p>
         </div>
       </section>
@@ -184,7 +249,7 @@ export default function PackagesContent() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-4">
             {TIERS.map((tier) => (
-              <div key={tier.name} className={`bg-white rounded-xl p-5 border-2 ${tier.color}`}>
+              <div key={tier.key} className={`bg-white rounded-xl p-5 border-2 ${tier.color}`}>
                 <div className="flex items-center gap-3 mb-2">
                   <span className={`text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${tier.badge}`}>
                     {tier.name}
@@ -198,140 +263,148 @@ export default function PackagesContent() {
         </div>
       </section>
 
-      {/* CHANNEL CARDS */}
-      <section className="py-16">
+      {/* GROUP 1 — ONE TIME FOREVER */}
+      <GroupHeader
+        eyebrow="Group 1"
+        title="One-time. Forever."
+        description="Pay once. Get it. Own it. No subscription. No monthly invoice. Done."
+      />
+      <section className="pb-16">
         <div className="max-w-6xl mx-auto px-6 flex flex-col gap-16">
-          {CHANNELS.map((ch) => (
-            <div key={ch.slug} id={ch.slug}>
-              <div className="mb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-3xl">{ch.emoji}</span>
-                  <h2 className="text-2xl font-extrabold">{ch.name}</h2>
-                </div>
-                <p className="text-[#6B7280] mb-1">{ch.description}</p>
-                <p className="text-xs text-[#6B7280]">
-                  <span className="font-semibold">Access:</span> {ch.access}
-                </p>
-              </div>
-              <div className="grid md:grid-cols-3 gap-5">
-                {(["starter", "growth", "pro"] as const).map((tier) => {
-                  const data = ch[tier];
-                  const isPopular = ch.mostPopular === tier;
-                  const sel = isSelected(ch.slug, tier);
-                  const tierStyles = {
-                    starter: {
-                      border: sel ? "border-[#2563EB]" : "border-[#E5E7EB]",
-                      badge: "bg-[#F3F4F6] text-[#6B7280]",
-                      btn: sel
-                        ? "bg-[#2563EB] text-white border-2 border-[#2563EB]"
-                        : "border-2 border-[#2563EB] text-[#2563EB] hover:bg-[#2563EB] hover:text-white",
-                    },
-                    growth: {
-                      border: sel ? "border-[#2563EB]" : "border-[#2563EB]",
-                      badge: "bg-blue-50 text-[#2563EB]",
-                      btn: sel
-                        ? "bg-[#000000] text-white border-2 border-[#000000]"
-                        : "bg-[#2563EB] text-white hover:bg-blue-700",
-                    },
-                    pro: {
-                      border: sel ? "border-[#2563EB]" : "border-[#000000]",
-                      badge: "bg-[#000000] text-white",
-                      btn: sel
-                        ? "bg-[#2563EB] text-white border-2 border-[#2563EB]"
-                        : "border-2 border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-white",
-                    },
-                  };
-                  const styles = tierStyles[tier];
-
-                  return (
-                    <div
-                      key={tier}
-                      className={`border-2 ${styles.border} rounded-2xl p-6 flex flex-col relative transition-all duration-200 ${sel ? "ring-2 ring-[#2563EB] ring-offset-2" : ""}`}
-                    >
-                      {isPopular && !sel && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                          <span className="bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">
-                            Most popular
-                          </span>
-                        </div>
-                      )}
-                      {sel && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                          <span className="bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
-                            ✓ Selected
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between mb-4">
-                        <span className={`text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${styles.badge}`}>
-                          {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                        </span>
-                        <span className="text-2xl font-extrabold">${data.price}</span>
-                      </div>
-                      <ul className="flex flex-col gap-2 mb-6 flex-1">
-                        {data.features.map((f) => (
-                          <li key={f} className="text-sm text-[#6B7280] flex items-start gap-2">
-                            <span className="text-[#2563EB] mt-0.5">✓</span> {f}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => togglePackage(ch.slug, tier, ch.name, data.price)}
-                          className={`flex-1 font-bold py-2.5 rounded-xl transition-colors text-sm ${styles.btn}`}
-                        >
-                          {sel ? "Remove" : "Add to selection"}
-                        </button>
-                        <Link
-                          href={`/configure/${ch.slug}?tier=${tier}`}
-                          className="px-3 py-2.5 rounded-xl border-2 border-[#E5E7EB] text-[#6B7280] hover:border-[#000000] hover:text-[#000000] transition-colors text-sm font-medium"
-                          title="Configure now"
-                        >
-                          →
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          {ONE_TIME_CHANNELS.map((ch) => (
+            <ChannelBlock
+              key={ch.slug}
+              channel={ch}
+              isSelected={isSelected}
+              onToggle={toggle}
+            />
           ))}
         </div>
       </section>
 
-      {/* ADD-ONS */}
-      <section className="bg-[#F3F4F6] py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-extrabold mb-2">Add-ons</h2>
-          <p className="text-[#6B7280] mb-10">Stack these on top of any package at checkout.</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {ADD_ONS.map((addon) => (
-              <div key={addon.id} className="bg-white rounded-2xl p-6 border border-[#E5E7EB]">
-                <p className="font-bold text-lg mb-1">{addon.name}</p>
-                <p className="text-[#2563EB] font-extrabold text-xl mb-1">{addon.price}</p>
-                <p className="text-xs text-[#6B7280] mb-3">{addon.per}</p>
-                <p className="text-sm text-[#6B7280] leading-relaxed">{addon.description}</p>
-              </div>
+      {/* GROUP 2 — SETUP + OPTIONAL MANAGEMENT */}
+      <div className="bg-[#F8F8F8]">
+        <GroupHeader
+          eyebrow="Group 2"
+          title="Setup + optional management"
+          description="One-time setup. Optional 3-month management subscription if you want a hand on the wheel. Cancel after 3. Both prices shown clearly."
+          dark
+        />
+        <section className="pb-16">
+          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-16">
+            {SETUP_PLUS_SUB_CHANNELS.map((ch) => (
+              <ChannelBlock
+                key={ch.slug}
+                channel={ch}
+                isSelected={isSelected}
+                onToggle={toggle}
+              />
             ))}
+          </div>
+        </section>
+      </div>
+
+      {/* GROUP 3 — CUSTOM (AUTOMATION) */}
+      <GroupHeader
+        eyebrow="Group 3"
+        title="Custom — built to your problem"
+        description="Automation isn't a template. Tell us what's eating your time. We scope it, quote it, build it."
+      />
+      <section className="pb-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="border-2 border-[#000000] rounded-3xl overflow-hidden">
+            <div className="bg-[#000000] text-white p-8">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-3xl">⚡</span>
+                <h2 className="text-2xl font-extrabold">Automation</h2>
+                <span className="bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">Custom Quote</span>
+              </div>
+              <p className="text-gray-300 max-w-2xl">
+                Walk us through what you do manually every day. We&apos;ll build a system that does it for you and tell you the price upfront.
+              </p>
+            </div>
+            <div className="p-8 grid md:grid-cols-3 gap-5 bg-white">
+              {AUTOMATION_RANGES.map((r) => (
+                <div key={r.name} className="border border-[#E5E7EB] rounded-2xl p-6">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-2">{r.name}</p>
+                  <p className="text-2xl font-black mb-3">{r.range}</p>
+                  <p className="font-semibold text-sm mb-2">{r.desc}</p>
+                  <p className="text-sm text-[#6B7280] leading-relaxed">{r.examples}</p>
+                </div>
+              ))}
+            </div>
+            <div className="bg-white border-t border-[#EBEBEB] p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-[#6B7280] text-sm">No off-the-shelf packages. Real quote in 24 hours.</p>
+              <Link
+                href="/support?topic=automation"
+                className="bg-[#2563EB] text-white font-bold px-7 py-3 rounded-full hover:bg-blue-700 transition-colors"
+              >
+                Tell us what&apos;s eating your time →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* GROUP 4 — RECURRING (BURNRATE) */}
+      <div className="bg-[#000000] text-white">
+        <GroupHeader
+          eyebrow="Group 4"
+          title="Recurring — Burnrate"
+          description="The only thing on this site you pay monthly. Worth it."
+          dark
+        />
+        <section className="pb-24">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="bg-[#0A0A0A] border-2 border-[#2563EB] rounded-3xl p-8 md:p-12 grid md:grid-cols-2 gap-10 items-center">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-3">SaaS · Standalone or add-on</p>
+                <h2 className="text-4xl md:text-5xl font-black mb-4 leading-[0.95]">Burnrate</h2>
+                <p className="text-gray-300 mb-6 text-lg leading-relaxed">
+                  Connects Google Ads and Meta. Runs weekly waste detection. Flags paid/organic keyword overlap. Sends you a prioritized fix list.
+                </p>
+                <ul className="space-y-2 text-gray-300 text-sm mb-6">
+                  <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> OAuth onboarding — no manual uploads, no calls</li>
+                  <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> First report in 24 hours</li>
+                  <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> Cancel anytime</li>
+                </ul>
+              </div>
+              <div className="bg-black border border-[#1F2937] rounded-2xl p-6 space-y-4">
+                <div className="flex items-baseline justify-between border-b border-[#1F2937] pb-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Standard</p>
+                    <p className="text-3xl font-black">$29<span className="text-base font-bold text-gray-400">/mo</span></p>
+                  </div>
+                  <p className="text-xs text-gray-500">Cancel anytime</p>
+                </div>
+                <div className="flex items-baseline justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-1">Founder · First 100</p>
+                    <p className="text-3xl font-black text-[#2563EB]">$17.99<span className="text-base font-bold text-blue-400">/mo</span></p>
+                    <p className="text-xs text-gray-400 mt-1">Locked forever</p>
+                  </div>
+                </div>
+                <Link
+                  href="/burnrate"
+                  className="block w-full text-center bg-[#2563EB] text-white font-bold py-3 rounded-full hover:bg-blue-700 transition-colors"
+                >
+                  See Burnrate →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
       {/* CTA */}
-      <section className="bg-[#2563EB] py-16">
+      <section className="bg-white py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
-            Not sure where to start?
+          <h2 className="text-3xl md:text-5xl font-black mb-4 leading-[0.95]">
+            Pick a channel.<br />Get on with your day.
           </h2>
-          <p className="text-blue-100 mb-8">
-            Use the configurator. Answer a few questions. Get a quote. If you&apos;re stuck — let the llamas decide.
+          <p className="text-[#6B7280] mb-8 text-lg">
+            Not sure where to start? Just pick the one that&apos;s been sitting on your to-do list the longest.
           </p>
-          <Link
-            href="/packages#paid-social"
-            className="inline-block bg-white text-[#2563EB] font-bold text-lg px-10 py-4 rounded-xl hover:bg-blue-50 transition-colors"
-          >
-            Pick a channel above
-          </Link>
         </div>
       </section>
 
@@ -351,7 +424,7 @@ export default function PackagesContent() {
                   >
                     {p.name} — {p.tier.charAt(0).toUpperCase() + p.tier.slice(1)}
                     <button
-                      onClick={() => togglePackage(p.slug, p.tier, p.name, p.price)}
+                      onClick={() => setSelected((prev) => prev.filter((x) => !(x.slug === p.slug && x.tier === p.tier)))}
                       className="text-[#6B7280] hover:text-red-500 transition-colors leading-none ml-0.5"
                       aria-label={`Remove ${p.name}`}
                     >
@@ -363,7 +436,7 @@ export default function PackagesContent() {
             </div>
             <div className="flex items-center gap-4 shrink-0">
               <div className="text-right hidden sm:block">
-                <p className="text-xs text-[#6B7280]">Total from</p>
+                <p className="text-xs text-[#6B7280]">Setup total</p>
                 <p className="text-xl font-extrabold">${totalSelected.toLocaleString()}</p>
               </div>
               <button
@@ -377,8 +450,160 @@ export default function PackagesContent() {
         </div>
       )}
 
-      {/* Bottom padding so content isn't hidden behind sticky bar */}
       {selected.length > 0 && <div className="h-28" />}
+    </div>
+  );
+}
+
+function GroupHeader({
+  eyebrow,
+  title,
+  description,
+  dark = false,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  dark?: boolean;
+}) {
+  return (
+    <section className="pt-16 pb-10">
+      <div className="max-w-6xl mx-auto px-6">
+        <p className={`text-xs font-bold tracking-widest uppercase mb-3 ${dark ? "text-[#2563EB]" : "text-[#2563EB]"}`}>
+          {eyebrow}
+        </p>
+        <h2 className={`text-3xl md:text-4xl font-black mb-3 ${dark ? "text-white" : "text-[#000000]"}`}>
+          {title}
+        </h2>
+        <p className={`max-w-2xl ${dark ? "text-gray-300" : "text-[#6B7280]"}`}>{description}</p>
+      </div>
+    </section>
+  );
+}
+
+function ChannelBlock({
+  channel,
+  isSelected,
+  onToggle,
+}: {
+  channel: SetupChannel;
+  isSelected: (slug: string, tier: Tier) => boolean;
+  onToggle: (channel: SetupChannel, tier: Tier) => void;
+}) {
+  const hasSub = !!channel.starter.sub;
+
+  return (
+    <div id={channel.slug}>
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-2 flex-wrap">
+          <span className="text-3xl">{channel.emoji}</span>
+          <h2 className="text-2xl font-extrabold">{channel.name}</h2>
+          {hasSub && (
+            <span className="bg-blue-50 text-[#2563EB] text-xs font-bold uppercase tracking-widest px-2.5 py-1 rounded">
+              Setup + optional 3-mo sub
+            </span>
+          )}
+        </div>
+        <p className="text-[#000000] mb-1 font-medium">{channel.description}</p>
+        <p className="text-sm text-[#6B7280]">{channel.pitch}</p>
+
+        {channel.setupIncludes.length > 0 && (
+          <div className="mt-4 grid md:grid-cols-2 gap-4">
+            <div className="bg-white border border-[#E5E7EB] rounded-xl p-4">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#000000] mb-2">Setup includes</p>
+              <ul className="text-sm text-[#6B7280] space-y-1">
+                {channel.setupIncludes.map((s) => (
+                  <li key={s} className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span>{s}</li>
+                ))}
+              </ul>
+            </div>
+            {channel.subIncludes && (
+              <div className="bg-white border border-[#2563EB] rounded-xl p-4">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-2">3-month management includes</p>
+                <ul className="text-sm text-[#6B7280] space-y-1">
+                  {channel.subIncludes.map((s) => (
+                    <li key={s} className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span>{s}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-5">
+        {(["starter", "growth", "pro"] as const).map((tier) => {
+          const data = channel[tier];
+          const isPopular = channel.mostPopular === tier;
+          const sel = isSelected(channel.slug, tier);
+          const tierStyles = {
+            starter: { border: sel ? "border-[#2563EB]" : "border-[#E5E7EB]", badge: "bg-[#F3F4F6] text-[#6B7280]", btn: sel ? "bg-[#2563EB] text-white border-2 border-[#2563EB]" : "border-2 border-[#2563EB] text-[#2563EB] hover:bg-[#2563EB] hover:text-white" },
+            growth:  { border: sel ? "border-[#2563EB]" : "border-[#2563EB]", badge: "bg-blue-50 text-[#2563EB]",   btn: sel ? "bg-[#000000] text-white border-2 border-[#000000]" : "bg-[#2563EB] text-white hover:bg-blue-700" },
+            pro:     { border: sel ? "border-[#2563EB]" : "border-[#000000]", badge: "bg-[#000000] text-white",      btn: sel ? "bg-[#2563EB] text-white border-2 border-[#2563EB]" : "border-2 border-[#000000] text-[#000000] hover:bg-[#000000] hover:text-white" },
+          };
+          const styles = tierStyles[tier];
+
+          return (
+            <div
+              key={tier}
+              className={`bg-white border-2 ${styles.border} rounded-2xl p-6 flex flex-col relative transition-all duration-200 ${sel ? "ring-2 ring-[#2563EB] ring-offset-2" : ""}`}
+            >
+              {isPopular && !sel && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">
+                    Most popular
+                  </span>
+                </div>
+              )}
+              {sel && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
+                    ✓ Selected
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center justify-between mb-4">
+                <span className={`text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${styles.badge}`}>
+                  {tier.charAt(0).toUpperCase() + tier.slice(1)}
+                </span>
+                <div className="text-right">
+                  <p className="text-2xl font-extrabold">${data.price}</p>
+                  {data.sub !== undefined && (
+                    <p className="text-xs text-[#6B7280] mt-0.5">
+                      <span className="font-semibold text-[#000000]">+ optional</span> ${data.sub}/mo · 3 mo
+                    </p>
+                  )}
+                </div>
+              </div>
+              {data.features.length > 0 && (
+                <ul className="flex flex-col gap-2 mb-6 flex-1">
+                  {data.features.map((f) => (
+                    <li key={f} className="text-sm text-[#6B7280] flex items-start gap-2">
+                      <span className="text-[#2563EB] mt-0.5">✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {data.features.length === 0 && <div className="flex-1" />}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => onToggle(channel, tier)}
+                  className={`flex-1 font-bold py-2.5 rounded-xl transition-colors text-sm ${styles.btn}`}
+                >
+                  {sel ? "Remove" : "Add to selection"}
+                </button>
+                <Link
+                  href={`/configure/${channel.slug}?tier=${tier}`}
+                  className="px-3 py-2.5 rounded-xl border-2 border-[#E5E7EB] text-[#6B7280] hover:border-[#000000] hover:text-[#000000] transition-colors text-sm font-medium"
+                  title="Configure now"
+                >
+                  →
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -27,6 +27,28 @@ export async function POST(req: NextRequest) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
+    // Burnrate subscription sessions: record the signup so the founder counter increments.
+    if (session.metadata?.product === "burnrate") {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+      const plan = session.metadata.plan ?? "standard";
+      const { error: brErr } = await supabase
+        .from("burnrate_subscriptions")
+        .insert({
+          stripe_session_id: session.id,
+          stripe_subscription_id: typeof session.subscription === "string" ? session.subscription : null,
+          stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+          customer_email: session.customer_details?.email ?? null,
+          plan,
+          status: "active",
+          is_founder: plan === "founder",
+        });
+      if (brErr) console.error("Failed to record Burnrate signup:", brErr);
+      return NextResponse.json({ received: true, product: "burnrate" });
+    }
+
     // Support both legacy single order_id and new multi-order order_ids
     let orderIds: string[] = [];
     if (session.metadata?.order_ids) {
@@ -50,6 +72,30 @@ export async function POST(req: NextRequest) {
     );
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+    // If this session included 3-mo management subscriptions, record them.
+    if (session.metadata?.has_mgmt_sub === "true" && session.metadata.mgmt_subs) {
+      try {
+        const mgmtSubs: Array<{ orderId: string; channel: string; tier: string; monthly: number }> =
+          JSON.parse(session.metadata.mgmt_subs);
+        const subscriptionId = typeof session.subscription === "string" ? session.subscription : null;
+        const rows = mgmtSubs.map((m) => ({
+          order_id: m.orderId,
+          stripe_session_id: session.id,
+          stripe_subscription_id: subscriptionId,
+          channel: m.channel,
+          tier: m.tier,
+          monthly_amount: m.monthly * 100,
+          status: "active",
+        }));
+        if (rows.length) {
+          const { error: msErr } = await supabase.from("management_subscriptions").insert(rows);
+          if (msErr) console.error("Failed to record management subscriptions:", msErr);
+        }
+      } catch (e) {
+        console.error("Failed to parse mgmt_subs metadata:", e);
+      }
+    }
 
     // Mark all orders as paid and send a confirmation email for each
     for (const orderId of orderIds) {

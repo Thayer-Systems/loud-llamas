@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 // Derive Stripe types from the SDK's create-method signature so we don't depend
 // on whichever namespace shape this version of stripe-node exposes.
-type CreateSessionParams = Parameters<typeof stripe.checkout.sessions.create>[0];
+type CreateSessionParams = NonNullable<Parameters<typeof stripe.checkout.sessions.create>[0]>;
 type LineItem = NonNullable<CreateSessionParams["line_items"]>[number];
 type SubscriptionData = NonNullable<CreateSessionParams["subscription_data"]>;
 type AddInvoiceItem = NonNullable<SubscriptionData["add_invoice_items"]>[number];

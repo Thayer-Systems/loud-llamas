@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { createClient } from "@supabase/supabase-js";
 
 const PRICES: Record<string, Record<string, number>> = {
-  "website-build":     { starter: 499,  growth: 899,  pro: 1499 },
-  "email-lifecycle":   { starter: 249,  growth: 499,  pro: 899  },
-  "organic-social":    { starter: 249,  growth: 499,  pro: 899  },
-  "seo-aeo":           { starter: 349,  growth: 699,  pro: 1199 },
-  "paid-social":       { starter: 149,  growth: 299,  pro: 499  },
-  "sem-google-ads":    { starter: 399,  growth: 799,  pro: 1399 },
-  "analytics-tracking":{ starter: 199,  growth: 399,  pro: 699  },
-  "automation":        { starter: 599,  growth: 999,  pro: 1799 },
+  "website-build":     { starter: 179, growth: 299, pro: 449 },
+  "email-lifecycle":   { starter: 99,  growth: 179, pro: 279 },
+  "organic-social":    { starter: 249, growth: 499, pro: 899 },
+  "seo-aeo":           { starter: 349, growth: 699, pro: 1199 },
+  "paid-social":       { starter: 59,  growth: 99,  pro: 149 },
+  "sem-google-ads":    { starter: 149, growth: 249, pro: 399 },
+  "analytics-tracking":{ starter: 99,  growth: 179, pro: 279 },
+  "automation":        { starter: 79,  growth: 199, pro: 399 },
+};
+
+// Optional 3-month management subscription per channel/tier (USD/month)
+const MGMT_SUB_PRICES: Record<string, Record<string, number>> = {
+  "sem-google-ads":     { starter: 99, growth: 149, pro: 199 },
+  "analytics-tracking": { starter: 49, growth: 79,  pro: 99  },
+  "email-lifecycle":    { starter: 49, growth: 79,  pro: 99  },
 };
 
 const CHANNEL_NAMES: Record<string, string> = {
@@ -36,16 +44,18 @@ const ADD_ON_NAMES: Record<string, string> = {
   playbook:   "Paid Social Playbook Bundle",
 };
 
-type PkgInput = { channel: string; tier: string; addOns?: string[] };
+type PkgInput = { channel: string; tier: string; addOns?: string[]; mgmtSub?: boolean };
+
+const THREE_MONTHS_SECONDS = 60 * 60 * 24 * 90;
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { customerName, customerEmail } = body;
 
-    // Support both { packages: [...] } and legacy { channel, tier, addOns }
+    // Support both { packages: [...] } and legacy { channel, tier, addOns, mgmtSub }
     const packages: PkgInput[] = body.packages ?? [
-      { channel: body.channel, tier: body.tier, addOns: body.addOns ?? [] },
+      { channel: body.channel, tier: body.tier, addOns: body.addOns ?? [], mgmtSub: !!body.mgmtSub },
     ];
 
     if (!packages.length) {
@@ -60,6 +70,12 @@ export async function POST(req: NextRequest) {
           { status: 400 }
         );
       }
+      if (pkg.mgmtSub && !MGMT_SUB_PRICES[pkg.channel]?.[pkg.tier]) {
+        return NextResponse.json(
+          { error: `Channel ${pkg.channel} doesn't offer a management subscription` },
+          { status: 400 }
+        );
+      }
     }
 
     const supabase = createClient(
@@ -68,13 +84,24 @@ export async function POST(req: NextRequest) {
     );
 
     // Create one Supabase order per package
-    const createdOrders: Array<{ id: string; channel: string; tier: string; addOns: string[]; basePrice: number; deliveryDays: number }> = [];
+    type CreatedOrder = {
+      id: string;
+      channel: string;
+      tier: string;
+      addOns: string[];
+      basePrice: number;
+      deliveryDays: number;
+      mgmtSub: boolean;
+      mgmtSubMonthly: number;
+    };
+    const createdOrders: CreatedOrder[] = [];
 
     for (const pkg of packages) {
       const addOns = pkg.addOns ?? [];
       const basePrice = PRICES[pkg.channel][pkg.tier];
       const addOnTotal = addOns.reduce((sum, a) => sum + (ADD_ON_PRICES[a] ?? 0), 0);
       const deliveryDays = addOns.includes("rush") ? 3 : 7;
+      const mgmtSubMonthly = pkg.mgmtSub ? (MGMT_SUB_PRICES[pkg.channel]?.[pkg.tier] ?? 0) : 0;
 
       const { data: order, error: orderError } = await supabase
         .from("orders")
@@ -96,71 +123,164 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
       }
 
-      createdOrders.push({ id: order.id, channel: pkg.channel, tier: pkg.tier, addOns, basePrice, deliveryDays });
-    }
-
-    // Build Stripe line items for all packages
-    const lineItems: {
-      price_data: {
-        currency: "usd";
-        product_data: { name: string; description: string };
-        unit_amount: number;
-      };
-      quantity: 1;
-    }[] = [];
-
-    for (const o of createdOrders) {
-      lineItems.push({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: `${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}`,
-            description: `Full setup handoff in ${o.deliveryDays} business days. You own it forever.`,
-          },
-          unit_amount: o.basePrice * 100,
-        },
-        quantity: 1,
+      createdOrders.push({
+        id: order.id,
+        channel: pkg.channel,
+        tier: pkg.tier,
+        addOns,
+        basePrice,
+        deliveryDays,
+        mgmtSub: !!pkg.mgmtSub,
+        mgmtSubMonthly,
       });
-
-      for (const addOn of o.addOns) {
-        if (ADD_ON_PRICES[addOn]) {
-          lineItems.push({
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: ADD_ON_NAMES[addOn] ?? addOn,
-                description: `Add-on for ${CHANNEL_NAMES[o.channel]}`,
-              },
-              unit_amount: ADD_ON_PRICES[addOn] * 100,
-            },
-            quantity: 1,
-          });
-        }
-      }
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
-    // Build intake chain URL: first order's intake, rest queued as nextOrders
     const [firstOrder, ...remaining] = createdOrders;
     const nextOrdersParam = remaining.length
       ? `&nextOrders=${encodeURIComponent(remaining.map((o) => o.id).join(","))}`
       : "";
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: lineItems,
-      mode: "payment",
-      allow_promotion_codes: true,
-      payment_intent_data: { statement_descriptor: "LOUD LLAMAS" },
-      customer_email: customerEmail || undefined,
-      metadata: {
-        // Store all order IDs so the webhook can mark them all paid
-        order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
-      },
-      success_url: `${appUrl}/intake/${firstOrder.id}?paid=1${nextOrdersParam}`,
-      cancel_url: `${appUrl}/packages`,
-    });
+    const hasAnyMgmtSub = createdOrders.some((o) => o.mgmtSub);
+
+    let session: Stripe.Checkout.Session;
+
+    if (!hasAnyMgmtSub) {
+      // ---- Existing one-time payment flow ----
+      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+      for (const o of createdOrders) {
+        lineItems.push({
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}`,
+              description: `Full setup handoff in ${o.deliveryDays} business days. You own it forever.`,
+            },
+            unit_amount: o.basePrice * 100,
+          },
+          quantity: 1,
+        });
+        for (const addOn of o.addOns) {
+          if (ADD_ON_PRICES[addOn]) {
+            lineItems.push({
+              price_data: {
+                currency: "usd",
+                product_data: {
+                  name: ADD_ON_NAMES[addOn] ?? addOn,
+                  description: `Add-on for ${CHANNEL_NAMES[o.channel]}`,
+                },
+                unit_amount: ADD_ON_PRICES[addOn] * 100,
+              },
+              quantity: 1,
+            });
+          }
+        }
+      }
+
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: lineItems,
+        mode: "payment",
+        allow_promotion_codes: true,
+        payment_intent_data: { statement_descriptor: "LOUD LLAMAS" },
+        customer_email: customerEmail || undefined,
+        metadata: {
+          order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
+        },
+        success_url: `${appUrl}/intake/${firstOrder.id}?paid=1${nextOrdersParam}`,
+        cancel_url: `${appUrl}/packages`,
+      });
+    } else {
+      // ---- Subscription flow (one or more 3-mo mgmt subs + one-time setups on first invoice) ----
+      // Recurring line items: each mgmt sub is its own line item
+      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+      const mgmtSubsMeta: Array<{ orderId: string; channel: string; tier: string; monthly: number }> = [];
+
+      for (const o of createdOrders) {
+        if (o.mgmtSub && o.mgmtSubMonthly > 0) {
+          lineItems.push({
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: `${CHANNEL_NAMES[o.channel]} — Management (3 mo)`,
+                description: `3-month optional management for ${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}. Auto-cancels after 3 charges.`,
+              },
+              unit_amount: o.mgmtSubMonthly * 100,
+              recurring: { interval: "month" },
+            },
+            quantity: 1,
+          });
+          mgmtSubsMeta.push({
+            orderId: o.id,
+            channel: o.channel,
+            tier: o.tier,
+            monthly: o.mgmtSubMonthly,
+          });
+        }
+      }
+
+      // One-time charges (setup + addons) added to the first invoice
+      type AddInvoiceItem = {
+        price_data: {
+          currency: "usd";
+          product_data: { name: string };
+          unit_amount: number;
+        };
+        quantity: 1;
+      };
+      const addInvoiceItems: AddInvoiceItem[] = [];
+      for (const o of createdOrders) {
+        addInvoiceItems.push({
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: `${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)} (Setup)`,
+            },
+            unit_amount: o.basePrice * 100,
+          },
+          quantity: 1,
+        });
+        for (const addOn of o.addOns) {
+          if (ADD_ON_PRICES[addOn]) {
+            addInvoiceItems.push({
+              price_data: {
+                currency: "usd",
+                product_data: { name: ADD_ON_NAMES[addOn] ?? addOn },
+                unit_amount: ADD_ON_PRICES[addOn] * 100,
+              },
+              quantity: 1,
+            });
+          }
+        }
+      }
+
+      const cancelAt = Math.floor(Date.now() / 1000) + THREE_MONTHS_SECONDS;
+
+      session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: lineItems,
+        mode: "subscription",
+        allow_promotion_codes: true,
+        customer_email: customerEmail || undefined,
+        metadata: {
+          order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
+          has_mgmt_sub: "true",
+          mgmt_subs: JSON.stringify(mgmtSubsMeta),
+        },
+        subscription_data: {
+          cancel_at: cancelAt,
+          // Cast: stripe-node's nested type name varies across versions; the runtime
+          // shape matches the API contract.
+          add_invoice_items: addInvoiceItems as unknown as Stripe.Checkout.SessionCreateParams.SubscriptionData["add_invoice_items"],
+          metadata: {
+            order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
+            mgmt_subs: JSON.stringify(mgmtSubsMeta),
+          },
+        },
+        success_url: `${appUrl}/intake/${firstOrder.id}?paid=1${nextOrdersParam}`,
+        cancel_url: `${appUrl}/packages`,
+      });
+    }
 
     // Save Stripe session ID back to all orders
     await supabase
@@ -171,6 +291,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("Checkout error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : "Internal server error";
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

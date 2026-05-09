@@ -21,8 +21,9 @@ export default function Footer() {
 
         <div className="flex flex-wrap justify-center gap-6 text-sm">
           <Link href="/packages" className="hover:text-white transition-colors">Packages</Link>
-          <Link href="/#how-it-works" className="hover:text-white transition-colors">How It Works</Link>
-          <Link href="/#faq" className="hover:text-white transition-colors">FAQ</Link>
+          <Link href="/burnrate" className="hover:text-[#2563EB] transition-colors font-semibold">Burnrate</Link>
+          <Link href="/how-it-works" className="hover:text-white transition-colors">How It Works</Link>
+          <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
           <Link href="/support" className="hover:text-white transition-colors">Support</Link>
         </div>
 

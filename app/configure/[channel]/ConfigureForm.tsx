@@ -25,8 +25,8 @@ type ChannelConfig = {
 const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
   "website-build": {
     name: "Website Build",
-    description: "A fast, good-looking website that turns visitors into customers. Built from scratch or rebuilt the right way.",
-    tiers: [{ name: "Starter", price: 499 }, { name: "Growth", price: 899 }, { name: "Pro", price: 1499 }],
+    description: "A fully custom website built from scratch. No WordPress. No templates. No page builders. Built fast, owned forever.",
+    tiers: [{ name: "Starter", price: 179 }, { name: "Growth", price: 299 }, { name: "Pro", price: 449 }],
     questions: [
       { key: "existing_site", question: "Do you have an existing website we're replacing?", type: "grid", options: ["Yes", "No — starting fresh"], critical: true },
       { key: "goal", question: "What do you want the site to do for your business?", type: "grid", options: ["Get people to contact me", "Sell products online", "Show off my work / portfolio", "Share information about my business"], critical: true },
@@ -40,8 +40,8 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
   },
   "email-lifecycle": {
     name: "Email / Lifecycle",
-    description: "Automated emails that go out at the right time. Set up once, runs on its own.",
-    tiers: [{ name: "Starter", price: 249 }, { name: "Growth", price: 499 }, { name: "Pro", price: 899 }],
+    description: "Platform config, welcome sequence, list segmentation. Set up once, runs without you.",
+    tiers: [{ name: "Starter", price: 99 }, { name: "Growth", price: 179 }, { name: "Pro", price: 279 }],
     questions: [
       { key: "platform", question: "What email tool are you using?", type: "grid", options: ["Klaviyo", "Mailchimp", "ActiveCampaign", "I don't have one yet", "Something else"], critical: true },
       { key: "goal", question: "What's the main thing you want these emails to do?", type: "grid", options: ["Welcome new subscribers / customers", "Remind people who didn't finish buying", "Stay in touch with leads until they're ready to buy", "Keep existing customers coming back"], critical: true },
@@ -82,8 +82,8 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
   },
   "paid-social": {
     name: "Paid Social Playbook",
-    description: "A complete step-by-step guide to run your own social ads — built from real campaigns.",
-    tiers: [{ name: "Starter", price: 149 }, { name: "Growth", price: 299 }, { name: "Pro", price: 499 }],
+    description: "A custom playbook built around your ICP and your offer. Not a template. You run the ads — we built the roadmap.",
+    tiers: [{ name: "Starter", price: 59 }, { name: "Growth", price: 99 }, { name: "Pro", price: 149 }],
     questions: [
       { key: "platforms", question: "Which platforms do you want to run ads on?", type: "multiselect", options: ["Facebook / Instagram (Meta)", "TikTok", "LinkedIn", "Pinterest"], critical: true },
       { key: "budget", question: "How much are you planning to spend on ads per month?", type: "grid", options: ["Under $500", "$500–$2,000", "Over $2,000"], critical: true },
@@ -96,8 +96,8 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
   },
   "sem-google-ads": {
     name: "SEM / Google Ads",
-    description: "We build your Google Ads account from scratch — the right keywords, the right setup, tracking so you know what's working.",
-    tiers: [{ name: "Starter", price: 399 }, { name: "Growth", price: 799 }, { name: "Pro", price: 1399 }],
+    description: "Campaign structure, keyword research, ad copy, and conversion tracking — set up and ready to spend on day one.",
+    tiers: [{ name: "Starter", price: 149 }, { name: "Growth", price: 249 }, { name: "Pro", price: 399 }],
     questions: [
       { key: "existing_account", question: "Do you already have a Google Ads account?", type: "grid", options: ["Yes", "No — starting fresh"], critical: true },
       { key: "budget", question: "How much are you planning to spend on Google Ads per month?", type: "grid", options: ["Under $500", "$500–$2,000", "Over $2,000"], critical: true },
@@ -110,8 +110,8 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
   },
   "analytics-tracking": {
     name: "Analytics & Tracking",
-    description: "Install Google Analytics, ad tracking codes, and connect everything — so you can see what's actually driving results.",
-    tiers: [{ name: "Starter", price: 199 }, { name: "Growth", price: 399 }, { name: "Pro", price: 699 }],
+    description: "GA4, conversion events, and a dashboard that actually tells you what's driving sales. Installed, configured, verified.",
+    tiers: [{ name: "Starter", price: 99 }, { name: "Growth", price: 179 }, { name: "Pro", price: 279 }],
     questions: [
       { key: "platforms", question: "Which platforms do you want to track? (Select all that apply)", type: "multiselect", options: ["Google Analytics", "Facebook / Instagram tracking", "Google Ads tracking", "TikTok tracking", "LinkedIn tracking"], critical: true },
       { key: "gtm", question: "Do you have Google Tag Manager installed? (A free tool that manages all your tracking in one place)", type: "grid", options: ["Yes", "No", "Not sure"], critical: true },
@@ -123,8 +123,8 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
   },
   "automation": {
     name: "Automation",
-    description: "Tell us what you do manually every day — we build a system that does it for you automatically.",
-    tiers: [{ name: "Starter", price: 599 }, { name: "Growth", price: 999 }, { name: "Pro", price: 1799 }],
+    description: "Tell us what's eating your time. We build a system that does it for you. Custom quoted — no off-the-shelf packages.",
+    tiers: [{ name: "Starter", price: 79 }, { name: "Growth", price: 199 }, { name: "Pro", price: 399 }],
     questions: [
       { key: "process", question: "What's the task or process you want to stop doing manually? Describe it in plain terms.", type: "text", critical: true },
       { key: "tools", question: "What tools or apps are involved in this process?", type: "multiselect", options: ["CRM (e.g. HubSpot, Salesforce)", "Email (e.g. Gmail, Mailchimp)", "Slack", "Google Sheets / Excel", "Zapier or Make", "Airtable", "Notion", "Custom system / API", "Other"], critical: true },
@@ -138,6 +138,16 @@ const CHANNEL_CONFIGS: Record<string, ChannelConfig> = {
 };
 
 const LLAMAS_DECIDE = "Let The Llamas Decide";
+
+// Per-channel tier display overrides. Internal tier values stay starter/growth/pro
+// for routing; this lets us show different labels and price ranges where it makes sense.
+const TIER_DISPLAY: Record<string, Record<string, { label: string; price: string }>> = {
+  automation: {
+    Starter: { label: "Simple", price: "$79–$149" },
+    Growth:  { label: "Medium", price: "$199–$349" },
+    Pro:     { label: "Complex", price: "$399–$599" },
+  },
+};
 
 type Answers = Record<string, string | string[]>;
 
@@ -191,8 +201,14 @@ export default function ConfigureForm({
   });
   const allCriticalAnswered = tier && answeredCritical.length === criticalQuestions.length;
 
-  function handleGoToCheckout() {
-    router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}`);
+  const isCustomQuote = channel === "automation";
+
+  function handleSubmit() {
+    if (isCustomQuote) {
+      router.push(`/support?topic=automation&tier=${tier.toLowerCase()}`);
+    } else {
+      router.push(`/checkout?channel=${channel}&tier=${tier.toLowerCase()}`);
+    }
   }
 
   return (
@@ -211,24 +227,29 @@ export default function ConfigureForm({
 
       {/* Tier selector */}
       <div className="mb-12">
-        <p className="font-bold text-[#000000] mb-4">Choose your tier</p>
+        <p className="font-bold text-[#000000] mb-4">
+          {isCustomQuote ? "How big is the lift?" : "Choose your tier"}
+        </p>
         <div className="grid grid-cols-3 gap-3">
-          {config.tiers.map((t) => (
-            <button
-              key={t.name}
-              onClick={() => setTier(t.name)}
-              className={`border-2 rounded-2xl p-4 text-left transition-all ${
-                tier === t.name
-                  ? "border-[#2563EB] bg-blue-50"
-                  : "border-[#EBEBEB] hover:border-[#BEBEBE]"
-              }`}
-            >
-              <p className={`font-bold text-sm ${tier === t.name ? "text-[#2563EB]" : "text-[#000000]"}`}>
-                {t.name}
-              </p>
-              <p className="text-[#6B7280] text-sm mt-1">${t.price}</p>
-            </button>
-          ))}
+          {config.tiers.map((t) => {
+            const display = TIER_DISPLAY[channel]?.[t.name] ?? { label: t.name, price: `$${t.price}` };
+            return (
+              <button
+                key={t.name}
+                onClick={() => setTier(t.name)}
+                className={`border-2 rounded-2xl p-4 text-left transition-all ${
+                  tier === t.name
+                    ? "border-[#2563EB] bg-blue-50"
+                    : "border-[#EBEBEB] hover:border-[#BEBEBE]"
+                }`}
+              >
+                <p className={`font-bold text-sm ${tier === t.name ? "text-[#2563EB]" : "text-[#000000]"}`}>
+                  {display.label}
+                </p>
+                <p className="text-[#6B7280] text-sm mt-1">{display.price}</p>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -318,17 +339,19 @@ export default function ConfigureForm({
 
         <button
           disabled={!allCriticalAnswered}
-          onClick={handleGoToCheckout}
+          onClick={handleSubmit}
           className={`w-full py-4 rounded-full font-bold text-lg transition-all ${
             allCriticalAnswered
               ? "bg-[#000000] text-white hover:bg-[#2563EB]"
               : "bg-[#F3F4F6] text-[#BEBEBE] cursor-not-allowed"
           }`}
         >
-          Continue to checkout →
+          {isCustomQuote ? "Send for a quote →" : "Continue to checkout →"}
         </button>
         <p className="text-xs text-[#6B7280] text-center mt-3">
-          Review your order before paying. One-time payment, no surprises.
+          {isCustomQuote
+            ? "Custom-quoted. We reply within 24 hours with a price."
+            : "Review your order before paying. One-time payment, no surprises."}
         </p>
       </div>
     </div>

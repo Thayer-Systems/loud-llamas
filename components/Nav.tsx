@@ -15,9 +15,12 @@ export default function Nav() {
           />
         </Link>
 
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-7">
           <Link href="/packages" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
             Packages
+          </Link>
+          <Link href="/burnrate" className="text-sm font-bold text-[#2563EB] hover:text-blue-700 transition-colors hidden md:block">
+            Burnrate
           </Link>
           <Link href="/how-it-works" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
             How It Works

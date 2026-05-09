@@ -3,81 +3,91 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FAQAccordion from "@/components/FAQAccordion";
+import FounderCounter from "@/components/FounderCounter";
+import { getFounderCount } from "@/lib/founder-count";
 
-const CHANNELS = [
-  { name: "Website Build", slug: "website-build", starter: 499 },
-  { name: "Email / Lifecycle", slug: "email-lifecycle", starter: 249 },
-  { name: "Organic Social", slug: "organic-social", starter: 249 },
-  { name: "SEO / AEO Foundation", slug: "seo-aeo", starter: 349 },
-  { name: "Paid Social Playbook", slug: "paid-social", starter: 149 },
-  { name: "SEM / Google Ads", slug: "sem-google-ads", starter: 399 },
-  { name: "Analytics & Tracking", slug: "analytics-tracking", starter: 199 },
-  { name: "Automation", slug: "automation", starter: 599 },
+export const revalidate = 60;
+
+type ChannelGroup = "one-time" | "setup-sub" | "custom";
+type ChannelCard = {
+  name: string;
+  slug: string;
+  from: number;
+  sub?: number;
+  group: ChannelGroup;
+  blurb: string;
+};
+
+const CHANNELS: ChannelCard[] = [
+  { name: "Website Build", slug: "website-build", from: 179, group: "one-time", blurb: "Fully custom. No WordPress." },
+  { name: "Paid Social Playbook", slug: "paid-social", from: 59, group: "one-time", blurb: "Built around your ICP. Not a template." },
+  { name: "SEM / Google Ads", slug: "sem-google-ads", from: 149, sub: 99, group: "setup-sub", blurb: "Setup + optional 3-mo management." },
+  { name: "Analytics & Tracking", slug: "analytics-tracking", from: 99, sub: 49, group: "setup-sub", blurb: "GA4, events, dashboard." },
+  { name: "Email / Lifecycle", slug: "email-lifecycle", from: 99, sub: 49, group: "setup-sub", blurb: "Welcome flow + segmentation." },
+  { name: "Automation", slug: "automation", from: 79, group: "custom", blurb: "Custom-quoted. Not a template." },
 ];
 
 const STEPS = [
   {
     number: "01",
-    title: "Pick your package",
-    desc: "8 channels. 3 tiers each. You know what you need — or let the configurator figure it out.",
+    title: "Pick your channel",
+    desc: "6 setups + Burnrate. No bundle nonsense. Buy what you need. Skip what you don't.",
   },
   {
     number: "02",
     title: "Fill out your intake",
-    desc: "Answer a few questions about your business. Stuck on something? Check the box. Let The Llamas Decide.",
+    desc: "Short form. No discovery call. No 'kickoff workshop.' Submit and you're done.",
   },
   {
     number: "03",
-    title: "We build it, you own it",
-    desc: "5–7 business days. Full handoff. Yours forever. No dependency, no retainer, no monthly fee.",
+    title: "We build it in 5–7 days",
+    desc: "You get the work, the credentials, and the receipts. Then we leave. You own it forever.",
   },
 ];
 
 const STATS = [
-  { value: "8", label: "Marketing Channels" },
   { value: "5–7", label: "Day Turnaround" },
-  { value: "3", label: "Tiers Per Channel" },
+  { value: "$0", label: "Retainers" },
+  { value: "0", label: "Discovery Calls" },
   { value: "$79", label: "Break Fix Fee" },
 ];
 
 const FAQS = [
   {
     q: "Do I need to know exactly what I want?",
-    a: "Not really. That's what the configurator is for. If you're stuck, check the box. Let The Llamas Decide. You can update it later.",
+    a: "Not really. The configurator handles it. If you're stuck on something, check the box. Let The Llamas Decide.",
   },
   {
     q: "How long does it take?",
-    a: "5–7 business days standard. 3 days if you add rush at checkout.",
+    a: "5–7 business days standard. Burnrate's first report lands in 24 hours.",
   },
   {
     q: "What if something breaks after handoff?",
-    a: "Flat $79 troubleshooting fee. No drama.",
+    a: "Flat $79 troubleshooting fee. No retainer. No drama.",
   },
   {
     q: "Do you offer ongoing management?",
-    a: "No. But we can refer you to someone who does.",
-  },
-  {
-    q: "What platforms do you use?",
-    a: "We recommend the best tool for your budget and situation. Every recommendation comes with affiliate pricing where available, which helps keep our setup fees low.",
-  },
-  {
-    q: "Can I buy more than one package?",
-    a: "Oh, we hope you do. It helps feed the llamas. Each one is its own sprint. Mix and match.",
+    a: "Only on SEM, Analytics, and Email — and only as an optional 3-month subscription, never required. Burnrate is the one true recurring product. Everything else is one-time.",
   },
   {
     q: "Why is Paid Social a playbook instead of a setup?",
-    a: "Because Meta makes it nearly impossible for third parties to properly access and configure ad accounts on behalf of clients. Rather than promise something we cannot cleanly deliver, we built a better product. The playbook gives you everything you need to launch it yourself.",
+    a: "Meta makes it nearly impossible for third parties to configure ad accounts on behalf of clients. We're not going to pretend otherwise. So we built something better — a custom playbook around your ICP and your offer. You run it. We built the roadmap.",
+  },
+  {
+    q: "What's Burnrate?",
+    a: "A SaaS that connects your Google Ads and Meta accounts, runs weekly waste detection, and hands you a prioritized fix list. $29/mo. Founders pay $17.99/mo locked forever. First 100 only.",
+  },
+  {
+    q: "Can I buy more than one package?",
+    a: "Please do. It feeds the llamas. Each setup is its own sprint — they run in parallel.",
   },
 ];
 
 const TICKER_ITEMS = [
-  "Website Build", "Email / Lifecycle", "Organic Social", "SEO / AEO Foundation",
-  "Paid Social Playbook", "SEM / Google Ads", "Analytics & Tracking", "Automation",
-  "5–7 Day Turnaround", "One-Time Price", "Full Handoff", "No Retainers",
+  "Website Build", "SEM / Google Ads", "Analytics & Tracking", "Email / Lifecycle",
+  "Paid Social Playbook", "Automation", "Burnrate",
+  "5–7 Day Turnaround", "Pay Once", "Full Handoff", "No Retainers", "No Discovery Calls",
 ];
-
-/* ── Inline SVG illustrations ── */
 
 function LlamaJumpSVG() {
   return (
@@ -94,13 +104,14 @@ function LlamaJumpSVG() {
   );
 }
 
+export default async function HomePage() {
+  const { count: founderCount, total: founderTotal } = await getFounderCount();
 
-export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section className="relative min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8 overflow-hidden">
         <div
           className="absolute right-0 top-0 h-full pointer-events-none select-none hidden lg:flex items-center pr-8"
@@ -111,18 +122,18 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto w-full relative z-10 lg:pr-[520px]">
           <p
-            className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
+            className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
             style={{ animationDelay: "0ms" }}
           >
-            Marketing Setup Studio
+            Marketing setup. Done once. Done right.
           </p>
           <h1 className="font-black leading-[0.92] tracking-tight" style={{ fontSize: "clamp(3.5rem, 9.5vw, 8.5rem)" }}>
             <span className="block animate-slide-up overflow-hidden pb-3" style={{ animationDelay: "80ms" }}>
-              Stop stalling.
+              Agencies are a scam.
             </span>
             <span className="block animate-slide-up overflow-hidden pb-10" style={{ animationDelay: "220ms" }}>
               <span className="relative inline-block">
-                Start marketing.
+                We&apos;re the exit.
                 <svg className="scribble-underline" viewBox="0 0 520 10" preserveAspectRatio="none" aria-hidden="true">
                   <polygon points="0,0 520,4 520,6 0,10" fill="#2563EB" />
                 </svg>
@@ -131,14 +142,14 @@ export default function HomePage() {
           </h1>
           <div className="mt-10 max-w-xl">
             <p className="text-xl text-[#6B7280] leading-relaxed animate-fade-in" style={{ animationDelay: "480ms" }}>
-              Pick your channel. Pay once. Get it done in 5–7 days.
+              You don&apos;t need a retainer. You don&apos;t need a 12-month contract. You need a setup. Pay once. Own it forever.
             </p>
             <div className="mt-8 flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: "620ms" }}>
               <Link href="/packages" className="bg-[#000000] text-white font-semibold text-base px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
-                Build your setup
+                See Packages
               </Link>
-              <Link href="/how-it-works" className="text-[#000000] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#000000] transition-colors duration-300">
-                How it works
+              <Link href="/burnrate" className="text-[#000000] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors duration-300">
+                What is Burnrate?
               </Link>
             </div>
           </div>
@@ -148,7 +159,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── STATS BAR ── */}
+      {/* STATS BAR */}
       <section className="px-6 md:px-12 lg:px-20 py-16 bg-[#000000]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -164,7 +175,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TICKER ── */}
+      {/* TICKER */}
       <div className="border-y border-[#EBEBEB] py-4 overflow-hidden bg-white">
         <div className="ticker-track flex gap-12 whitespace-nowrap">
           {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
@@ -176,23 +187,24 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ── PROBLEM BLOCK ── */}
+      {/* PROBLEM BLOCK */}
       <section className="px-6 md:px-12 lg:px-20 py-24">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="font-semibold text-[#000000] leading-tight max-w-3xl mx-auto" style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}>
-            You know you need to do it.<br />
-            You&apos;ve been putting it off. We get it.
+        <div className="max-w-4xl mx-auto">
+          <p className="font-black text-[#000000] leading-[1.05]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}>
+            You&apos;ve been quoted{" "}
+            <span className="text-[#6B7280]">$5K/mo for a 12-month contract</span>{" "}
+            to do what we&apos;ll set up in a week.
           </p>
-          <p className="mt-6 text-lg text-[#6B7280] max-w-xl mx-auto leading-relaxed">
-            Here&apos;s what we do: set it all up, hand you the keys, and get out of your way.
+          <p className="mt-8 text-lg text-[#6B7280] max-w-2xl leading-relaxed">
+            Marketing agencies are bloated. They sell process and time. We sell finished work. Pick a channel. Pay once. Get the credentials. We leave. The end.
           </p>
         </div>
       </section>
 
-      {/* ── PULL QUOTE + LLAMA ── */}
+      {/* PULL QUOTE */}
       <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
-          <blockquote className="font-black text-white leading-tight max-w-3xl" style={{ fontSize: "clamp(2rem, 5vw, 4.25rem)" }}>
+          <blockquote className="font-black text-white leading-[0.95] max-w-3xl" style={{ fontSize: "clamp(2rem, 5vw, 4.25rem)" }}>
             We&apos;re not your agency.{" "}
             <span className="text-[#2563EB]">We&apos;re your launch crew.</span>
           </blockquote>
@@ -200,12 +212,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
+      {/* HOW IT WORKS */}
       <section id="how-it-works" className="px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto">
-          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">The Process</p>
-          <h2 className="font-black text-[#000000] mb-16" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
-            How it works
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">The Process</p>
+          <h2 className="font-black text-[#000000] mb-16 leading-[1.0]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}>
+            Pick. Submit. Done in a week.
           </h2>
           <div className="grid md:grid-cols-3 gap-12 md:gap-16">
             {STEPS.map((step) => (
@@ -219,30 +231,48 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PACKAGE PREVIEW ── */}
+      {/* PACKAGE PREVIEW */}
       <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto">
-          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">What We Set Up</p>
-          <h2 className="font-black text-[#000000] mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
-            8 channels. Pick yours.
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">What we set up</p>
+          <h2 className="font-black text-[#000000] mb-3 leading-[1.0]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}>
+            Six setups. Pick yours.
           </h2>
-          <p className="text-[#6B7280] text-lg mb-12">Starter, Growth, or Pro. One-time price. Full setup.</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {CHANNELS.map((ch) => (
-              <Link
-                key={ch.slug}
-                href={`/configure/${ch.slug}`}
-                className="bg-white rounded-2xl p-6 border border-[#EBEBEB] hover:border-[#2563EB] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
-              >
-                <h3 className="font-bold text-base text-[#000000] mb-3 group-hover:text-[#2563EB] transition-colors">{ch.name}</h3>
-                <p className="text-sm text-[#6B7280] mb-5">
-                  from <span className="font-semibold text-[#000000]">${ch.starter}</span>
-                </p>
-                <span className="text-sm font-semibold text-[#2563EB] flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
-                  Get started <span aria-hidden="true">→</span>
-                </span>
-              </Link>
-            ))}
+          <p className="text-[#6B7280] text-lg mb-12">Plus Burnrate, the only recurring thing we sell.</p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {CHANNELS.map((ch) => {
+              const href = ch.group === "custom" ? "/support?topic=automation" : `/configure/${ch.slug}`;
+              return (
+                <Link
+                  key={ch.slug}
+                  href={href}
+                  className="bg-white rounded-2xl p-6 border border-[#EBEBEB] hover:border-[#2563EB] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group flex flex-col"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <h3 className="font-bold text-base text-[#000000] group-hover:text-[#2563EB] transition-colors">{ch.name}</h3>
+                    {ch.group === "custom" && (
+                      <span className="bg-[#000000] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded shrink-0">Custom Quote</span>
+                    )}
+                    {ch.group === "setup-sub" && (
+                      <span className="bg-blue-50 text-[#2563EB] text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded shrink-0">+ Optional sub</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-[#6B7280] mb-4 leading-relaxed flex-1">{ch.blurb}</p>
+                  <div className="flex items-end justify-between">
+                    <p className="text-sm text-[#6B7280]">
+                      from <span className="font-extrabold text-[#000000] text-lg">${ch.from}</span>
+                      {ch.sub !== undefined && (
+                        <span className="block text-xs mt-0.5">+ ${ch.sub}/mo · 3 mo (optional)</span>
+                      )}
+                    </p>
+                    <span className="text-sm font-semibold text-[#2563EB] flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+                      {ch.group === "custom" ? "Get a quote" : "Get started"} <span aria-hidden="true">→</span>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
           <div className="mt-12">
             <Link
@@ -255,83 +285,123 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── POSITIONING BLOCK — right-aligned, all black, llama party left ── */}
-      <section className="px-6 md:px-12 lg:px-20 py-28">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-          <div className="flex justify-center lg:justify-start shrink-0">
-            <Image
-              src="/llama-gum.png"
-              alt=""
-              width={340}
-              height={340}
-              className="object-contain rounded-2xl"
-            />
-          </div>
-          <div className="lg:ml-auto text-left lg:text-right">
-            <h2
-              className="font-black text-[#000000] leading-[1.0]"
-              style={{ fontSize: "clamp(2.5rem, 5.5vw, 5.5rem)" }}
-            >
-              No retainers.<br />
-              No monthly fees.<br />
-              No 18-month contracts.
+      {/* BURNRATE CALLOUT */}
+      <section className="bg-[#000000] text-white px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-12 items-center">
+          <div>
+            <span className="inline-block bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-8">
+              Recurring · SaaS · $29/mo
+            </span>
+            <h2 className="font-black leading-[0.95]" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+              You set it up.<br />
+              <span className="text-[#2563EB]">Now it&apos;s leaking money</span><br />
+              and you don&apos;t know it.
             </h2>
-            <p className="mt-8 text-xl text-[#6B7280] max-w-md lg:ml-auto">
-              Just a clean setup and a handoff.
+            <p className="text-gray-300 text-lg mt-8 max-w-xl leading-relaxed">
+              Burnrate connects to Google Ads and Meta. Runs weekly waste detection. Spots paid/organic keyword overlap. Hands you a prioritized fix list.
+            </p>
+            <p className="text-gray-400 mt-4 max-w-xl">
+              Agencies charge $2,000/mo for this. We charge $29.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/burnrate"
+                className="bg-[#2563EB] text-white font-bold text-base px-8 py-4 rounded-full hover:bg-blue-700 transition-colors duration-300"
+              >
+                See Burnrate →
+              </Link>
+              <Link
+                href="/burnrate/start"
+                className="text-white font-semibold text-base px-8 py-4 rounded-full border border-[#374151] hover:border-white transition-colors duration-300"
+              >
+                Start Burnrate
+              </Link>
+            </div>
+          </div>
+          <div className="lg:pl-4">
+            <FounderCounter count={founderCount} total={founderTotal} variant="dark" size="lg" />
+            <p className="text-sm text-gray-400 mt-4 leading-relaxed">
+              First 100 customers lock in <span className="text-[#2563EB] font-bold">$17.99/mo forever</span>. After that, $29/mo.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── PAID SOCIAL CALLOUT + PLAYBOOK ── */}
-      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
+      {/* FOUNDER OFFER */}
+      <section className="px-6 md:px-12 lg:px-20 py-28">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">The Founder Deal</p>
+          <h2 className="font-black text-[#000000] leading-[0.95]" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+            First 100 clients.<br />
+            <span className="text-[#2563EB]">50% off everything.</span>
+          </h2>
+          <p className="text-[#6B7280] text-xl mt-6 max-w-2xl leading-relaxed">
+            Half off any setup. Burnrate locked at $17.99/mo forever. We&apos;re building the proof that this model works — you get the discount for being early.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6 mt-12">
+            <div className="border-2 border-[#000000] rounded-3xl p-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#000000] mb-3">Setup discount</p>
+              <p className="font-black text-5xl mb-3">50% off</p>
+              <p className="text-[#6B7280] mb-6">Any one-time setup. Stack as many as you want. Code applies at checkout.</p>
+              <Link
+                href="/packages"
+                className="inline-block bg-[#000000] text-white font-bold px-6 py-3 rounded-full hover:bg-[#2563EB] transition-colors"
+              >
+                See packages →
+              </Link>
+            </div>
+            <div className="border-2 border-[#2563EB] rounded-3xl p-8 bg-[#000000] text-white">
+              <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-3">Burnrate · Founder</p>
+              <p className="font-black text-5xl mb-3">$17.99<span className="text-lg text-gray-400 font-bold">/mo</span></p>
+              <p className="text-gray-300 mb-6">Locked forever. No price increases — ever.</p>
+              <FounderCounter count={founderCount} total={founderTotal} variant="dark" size="sm" />
+              <Link
+                href="/burnrate"
+                className="inline-block mt-6 bg-[#2563EB] text-white font-bold px-6 py-3 rounded-full hover:bg-blue-700 transition-colors"
+              >
+                Lock it in →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PAID SOCIAL CALLOUT */}
+      <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-24">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="flex-1">
-            <span className="inline-block bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-10">
+            <span className="inline-block bg-[#000000] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-8">
               Honest talk about Meta
             </span>
-            <div className="max-w-3xl space-y-4" style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}>
-              <p className="text-[#9CA3AF] leading-relaxed">
-                Meta makes it nearly impossible for third parties to configure ad accounts on behalf
-                of clients. We&apos;re not going to pretend otherwise. So instead of a half-baked
-                setup, we built something better:
-              </p>
-              <p>
-                <Link
-                  href="/configure/paid-social"
-                  className="text-white font-bold hover:text-[#2563EB] transition-colors duration-200"
-                >
-                  The Paid Social Playbook.
-                </Link>
-              </p>
-              <p className="text-[#9CA3AF] leading-relaxed">
-                Years of paid social experience packaged into a step-by-step implementation guide.
-                You run it. We built it. Same outcome, no access headaches.
-              </p>
-            </div>
+            <p className="text-[#000000] font-medium leading-relaxed" style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}>
+              Meta won&apos;t let agencies properly access your ad account. Period. So instead of pretending we can do something we can&apos;t, we built the{" "}
+              <Link href="/configure/paid-social" className="text-[#2563EB] font-bold hover:underline">Paid Social Playbook</Link>{" "}
+              — a custom roadmap built around your ICP and your offer. You run the ads. We built the plan.
+            </p>
             <Link
               href="/configure/paid-social"
-              className="inline-block mt-10 bg-[#2563EB] text-white font-semibold px-8 py-4 rounded-full hover:bg-blue-500 transition-colors duration-300"
+              className="inline-block mt-8 bg-[#2563EB] text-white font-semibold px-8 py-4 rounded-full hover:bg-blue-700 transition-colors duration-300"
             >
-              Get the playbook
+              Get the playbook from $59 →
             </Link>
           </div>
           <div className="flex justify-center lg:justify-end pt-4 shrink-0">
             <Image
-              src="/meta-logo-white.png"
+              src="/meta-logo.png"
               alt=""
-              width={220}
-              height={220}
-              className="object-contain"
+              width={180}
+              height={180}
+              className="object-contain opacity-90"
             />
           </div>
         </div>
       </section>
 
-      {/* ── FAQ — accordion, centered ── */}
-      <section id="faq" className="px-6 md:px-12 lg:px-20 py-14">
+      {/* FAQ */}
+      <section id="faq" className="px-6 md:px-12 lg:px-20 py-20">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm font-semibold tracking-widest uppercase text-[#2563EB] mb-4">Got questions</p>
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">Got questions</p>
           <h2 className="font-black text-[#000000] mb-16" style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
             FAQ
           </h2>
@@ -339,28 +409,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FOOTER CTA — centered with party icons ── */}
+      {/* FOOTER CTA */}
       <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-start justify-center gap-6 md:gap-10">
-            <span className="text-5xl md:text-7xl mt-2 hidden sm:block" aria-hidden="true">🎉</span>
-            <h2
-              className="font-black text-white leading-[0.92] tracking-tight"
-              style={{ fontSize: "clamp(3rem, 8vw, 7.5rem)" }}
-            >
-              Stop stalling.<br />
-              Let the llamas<br />
-              <span className="text-[#2563EB]">handle it.</span>
-            </h2>
-            <span className="text-5xl md:text-7xl mt-2 hidden sm:block" aria-hidden="true">🎉</span>
-          </div>
-          <p className="text-[#6B7280] mt-8 text-lg">Pick a channel. Pay once. Done in 5–7 days.</p>
-          <Link
-            href="/packages"
-            className="inline-block mt-10 bg-white text-[#000000] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
+          <h2
+            className="font-black text-white leading-[0.92] tracking-tight"
+            style={{ fontSize: "clamp(3rem, 8vw, 7.5rem)" }}
           >
-            Build your setup
-          </Link>
+            Stop renting your<br />
+            marketing.<br />
+            <span className="text-[#2563EB]">Buy it instead.</span>
+          </h2>
+          <p className="text-[#6B7280] mt-8 text-lg">Pick a channel. Pay once. Done in 5–7 days.</p>
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/packages"
+              className="inline-block bg-white text-[#000000] font-bold text-lg px-10 py-4 rounded-full hover:bg-[#2563EB] hover:text-white transition-colors duration-300"
+            >
+              See packages
+            </Link>
+            <Link
+              href="/burnrate"
+              className="inline-block border-2 border-[#374151] text-white font-bold text-lg px-10 py-4 rounded-full hover:border-white transition-colors duration-300"
+            >
+              Or start Burnrate
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -15,7 +15,7 @@ const FAQS = [
   },
   {
     q: "How long does it take?",
-    a: "Standard turnaround is 5–7 business days from the time your intake is submitted. Need it faster? Add Rush Delivery at checkout for +$299 and we'll get it done in 3 business days.",
+    a: "Standard turnaround is 5–7 business days from the time your intake is submitted. Burnrate's first fix list lands within 24 hours of you connecting your Google Ads and Meta accounts.",
   },
   {
     q: "What's included in the handoff?",
@@ -27,11 +27,15 @@ const FAQS = [
   },
   {
     q: "Do you offer ongoing management?",
-    a: "No — we're a setup shop, not an agency. We get everything configured and hand it off. If you need ongoing management, we can point you in the right direction.",
+    a: "Optional 3-month subscriptions on SEM, Analytics, and Email — clearly priced, never required. After 3 months it's done. Burnrate is the one true recurring product. Everything else is a one-time setup.",
+  },
+  {
+    q: "What is Burnrate?",
+    a: "A SaaS that connects your Google Ads and Meta accounts, runs weekly waste detection, finds paid/organic keyword overlap, and hands you a prioritized fix list. $29/mo. Founders pay $17.99/mo locked forever — first 100 customers only.",
   },
   {
     q: "What platforms do you use?",
-    a: "We recommend the best tool for your budget and situation. We work across all major platforms — Klaviyo, Mailchimp, ActiveCampaign, WordPress, Webflow, Google Ads, GA4, and more. We'll tell you exactly what we're using before we start.",
+    a: "Website Build is fully custom — no WordPress, no templates, no page builders. For other channels we recommend the best tool for your budget — Klaviyo, Mailchimp, ActiveCampaign, Webflow, Google Ads, GA4, and more. We'll tell you exactly what we're using before we start.",
   },
   {
     q: "Can I buy more than one package?",

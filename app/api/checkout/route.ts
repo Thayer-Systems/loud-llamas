@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { createClient } from "@supabase/supabase-js";
+
+// Derive Stripe types from the SDK's create-method signature so we don't depend
+// on whichever namespace shape this version of stripe-node exposes.
+type CreateSessionParams = Parameters<typeof stripe.checkout.sessions.create>[0];
+type LineItem = NonNullable<CreateSessionParams["line_items"]>[number];
+type SubscriptionData = NonNullable<CreateSessionParams["subscription_data"]>;
+type AddInvoiceItem = NonNullable<SubscriptionData["add_invoice_items"]>[number];
+type CheckoutSession = Awaited<ReturnType<typeof stripe.checkout.sessions.create>>;
 
 const PRICES: Record<string, Record<string, number>> = {
   "website-build":     { starter: 179, growth: 299, pro: 449 },
@@ -143,11 +150,11 @@ export async function POST(req: NextRequest) {
 
     const hasAnyMgmtSub = createdOrders.some((o) => o.mgmtSub);
 
-    let session: Stripe.Checkout.Session;
+    let session: CheckoutSession;
 
     if (!hasAnyMgmtSub) {
       // ---- Existing one-time payment flow ----
-      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+      const lineItems: LineItem[] = [];
       for (const o of createdOrders) {
         lineItems.push({
           price_data: {
@@ -193,7 +200,7 @@ export async function POST(req: NextRequest) {
     } else {
       // ---- Subscription flow (one or more 3-mo mgmt subs + one-time setups on first invoice) ----
       // Recurring line items: each mgmt sub is its own line item
-      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+      const lineItems: LineItem[] = [];
       const mgmtSubsMeta: Array<{ orderId: string; channel: string; tier: string; monthly: number }> = [];
 
       for (const o of createdOrders) {
@@ -220,14 +227,6 @@ export async function POST(req: NextRequest) {
       }
 
       // One-time charges (setup + addons) added to the first invoice
-      type AddInvoiceItem = {
-        price_data: {
-          currency: "usd";
-          product_data: { name: string };
-          unit_amount: number;
-        };
-        quantity: 1;
-      };
       const addInvoiceItems: AddInvoiceItem[] = [];
       for (const o of createdOrders) {
         addInvoiceItems.push({
@@ -269,9 +268,7 @@ export async function POST(req: NextRequest) {
         },
         subscription_data: {
           cancel_at: cancelAt,
-          // Cast: stripe-node's nested type name varies across versions; the runtime
-          // shape matches the API contract.
-          add_invoice_items: addInvoiceItems as unknown as Stripe.Checkout.SessionCreateParams.SubscriptionData["add_invoice_items"],
+          add_invoice_items: addInvoiceItems,
           metadata: {
             order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
             mgmt_subs: JSON.stringify(mgmtSubsMeta),

@@ -2,13 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { createClient } from "@supabase/supabase-js";
 
-// Derive Stripe types from the SDK's create-method signature so we don't depend
-// on whichever namespace shape this version of stripe-node exposes.
+// Derive types from the SDK's create-method signature where possible.
+// add_invoice_items is a documented Stripe API param on subscription_data but
+// stripe-node v22 hasn't added it to the TS types yet — we declare it locally
+// and cast at the call site.
 type CreateSessionParams = NonNullable<Parameters<typeof stripe.checkout.sessions.create>[0]>;
 type LineItem = NonNullable<CreateSessionParams["line_items"]>[number];
-type SubscriptionData = NonNullable<CreateSessionParams["subscription_data"]>;
-type AddInvoiceItem = NonNullable<SubscriptionData["add_invoice_items"]>[number];
 type CheckoutSession = Awaited<ReturnType<typeof stripe.checkout.sessions.create>>;
+
+type AddInvoiceItem = {
+  price_data: {
+    currency: "usd";
+    product_data: { name: string };
+    unit_amount: number;
+  };
+  quantity: number;
+};
 
 const PRICES: Record<string, Record<string, number>> = {
   "website-build":     { starter: 179, growth: 299, pro: 449 },
@@ -255,7 +264,9 @@ export async function POST(req: NextRequest) {
 
       const cancelAt = Math.floor(Date.now() / 1000) + THREE_MONTHS_SECONDS;
 
-      session = await stripe.checkout.sessions.create({
+      // Cast: add_invoice_items is a real Stripe API param the SDK's TS types
+      // don't surface yet. The runtime API accepts this shape.
+      const subscriptionParams: CreateSessionParams = {
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "subscription",
@@ -268,7 +279,6 @@ export async function POST(req: NextRequest) {
         },
         subscription_data: {
           cancel_at: cancelAt,
-          add_invoice_items: addInvoiceItems,
           metadata: {
             order_ids: JSON.stringify(createdOrders.map((o) => o.id)),
             mgmt_subs: JSON.stringify(mgmtSubsMeta),
@@ -276,7 +286,10 @@ export async function POST(req: NextRequest) {
         },
         success_url: `${appUrl}/intake/${firstOrder.id}?paid=1${nextOrdersParam}`,
         cancel_url: `${appUrl}/packages`,
-      });
+      };
+      // Attach add_invoice_items via cast since the SDK types lag the API.
+      (subscriptionParams.subscription_data as unknown as { add_invoice_items: AddInvoiceItem[] }).add_invoice_items = addInvoiceItems;
+      session = await stripe.checkout.sessions.create(subscriptionParams);
     }
 
     // Save Stripe session ID back to all orders

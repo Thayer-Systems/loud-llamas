@@ -3,22 +3,22 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "How It Works — Loud Llamas",
-  description: "Pick a channel, fill out your intake, and we build it in 5–7 days. No calls, no retainers, no guesswork.",
+  title: "How It Works | Loud Llamas",
+  description: "Pick a channel, fill out your intake, and we build it in 5 to 7 days. No calls, no retainers, no guesswork.",
 };
 
 const STEPS = [
   {
     number: "01",
     title: "Pick your package",
-    tagline: "You know what you need. Or you don't — that's fine too.",
+    tagline: "You know what you need. Or you don't. That's fine too.",
     description:
-      "Browse 6 marketing channels plus Burnrate. Not sure which one to pick? Start with whatever's been on your to-do list the longest. You can always add more later — each one is its own sprint.",
+      "Browse 6 marketing channels plus Burnrate. Not sure which one to pick? Start with whatever's been on your to-do list the longest. You can always add more later. Each one is its own sprint.",
     details: [
       "Website Build, SEM / Google Ads, Analytics, Email, Paid Social Playbook, or Automation",
-      "Starter, Growth, or Pro tiers — scaled by scope, not by time",
+      "Starter, Growth, or Pro tiers, scaled by scope, not by time",
       "One-time price, no surprise invoices (Burnrate is the only recurring product)",
-      "Mix and match — buy as many channels as you want",
+      "Mix and match. Buy as many channels as you want.",
     ],
   },
   {
@@ -26,25 +26,25 @@ const STEPS = [
     title: "Fill out your intake",
     tagline: "A few questions. No calls required.",
     description:
-      "After you pick your package, you'll fill out a short intake form. It's a quick set of questions about your business, your goals, and what you already have. If you're stuck on something — check the box. Let The Llamas Decide. We'll use our judgment.",
+      "After you pick your package, you'll fill out a short intake form. It's a quick set of questions about your business, your goals, and what you already have. If you're stuck on something, check the box. Let The Llamas Decide. We'll use our judgment.",
     details: [
-      "Button-grid questions — no long essays required",
+      "Button-grid questions. No long essays required.",
       "Every critical field has a 'Let The Llamas Decide' option",
-      "Takes about 5–10 minutes depending on the channel",
+      "Takes about 5 to 10 minutes depending on the channel",
       "You can upload assets (logo, copy, etc.) right in the form",
     ],
   },
   {
     number: "03",
     title: "We build it",
-    tagline: "5–7 business days. We get to work, you get on with your life.",
+    tagline: "5 to 7 business days. We get to work, you get on with your life.",
     description:
       "Once your intake is submitted, our team starts building. We use your answers to configure, set up, and launch your marketing channel exactly the way you described. Need it faster? Add Rush Delivery at checkout for a 3-day turnaround.",
     details: [
-      "Standard delivery: 5–7 business days",
+      "Standard delivery: 5 to 7 business days",
       "Rush delivery available: 3 business days (+$299)",
       "You'll get a confirmation email with your expected delivery date",
-      "We work async — no status calls, no check-ins required",
+      "We work async. No status calls, no check-ins required.",
     ],
   },
   {
@@ -52,7 +52,7 @@ const STEPS = [
     title: "You own it",
     tagline: "Full handoff. No strings attached.",
     description:
-      "When we're done, we hand everything over. Credentials, documentation, logins — it's all yours. There's no retainer, no monthly fee, and no dependency on us to keep things running. If something breaks after handoff, our flat $79 break-fix fee has you covered.",
+      "When we're done, we hand everything over. Credentials, documentation, logins. It's all yours. There's no retainer, no monthly fee, and no dependency on us to keep things running. If something breaks after handoff, our flat $79 break-fix fee has you covered.",
     details: [
       "Full documentation of what was built and how it works",
       "All credentials and access transferred to you",
@@ -63,10 +63,10 @@ const STEPS = [
 ];
 
 const WHAT_WE_NEED = [
-  { item: "Access to your platforms", note: "We'll tell you exactly what to share — no password sharing required for most channels." },
+  { item: "Access to your platforms", note: "We'll tell you exactly what to share. No password sharing required for most channels." },
   { item: "Your completed intake form", note: "The more detail you give us, the better the result. Use 'Let The Llamas Decide' if you're unsure." },
-  { item: "Any existing assets", note: "Logo, brand colors, copy, photos — anything you have. We work with what we've got." },
-  { item: "A little patience", note: "We're building something real. 5–7 days goes fast." },
+  { item: "Any existing assets", note: "Logo, brand colors, copy, photos. Anything you have. We work with what we've got." },
+  { item: "A little patience", note: "We're building something real. 5 to 7 days goes fast." },
 ];
 
 export default function HowItWorksPage() {
@@ -148,7 +148,7 @@ export default function HowItWorksPage() {
             {[
               { day: "Day 0", label: "You complete checkout + intake form" },
               { day: "Day 1", label: "We review your intake and start building" },
-              { day: "Days 2–5", label: "Active build — we set everything up per your intake" },
+              { day: "Days 2–5", label: "Active build. We set everything up per your intake." },
               { day: "Day 5–7", label: "Quality check, final touches, handoff prep" },
               { day: "Day 7", label: "You receive credentials, documentation, and full ownership" },
             ].map((t) => (

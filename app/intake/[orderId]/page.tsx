@@ -74,12 +74,12 @@ export default async function IntakePage({
             Tell us about your business
           </h1>
           <p className="text-[#9CA3AF] mt-3">
-            {channelName} — {tierLabel} · Order #{orderId.slice(0, 8).toUpperCase()}
+            {channelName} · {tierLabel} · Order #{orderId.slice(0, 8).toUpperCase()}
           </p>
           <p className="text-[#6B7280] mt-4 max-w-xl leading-relaxed">
             Answer what you can. If you&apos;re unsure about anything, hit{" "}
             <span className="text-[#2563EB] font-semibold">Let The Llamas Decide</span>{" "}
-            — we&apos;ll make the call. Takes about 5–10 minutes.
+            and we&apos;ll make the call. Takes about 5 to 10 minutes.
           </p>
         </div>
       </section>

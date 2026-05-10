@@ -7,7 +7,7 @@ import { getFounderCount } from "@/lib/founder-count";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Burnrate — Find the money your ads are burning",
+  title: "Burnrate | Find the money your ads are burning",
   description:
     "Connect Google Ads and Meta. Burnrate runs weekly waste detection, finds paid/organic keyword overlap, and hands you a prioritized fix list. $29/mo. Founder pricing $17.99/mo for the first 100.",
 };
@@ -27,7 +27,7 @@ const WHAT_IT_DOES = [
   },
   {
     title: "Cross-platform connected",
-    desc: "Google Ads and Meta in one view. Compare what's actually working — without flipping between tabs.",
+    desc: "Google Ads and Meta in one view. Compare what's actually working without flipping between tabs.",
   },
 ];
 
@@ -45,8 +45,8 @@ const COMPARISON = [
   { item: "Cancel anytime", agency: "Try the 12-month contract", burnrate: "Yes" },
 ];
 
-// Marketing-staged count; live count helper is still called for cache warming.
-const STATIC_FOUNDER_COUNT = 77;
+// Marketing-staged: 86 taken / 14 left. Live count helper still runs for cache warming.
+const STATIC_FOUNDER_COUNT = 86;
 const STATIC_FOUNDER_TOTAL = 100;
 
 export default async function BurnratePage() {
@@ -90,7 +90,7 @@ export default async function BurnratePage() {
           <div className="lg:pl-8">
             <FounderCounter count={founderCount} total={founderTotal} variant="dark" size="lg" />
             <p className="text-sm text-gray-400 mt-4">
-              First 100 customers lock in <span className="text-[#2563EB] font-bold">$17.99/mo forever</span>. Standard price after that is $29/mo.
+              Only <span className="text-[#2563EB] font-bold">{Math.max(founderTotal - founderCount, 0)} founder spots left</span>. After that, $29/mo standard pricing. No exceptions.
             </p>
           </div>
         </div>
@@ -100,12 +100,12 @@ export default async function BurnratePage() {
       <section className="px-6 md:px-12 lg:px-20 py-20 bg-[#F8F8F8]">
         <div className="max-w-5xl mx-auto">
           <p className="font-black leading-[1.05] text-[#000000]" style={{ fontSize: "clamp(1.75rem, 4vw, 3.25rem)" }}>
-            You set it up.{" "}
-            <span className="text-[#6B7280]">Now it&apos;s leaking money</span>{" "}
-            and you don&apos;t know it.
+            Most small businesses are flushing{" "}
+            <span className="text-[#2563EB]">$300 to $800 a month</span>{" "}
+            on ads that go nowhere.
           </p>
-          <p className="text-[#6B7280] text-lg mt-6 max-w-2xl">
-            Most ad accounts waste 20–40% of their spend on garbage clicks, dead keywords, and queries the brand already ranks for organically. You&apos;re busy. You don&apos;t have time to audit it weekly. We do.
+          <p className="text-[#6B7280] text-lg mt-6 max-w-2xl leading-relaxed">
+            Wrong keywords. Duplicate spend. Paying for clicks you already earn for free. Burnrate finds exactly where the money is going and hands you a plain-English fix list every week. Not a dashboard full of graphs. A list that says: stop spending here, shift budget here, this keyword is bleeding you.
           </p>
         </div>
       </section>
@@ -154,6 +154,9 @@ export default async function BurnratePage() {
           <h2 className="font-black mb-10" style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}>
             Same outcome. <span className="text-[#2563EB]">98% less money.</span>
           </h2>
+          <p className="text-[#6B7280] mb-8 max-w-2xl leading-relaxed">
+            Marketing agencies charge $2,000 a month to do what Burnrate does automatically overnight. The difference is Burnrate actually shows you the problem in plain English instead of hiding it in a slide deck.
+          </p>
           <div className="bg-white rounded-2xl border border-[#E5E7EB] overflow-hidden">
             <div className="grid grid-cols-3 bg-[#F3F4F6] text-xs font-bold uppercase tracking-widest text-[#6B7280] py-3 px-4">
               <span></span>
@@ -211,7 +214,7 @@ export default async function BurnratePage() {
               <p className="font-black mb-1" style={{ fontSize: "clamp(2.5rem, 4.5vw, 3.5rem)" }}>
                 $17.99<span className="text-lg text-gray-400 font-bold">/mo</span>
               </p>
-              <p className="text-gray-400 mb-6">38% off. Forever. No price increases — ever.</p>
+              <p className="text-gray-400 mb-6">38% off. Forever. No price increases. Ever.</p>
               <div className="mb-6">
                 <FounderCounter count={founderCount} total={founderTotal} variant="dark" size="sm" />
               </div>

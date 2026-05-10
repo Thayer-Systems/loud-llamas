@@ -4,18 +4,18 @@ import Footer from "@/components/Footer";
 import FAQAccordion from "@/components/FAQAccordion";
 
 export const metadata = {
-  title: "FAQ — Loud Llamas",
+  title: "FAQ | Loud Llamas",
   description: "Common questions about how Loud Llamas works, what's included, turnaround time, and what happens after handoff.",
 };
 
 const FAQS = [
   {
     q: "Do I need to know exactly what I want?",
-    a: "Not really. That's what the configurator is for. If you're stuck on something, check the box. Let The Llamas Decide. You can always update it later — we'll reach out if we have questions before we start.",
+    a: "Not really. That's what the configurator is for. If you're stuck on something, check the box. Let The Llamas Decide. You can always update it later. We'll reach out if we have questions before we start.",
   },
   {
     q: "How long does it take?",
-    a: "Standard turnaround is 5–7 business days from the time your intake is submitted. Burnrate's first fix list lands within 24 hours of you connecting your Google Ads and Meta accounts.",
+    a: "Standard turnaround is 5 to 7 business days from the time your intake is submitted. Burnrate's first fix list lands within 24 hours of you connecting your Google Ads and Meta accounts.",
   },
   {
     q: "What's included in the handoff?",
@@ -27,15 +27,15 @@ const FAQS = [
   },
   {
     q: "Do you offer ongoing management?",
-    a: "Optional 3-month subscriptions on SEM, Analytics, and Email — clearly priced, never required. After 3 months it's done. Burnrate is the one true recurring product. Everything else is a one-time setup.",
+    a: "Optional 90-day sprint on SEM, Analytics, and Email. Clearly priced, never required. Auto-cancels at day 90. Burnrate is the one true recurring product. Everything else is a one-time setup.",
   },
   {
     q: "What is Burnrate?",
-    a: "A SaaS that connects your Google Ads and Meta accounts, runs weekly waste detection, finds paid/organic keyword overlap, and hands you a prioritized fix list. $29/mo. Founders pay $17.99/mo locked forever — first 100 customers only.",
+    a: "A SaaS that connects your Google Ads and Meta accounts, runs weekly waste detection, finds paid/organic keyword overlap, and hands you a prioritized fix list. $29/mo. Founders pay $17.99/mo locked forever. First 100 customers only.",
   },
   {
     q: "What platforms do you use?",
-    a: "Website Build is fully custom — no WordPress, no templates, no page builders. For other channels we recommend the best tool for your budget — Klaviyo, Mailchimp, ActiveCampaign, Webflow, Google Ads, GA4, and more. We'll tell you exactly what we're using before we start.",
+    a: "Website Build is fully custom. No WordPress, no templates, no page builders. For other channels we recommend the best tool for your budget. Klaviyo, Mailchimp, ActiveCampaign, Webflow, Google Ads, GA4, and more. We'll tell you exactly what we're using before we start.",
   },
   {
     q: "Can I buy more than one package?",
@@ -43,11 +43,11 @@ const FAQS = [
   },
   {
     q: "Do I need to share my passwords?",
-    a: "Usually not. Most platforms support admin role invites — we'll walk you through exactly what access to grant. We'll never ask for master passwords.",
+    a: "Usually not. Most platforms support admin role invites. We'll walk you through exactly what access to grant. We'll never ask for master passwords.",
   },
   {
     q: "Why is Paid Social a playbook instead of a setup?",
-    a: "Because Meta makes it nearly impossible for third parties to configure ad accounts on behalf of clients — not for lack of trying. Rather than sell you something we can't cleanly deliver, we built a better product: a complete step-by-step implementation guide built from years of paid social experience. You run it. We built the roadmap.",
+    a: "Because Meta makes it nearly impossible for third parties to configure ad accounts on behalf of clients. Not for lack of trying. Rather than sell you something we can't cleanly deliver, we built a better product. A complete step-by-step implementation guide built from years of paid social experience. You run it. We built the roadmap.",
   },
   {
     q: "What if I'm not happy with the result?",
@@ -55,11 +55,11 @@ const FAQS = [
   },
   {
     q: "Is there a free trial or money-back guarantee?",
-    a: "There's no free trial — we're doing real setup work. But if we can't complete your setup as described, you don't pay. We stand behind the work.",
+    a: "There's no free trial. We're doing real setup work. But if we can't complete your setup as described, you don't pay. We stand behind the work.",
   },
   {
     q: "What do I need to provide to get started?",
-    a: "After checkout, you'll fill out a short intake form. It takes about 5–10 minutes. Attach any existing assets (logo, brand colors, copy) and answer a few questions about your goals. If you're unsure about anything, check the 'Let The Llamas Decide' box.",
+    a: "After checkout, you'll fill out a short intake form. It takes about 5 to 10 minutes. Attach any existing assets (logo, brand colors, copy) and answer a few questions about your goals. If you're unsure about anything, check the 'Let The Llamas Decide' box.",
   },
 ];
 
@@ -97,8 +97,7 @@ export default function FAQPage() {
               We&apos;re not a robot.
             </h2>
             <p className="text-[#6B7280] text-lg leading-relaxed mb-8">
-              If you have a question that&apos;s not covered here, just ask. No sales call required —
-              just a real answer from the team.
+              If you have a question that&apos;s not covered here, just ask. No sales call required. Just a real answer from the team.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link

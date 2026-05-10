@@ -21,7 +21,7 @@ export async function generateMetadata({
   const { channel } = await params;
   const name = CHANNEL_NAMES[channel] ?? "Configure";
   return {
-    title: `${name} — Loud Llamas`,
+    title: `${name} | Loud Llamas`,
     description: `Configure your ${name} setup. Pick your tier, answer a few questions, and we build it in 5–7 days.`,
   };
 }

@@ -82,7 +82,7 @@ const CHANNEL_QUESTIONS: Record<string, Question[]> = {
     { key: "trigger",         label: "What triggers the automation?",                        type: "choice", options: ["Form submission","Purchase","Lead stage change","Time-based","Manual trigger","Other"], critical: true },
     { key: "goal",            label: "What is the goal of this automation?",                 type: "choice", options: ["Save time on repetitive tasks","Notify the right people","Move data between systems","Follow up with leads","Other"], critical: true },
     { key: "existing_tools",  label: "What tools are you currently using?",                  type: "text",   critical: true  },
-    { key: "tell_us_more",    label: "Tell us more",                                         type: "textarea", subtitle: "Sometimes automations can be hard to explain in a few clicks. Use this space to describe what you're trying to accomplish in plain language — what triggers it, what should happen, and what the end result looks like.", critical: false },
+    { key: "tell_us_more",    label: "Tell us more",                                         type: "textarea", subtitle: "Sometimes automations can be hard to explain in a few clicks. Use this space to describe what you're trying to accomplish in plain language. What triggers it, what should happen, and what the end result looks like.", critical: false },
   ],
 };
 

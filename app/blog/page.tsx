@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { posts } from "@/content/blog";
 
 export const metadata = {
-  title: "Blog — Loud Llamas",
+  title: "Blog | Loud Llamas",
   description: "Marketing setup guides, channel breakdowns, and honest advice for small business owners.",
 };
 

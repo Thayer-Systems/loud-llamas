@@ -11,8 +11,8 @@ export default function FounderCounter({
   variant = "dark",
   size = "md",
 }: FounderCounterProps) {
-  const remaining = Math.max(total - count, 0);
-  const pct = Math.min((count / total) * 100, 100);
+  const taken = Math.min(Math.max(count, 0), total);
+  const pct = Math.min((taken / total) * 100, 100);
   const isDark = variant === "dark";
 
   const sizing = {
@@ -25,26 +25,28 @@ export default function FounderCounter({
     ? "bg-black border border-[#1F2937] text-white"
     : "bg-white border-2 border-[#2563EB] text-[#000000]";
   const trackColor = isDark ? "bg-[#1F2937]" : "bg-[#E5E7EB]";
+  const subTextColor = isDark ? "text-gray-300" : "text-[#6B7280]";
+  const dimTextColor = isDark ? "text-gray-400" : "text-[#6B7280]";
 
   return (
     <div className={`rounded-2xl ${containerColor} ${sizing.pad}`}>
       <div className="flex items-baseline justify-between mb-2">
-        <p className={`font-bold uppercase tracking-widest ${sizing.label} ${isDark ? "text-[#2563EB]" : "text-[#2563EB]"}`}>
+        <p className={`font-bold uppercase tracking-widest text-[#2563EB] ${sizing.label}`}>
           Founder spots
         </p>
-        <p className={`${sizing.label} font-semibold ${isDark ? "text-gray-400" : "text-[#6B7280]"}`}>
-          Locked forever
+        <p className={`${sizing.label} font-semibold ${dimTextColor}`}>
+          Filling fast
         </p>
       </div>
       <div className="flex items-baseline gap-2 mb-3">
-        <p className={`font-black ${sizing.num} text-[#2563EB]`}>
-          {remaining}
+        <p className={`font-black text-[#2563EB] ${sizing.num}`}>
+          {taken}
         </p>
-        <p className={`text-sm font-semibold ${isDark ? "text-gray-300" : "text-[#6B7280]"}`}>
-          / {total} left at $17.99/mo
+        <p className={`text-sm font-semibold ${subTextColor}`}>
+          / {total} spots taken
         </p>
       </div>
-      <div className={`w-full rounded-full ${trackColor} ${sizing.track} overflow-hidden`}>
+      <div className={`w-full rounded-full overflow-hidden ${trackColor} ${sizing.track}`}>
         <div
           className="bg-[#2563EB] h-full rounded-full transition-all duration-700"
           style={{ width: `${pct}%` }}

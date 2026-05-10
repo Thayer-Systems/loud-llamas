@@ -16,8 +16,8 @@ function StartContent() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // Marketing-staged: shows ~23 spots left until live count is wired back in.
-  const [founder] = useState<{ count: number; total: number }>({ count: 77, total: 100 });
+  // Marketing-staged: shows 86/100 taken (14 left) until live count is wired back in.
+  const [founder] = useState<{ count: number; total: number }>({ count: 86, total: 100 });
 
   async function handleStart() {
     if (!email.trim()) {
@@ -86,7 +86,7 @@ function StartContent() {
                 <span className="bg-[#2563EB] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded">First 100</span>
               </div>
               <p className="font-black text-3xl mb-1 text-[#2563EB]">$17.99<span className="text-base text-[#2563EB] font-bold">/mo</span></p>
-              <p className="text-[#6B7280] text-sm">Locked forever. No price increases — ever.</p>
+              <p className="text-[#6B7280] text-sm">Locked forever. No price increases. Ever.</p>
             </button>
           </div>
 

@@ -3,7 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Welcome to Burnrate — Loud Llamas",
+  title: "Welcome to Burnrate | Loud Llamas",
 };
 
 export default function BurnrateWelcomePage() {
@@ -19,7 +19,7 @@ export default function BurnrateWelcomePage() {
             Welcome to Burnrate.
           </h1>
           <p className="text-[#6B7280] text-lg mb-10 max-w-xl mx-auto">
-            Your subscription is live. Check your inbox — we&apos;ve sent a link to OAuth your Google Ads and Meta accounts. First fix list lands within 24 hours of connection.
+            Your subscription is live. Check your inbox. We&apos;ve sent a link to OAuth your Google Ads and Meta accounts. First fix list lands within 24 hours of connection.
           </p>
 
           <div className="bg-[#F8F8F8] rounded-2xl p-8 text-left mb-10">

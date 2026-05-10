@@ -3,7 +3,7 @@ import { stripe } from "@/lib/stripe";
 
 const BURNRATE_PLANS = {
   standard: { name: "Burnrate · Standard", unitAmountCents: 2900, description: "Weekly waste detection. Cancel anytime." },
-  founder:  { name: "Burnrate · Founder",  unitAmountCents: 1799, description: "Founder pricing — locked forever. First 100 only." },
+  founder:  { name: "Burnrate · Founder",  unitAmountCents: 1799, description: "Founder pricing. Locked forever. First 100 only." },
 } as const;
 
 type PlanKey = keyof typeof BURNRATE_PLANS;

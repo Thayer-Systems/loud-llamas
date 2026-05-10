@@ -25,18 +25,18 @@ const ONE_TIME_CHANNELS: SetupChannel[] = [
     name: "Website Build",
     slug: "website-build",
     emoji: "🌐",
-    description: "Fully custom site. No WordPress. No templates. No page builders.",
-    pitch: "Built once. Yours forever. We hand over the code.",
+    description: "A real website that loads fast, looks sharp, and actually shows up on Google.",
+    pitch: "Fully custom. No WordPress, no page builders, no templates someone else used last week. Five to twelve pages depending on tier. Built clean, handed over completely. You get the code, the credentials, and the login. We disappear.",
     setupIncludes: [],
     starter: {
       price: 179,
       features: [
         "5 pages",
         "Mobile ready",
-        "Contact form",
-        "Meta titles & descriptions",
-        "H1 structure",
-        "Schema markup",
+        "Contact form that delivers leads to your inbox",
+        "Meta titles and descriptions written for search",
+        "Clean H1 structure",
+        "Schema markup so Google reads it right",
       ],
     },
     growth: {
@@ -44,9 +44,9 @@ const ONE_TIME_CHANNELS: SetupChannel[] = [
       features: [
         "8 pages",
         "Everything in Starter",
-        "Image optimization",
-        "Internal linking",
-        "Google Search Console setup",
+        "Image optimization so the site stays fast",
+        "Internal linking that helps Google map your content",
+        "Google Search Console set up and submitted",
       ],
     },
     pro: {
@@ -54,9 +54,9 @@ const ONE_TIME_CHANNELS: SetupChannel[] = [
       features: [
         "12 pages",
         "Everything in Growth",
-        "Page speed optimization",
-        "Local SEO signals",
-        "GA4 connected",
+        "Page speed optimization with measured before/after",
+        "Local SEO signals for businesses with a service area",
+        "GA4 connected and tracking from day one",
       ],
     },
     mostPopular: "pro",
@@ -65,37 +65,37 @@ const ONE_TIME_CHANNELS: SetupChannel[] = [
     name: "Paid Social Playbook",
     slug: "paid-social",
     emoji: "📣",
-    description: "Custom playbook built around your ICP and offer. Not a template.",
-    pitch: "Meta won't let agencies touch your ad account. So we built something better — a roadmap you run.",
+    description: "A custom Meta playbook built around your exact customer, offer, and market.",
+    pitch: "Not a template. Not a PDF someone else got last week. Built specifically for your ICP, your product or service, and the platform your customer actually uses. You run the ads. We built the entire roadmap.",
     setupIncludes: [],
     starter: {
       price: 59,
       features: [
         "Meta only",
-        "Custom campaign framework",
-        "Audience guide",
-        "Ad copy templates",
-        "Creative brief",
+        "Custom campaign framework written for your offer",
+        "Audience guide tied to your real ICP",
+        "Ad copy templates you can run as-is",
+        "Creative brief so you know what assets to make",
       ],
     },
     growth: {
       price: 99,
       features: [
-        "Meta + 1 platform (X, Reddit, or TikTok)",
+        "Meta plus one extra platform (X, Reddit, or TikTok)",
         "ICP-specific angle for each platform",
         "Custom campaign framework",
-        "Audience guide",
-        "Ad copy templates",
+        "Audience guide tied to your real ICP",
+        "Ad copy templates you can run as-is",
       ],
     },
     pro: {
       price: 149,
       features: [
-        "Meta + 2 or more platforms",
-        "X, Reddit, TikTok, Pinterest, LinkedIn",
-        "Full multi-platform playbook",
+        "Meta plus two or more platforms",
+        "Platforms: X, Reddit, TikTok, Pinterest, LinkedIn",
+        "Full multi-platform playbook with sequencing",
         "Platform-specific creative briefs",
-        "Sequencing guide",
+        "Sequencing guide so you know what to run first, next, and last",
       ],
     },
     mostPopular: "starter",
@@ -107,65 +107,131 @@ const SETUP_PLUS_SUB_CHANNELS: SetupChannel[] = [
     name: "SEM / Google Ads",
     slug: "sem-google-ads",
     emoji: "📊",
-    description: "Built from scratch. Right keywords. Right structure. Tracking that works.",
-    pitch: "Setup gets you live. Optional 3-month management keeps it tuned.",
+    description: "Google Ads that bring in calls instead of just spending your budget.",
+    pitch: "We build the campaign structure, write the ads, set up conversion tracking, and make sure the right people are seeing you at the right moment. You will know exactly what is working and what is not before we hand it off.",
     setupIncludes: [
-      "Campaign structure",
-      "Keyword research",
-      "Ad copy",
-      "Conversion tracking",
+      "Campaign structure built for your service or product",
+      "Keyword research with negatives included",
+      "Ad copy variations written and loaded",
+      "Conversion tracking verified and firing",
     ],
     subIncludes: [
-      "Weekly bid adjustments",
-      "1 campaign change per week",
-      "Monthly report",
+      "Weekly search term review",
+      "Bid adjustments based on conversion data",
+      "One structural change per week",
+      "Monthly plain-language report. No jargon. No fluff.",
     ],
-    starter: { price: 149, sub: 99, features: [] },
-    growth: { price: 249, sub: 149, features: [] },
-    pro: { price: 399, sub: 199, features: [] },
+    starter: {
+      price: 149, sub: 99, features: [
+        "Campaign structure built for one core service or product",
+        "Keyword research with negatives included",
+        "Three ad variations written and loaded",
+        "Conversion tracking verified and firing",
+        "Search terms report walkthrough video recorded and delivered",
+      ],
+    },
+    growth: {
+      price: 249, sub: 149, features: [
+        "Everything in Starter",
+        "Two campaign types (Search plus one additional)",
+        "Five ad variations per campaign",
+        "Audience signal setup",
+        "Monthly performance summary template delivered",
+      ],
+    },
+    pro: {
+      price: 399, sub: 199, features: [
+        "Everything in Growth",
+        "Full account structure across all core services",
+        "Competitor gap analysis included",
+        "Quality score audit and fixes before handoff",
+        "30-minute recorded walkthrough of the full account",
+      ],
+    },
     mostPopular: "growth",
   },
   {
     name: "Analytics & Tracking",
-    // (varied: pro is the popular pick — dashboard is the value)
     slug: "analytics-tracking",
     emoji: "📈",
-    description: "GA4, conversion events, dashboards. Know what's actually driving sales.",
-    pitch: "One-time setup. Optional 3-month babysitting if you want it watched.",
+    description: "Know which ads are making you money and which ones are just costing you money.",
+    pitch: "GA4 fully configured, conversion events firing correctly, and a dashboard that shows you what actually matters. No more guessing. No more looking at numbers that do not connect to revenue.",
     setupIncludes: [
-      "GA4",
-      "Conversion events",
-      "Dashboard build",
+      "GA4 property configured",
+      "Five core conversion events set up and verified",
+      "Dashboard with traffic, leads, and top pages",
     ],
     subIncludes: [
       "Monthly review",
       "Alert monitoring",
       "Dashboard updates",
+      "Plain-language summary of what changed and why",
     ],
-    starter: { price: 99, sub: 49, features: [] },
-    growth: { price: 179, sub: 79, features: [] },
-    pro: { price: 279, sub: 99, features: [] },
+    starter: {
+      price: 99, sub: 49, features: [
+        "GA4 property configured",
+        "Five core conversion events set up and verified",
+        "Basic dashboard with traffic, leads, and top pages",
+      ],
+    },
+    growth: {
+      price: 179, sub: 79, features: [
+        "Everything in Starter",
+        "Source and medium attribution configured",
+        "Ecommerce or lead tracking depending on business type",
+        "Custom dashboard with revenue or lead metrics front and center",
+      ],
+    },
+    pro: {
+      price: 279, sub: 99, features: [
+        "Everything in Growth",
+        "Full funnel tracking from ad click to conversion",
+        "Audience segments built for retargeting",
+        "30-minute recorded walkthrough",
+      ],
+    },
     mostPopular: "pro",
   },
   {
     name: "Email / Lifecycle",
     slug: "email-lifecycle",
     emoji: "📧",
-    description: "Platform config, welcome sequence, list segmentation. Set up once.",
-    pitch: "Setup is one-time. Add 3 months of management if you want a hand on the wheel.",
+    description: "A welcome sequence that converts leads while you sleep.",
+    pitch: "Platform configured, list segmented, welcome flow live. The first impression a new lead gets from you will be automatic, on-brand, and actually move them toward a purchase. Built once. Runs forever.",
     setupIncludes: [
-      "Platform config",
-      "Welcome sequence",
-      "List segmentation",
+      "Platform configured and domain authenticated",
+      "Welcome sequence written, designed, and live",
+      "List segmented by lead source",
     ],
     subIncludes: [
-      "Deliverability monitoring",
-      "1 new email per month",
-      "Performance report",
+      "Deliverability monitoring weekly",
+      "One new email written and added per month",
+      "Monthly performance review with open rate and click rate benchmarks",
     ],
-    starter: { price: 99, sub: 49, features: [] },
-    growth: { price: 179, sub: 79, features: [] },
-    pro: { price: 279, sub: 99, features: [] },
+    starter: {
+      price: 99, sub: 49, features: [
+        "Platform configured and domain authenticated",
+        "Welcome sequence: three emails written, designed, and live",
+        "List segmented by lead source",
+      ],
+    },
+    growth: {
+      price: 179, sub: 79, features: [
+        "Everything in Starter",
+        "Five-email welcome sequence",
+        "One additional sequence (abandoned, re-engagement, or post-purchase depending on business)",
+        "Lead magnet delivery configured if applicable",
+      ],
+    },
+    pro: {
+      price: 279, sub: 99, features: [
+        "Everything in Growth",
+        "Seven-email welcome sequence",
+        "Two additional sequences",
+        "Behavioral trigger setup",
+        "30-minute recorded walkthrough",
+      ],
+    },
     mostPopular: "starter",
   },
 ];
@@ -202,7 +268,8 @@ type Selection = { slug: string; tier: Tier; name: string; price: number };
 export default function PackagesContent() {
   const router = useRouter();
   const [selected, setSelected] = useState<Selection[]>([]);
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  // Single-expand accordion: only one channel open at a time.
+  const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
 
   function toggle(channel: SetupChannel, tier: Tier) {
     const data = channel[tier];
@@ -212,20 +279,12 @@ export default function PackagesContent() {
       const filtered = prev.filter((p) => p.slug !== channel.slug);
       return [...filtered, { slug: channel.slug, tier, name: channel.name, price: data.price }];
     });
-    // Auto-expand the channel when a tier inside it is selected
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      next.add(channel.slug);
-      return next;
-    });
+    // Keep this channel open when a tier inside it is selected
+    setExpandedSlug(channel.slug);
   }
 
   function toggleExpanded(slug: string) {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug); else next.add(slug);
-      return next;
-    });
+    setExpandedSlug((prev) => (prev === slug ? null : slug));
   }
 
   function isSelected(slug: string, tier: Tier) {
@@ -250,12 +309,12 @@ export default function PackagesContent() {
       <section className="bg-[#000000] text-white py-20">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">All packages</p>
-          <h1 className="text-5xl md:text-6xl font-black mb-6 leading-[0.95]">
+          <h1 className="text-4xl md:text-6xl font-black mb-6 leading-[0.95]">
             One-time setups.<br />
             <span className="text-[#2563EB]">Zero ongoing nonsense.</span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl">
-            Pick what you need. Pay once. Own it forever. Optional management on a few — clearly priced, never hidden.
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl">
+            Pick what you need. Pay once. Own it forever. Optional 90-day sprint on a few channels. Clearly priced. Never hidden.
           </p>
         </div>
       </section>
@@ -293,20 +352,20 @@ export default function PackagesContent() {
               channel={ch}
               isSelected={isSelected}
               onToggle={toggle}
-              isExpanded={expanded.has(ch.slug)}
+              isExpanded={expandedSlug === ch.slug}
               onToggleExpanded={toggleExpanded}
             />
           ))}
         </div>
       </section>
 
-      {/* GROUP 2 — SETUP + OPTIONAL MANAGEMENT */}
+      {/* GROUP 2 — SETUP + OPTIONAL 90-DAY SPRINT */}
       <div className="bg-[#F8F8F8]">
         <GroupHeader
           eyebrow="Group 2"
-          title="Setup + optional management"
-          description="One-time setup. Optional 3-month management subscription if you want a hand on the wheel. Cancel after 3. Both prices shown clearly."
-          dark
+          title="Still finding your footing? We can stay for 90 days."
+          description="Most clients take the setup and run. That is the whole point. But if you have never run Google Ads before, or you want someone watching the numbers while you figure out the rhythm, we offer a 90-day sprint. We stay hands-on, make weekly adjustments, and walk you through what we are doing so that by day 90 you do not need us at all. Completely optional. We genuinely do not care if you use it. We just want the setup to actually work for you. From $49/mo. Ends at 90 days. No renewal. No pressure."
+          dark={false}
         />
         <section className="pb-16">
           <div className="max-w-6xl mx-auto px-6 flex flex-col gap-3">
@@ -316,7 +375,7 @@ export default function PackagesContent() {
                 channel={ch}
                 isSelected={isSelected}
                 onToggle={toggle}
-                isExpanded={expanded.has(ch.slug)}
+                isExpanded={expandedSlug === ch.slug}
                 onToggleExpanded={toggleExpanded}
               />
             ))}
@@ -327,7 +386,7 @@ export default function PackagesContent() {
       {/* GROUP 3 — CUSTOM (AUTOMATION) */}
       <GroupHeader
         eyebrow="Group 3"
-        title="Custom — built to your problem"
+        title="Custom. Built to your problem."
         description="Automation isn't a template. Tell us what's eating your time. We scope it, quote it, build it."
       />
       <section className="pb-20">
@@ -370,7 +429,7 @@ export default function PackagesContent() {
       <div className="bg-[#000000] text-white">
         <GroupHeader
           eyebrow="Group 4"
-          title="Your 24/7 paid media monitor — Burnrate"
+          title="Your 24/7 paid media monitor. Burnrate."
           description="The one thing on this site you pay monthly. Watches your ads while you sleep so you stop bleeding budget."
           dark
         />
@@ -384,7 +443,7 @@ export default function PackagesContent() {
                   Connects Google Ads and Meta. Runs weekly waste detection. Flags paid/organic keyword overlap. Sends you a prioritized fix list.
                 </p>
                 <ul className="space-y-2 text-gray-300 text-sm mb-6">
-                  <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> OAuth onboarding — no manual uploads, no calls</li>
+                  <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> OAuth onboarding. No manual uploads, no calls.</li>
                   <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> First report in 24 hours</li>
                   <li className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span> Cancel anytime</li>
                 </ul>
@@ -442,7 +501,7 @@ export default function PackagesContent() {
                     key={`${p.slug}-${p.tier}`}
                     className="text-xs bg-[#F3F4F6] text-[#000000] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5"
                   >
-                    {p.name} — {p.tier.charAt(0).toUpperCase() + p.tier.slice(1)}
+                    {p.name} · {p.tier.charAt(0).toUpperCase() + p.tier.slice(1)}
                     <button
                       onClick={() => setSelected((prev) => prev.filter((x) => !(x.slug === p.slug && x.tier === p.tier)))}
                       className="text-[#6B7280] hover:text-red-500 transition-colors leading-none ml-0.5"
@@ -536,7 +595,7 @@ function ChannelBlock({
           <h2 className="text-lg sm:text-xl font-extrabold">{channel.name}</h2>
           {hasSub && (
             <span className="bg-blue-50 text-[#2563EB] text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
-              + Optional 3-mo sub
+              + Optional 90-day sprint
             </span>
           )}
         </div>
@@ -571,7 +630,7 @@ function ChannelBlock({
               </div>
               {channel.subIncludes && (
                 <div className="bg-white border border-[#2563EB] rounded-xl p-4">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-2">3-month management includes</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-2">90-day sprint includes</p>
                   <ul className="text-sm text-[#6B7280] space-y-1">
                     {channel.subIncludes.map((s) => (
                       <li key={s} className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span>{s}</li>
@@ -621,7 +680,7 @@ function ChannelBlock({
                   <p className="text-2xl font-extrabold">${data.price}</p>
                   {data.sub !== undefined && (
                     <p className="text-xs text-[#6B7280] mt-0.5">
-                      <span className="font-semibold text-[#000000]">+ optional</span> ${data.sub}/mo · 3 mo
+                      <span className="font-semibold text-[#000000]">+ optional</span> ${data.sub}/mo · 90-day sprint
                     </p>
                   )}
                 </div>

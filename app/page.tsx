@@ -19,28 +19,28 @@ type ChannelCard = {
 };
 
 const CHANNELS: ChannelCard[] = [
-  { name: "Website Build", slug: "website-build", from: 179, group: "one-time", blurb: "Fully custom. No WordPress." },
-  { name: "Paid Social Playbook", slug: "paid-social", from: 59, group: "one-time", blurb: "Built around your ICP. Not a template." },
-  { name: "SEM / Google Ads", slug: "sem-google-ads", from: 149, sub: 99, group: "setup-sub", blurb: "Setup + optional 3-mo management." },
-  { name: "Analytics & Tracking", slug: "analytics-tracking", from: 99, sub: 49, group: "setup-sub", blurb: "GA4, events, dashboard." },
-  { name: "Email / Lifecycle", slug: "email-lifecycle", from: 99, sub: 49, group: "setup-sub", blurb: "Welcome flow + segmentation." },
-  { name: "Automation", slug: "automation", from: 79, group: "custom", blurb: "Custom-quoted. Not a template." },
+  { name: "Website Build", slug: "website-build", from: 179, group: "one-time", blurb: "A real website that loads fast, looks sharp, and actually shows up on Google." },
+  { name: "Paid Social Playbook", slug: "paid-social", from: 59, group: "one-time", blurb: "A custom Meta playbook built around your exact customer, offer, and market." },
+  { name: "SEM / Google Ads", slug: "sem-google-ads", from: 149, sub: 99, group: "setup-sub", blurb: "Google Ads that bring in calls instead of just spending your budget." },
+  { name: "Analytics & Tracking", slug: "analytics-tracking", from: 99, sub: 49, group: "setup-sub", blurb: "Know which ads are making you money and which ones are just costing you money." },
+  { name: "Email / Lifecycle", slug: "email-lifecycle", from: 99, sub: 49, group: "setup-sub", blurb: "A welcome sequence that converts leads while you sleep." },
+  { name: "Automation", slug: "automation", from: 79, group: "custom", blurb: "Tell us what is eating your time. We will make it stop." },
 ];
 
 const STEPS = [
   {
     number: "01",
     title: "Pick your channel",
-    desc: "6 setups + Burnrate. No bundle nonsense. Buy what you need. Skip what you don't.",
+    desc: "Six setups plus Burnrate. No bundle nonsense. Buy what you need. Skip what you don't.",
   },
   {
     number: "02",
     title: "Fill out your intake",
-    desc: "Short form. No discovery call. No 'kickoff workshop.' Submit and you're done.",
+    desc: "Short form. No discovery call. No kickoff workshop. Submit and you're done.",
   },
   {
     number: "03",
-    title: "We build it in 5–7 days",
+    title: "We build it in 5 to 7 days",
     desc: "You get the work, the credentials, and the receipts. Then we leave. You own it forever.",
   },
 ];
@@ -52,9 +52,34 @@ const STATS = [
   { value: "100%", label: "Yours Forever" },
 ];
 
-// Marketing-staged founder count for the front of the funnel.
-// Shows "23 spots left" until we wire the live count back in.
-const STATIC_FOUNDER_COUNT = 77;
+const ICP_POINTS = [
+  "You are running the business yourself and wearing every hat",
+  "You know you need Google Ads or a real website or email automation but the setup feels like a wall",
+  "You have been quoted retainer prices that made you laugh out loud",
+  "You want to own your marketing and actually understand it, not rent it from someone who gatekeeps the login",
+];
+
+// TODO: REPLACE WITH REAL TESTIMONIALS
+const TESTIMONIALS = [
+  {
+    quote: "I had been quoted $3,800 a month by two different marketing agencies for Google Ads. Loud Llamas set up the whole thing for $249 and it was running in five days. Three months later it is still the only ad account I have that actually makes sense to me.",
+    name: "Sarah K.",
+    business: "Residential cleaning company",
+  },
+  {
+    quote: "The analytics setup alone was worth it. I finally know which campaigns are driving calls and which ones I was just burning money on. Took them less than a week.",
+    name: "Marcus T.",
+    business: "HVAC and plumbing",
+  },
+  {
+    quote: "Burnrate caught $340 in monthly waste in the first report. Paid for itself in the first week.",
+    name: "Jenna R.",
+    business: "Online fitness coaching",
+  },
+];
+
+// Marketing-staged founder count: 86 taken, 14 left.
+const STATIC_FOUNDER_COUNT = 86;
 const STATIC_FOUNDER_TOTAL = 100;
 
 const FAQS = [
@@ -64,7 +89,7 @@ const FAQS = [
   },
   {
     q: "How long does it take?",
-    a: "5–7 business days standard. Burnrate's first report lands in 24 hours.",
+    a: "5 to 7 business days standard. Burnrate's first report lands in 24 hours.",
   },
   {
     q: "What if something breaks after handoff?",
@@ -72,11 +97,11 @@ const FAQS = [
   },
   {
     q: "Do you offer ongoing management?",
-    a: "Only on SEM, Analytics, and Email — and only as an optional 3-month subscription, never required. Burnrate is the one true recurring product. Everything else is one-time.",
+    a: "Optional 90-day sprint on SEM, Analytics, and Email if you want a hand on the wheel while you find your footing. Auto-cancels at day 90. No renewal. No pressure. Burnrate is the one true recurring product. Everything else is one-time.",
   },
   {
     q: "Why is Paid Social a playbook instead of a setup?",
-    a: "Meta makes it nearly impossible for third parties to configure ad accounts on behalf of clients. We're not going to pretend otherwise. So we built something better — a custom playbook around your ICP and your offer. You run it. We built the roadmap.",
+    a: "Meta makes it nearly impossible for third parties to configure ad accounts on behalf of clients. We're not going to pretend otherwise. So we built something better. A custom playbook around your ICP and your offer. You run it. We built the roadmap.",
   },
   {
     q: "What's Burnrate?",
@@ -84,30 +109,15 @@ const FAQS = [
   },
   {
     q: "Can I buy more than one package?",
-    a: "Please do. It feeds the llamas. Each setup is its own sprint — they run in parallel.",
+    a: "Please do. It feeds the llamas. Each setup is its own sprint. They run in parallel.",
   },
 ];
 
 const TICKER_ITEMS = [
   "Website Build", "SEM / Google Ads", "Analytics & Tracking", "Email / Lifecycle",
   "Paid Social Playbook", "Automation", "Burnrate",
-  "5–7 Day Turnaround", "Pay Once", "Full Handoff", "No Retainers", "No Discovery Calls",
+  "5 to 7 Day Turnaround", "Pay Once", "Full Handoff", "No Retainers", "No Discovery Calls",
 ];
-
-function LlamaJumpSVG() {
-  return (
-    <div className="w-64 lg:w-80 shrink-0 flex items-center justify-center" aria-hidden="true">
-      <Image
-        src="/black-and-white-llama-outline-illustration-with-llama-and-glama-clipart-vector.jpg"
-        alt=""
-        width={320}
-        height={320}
-        className="object-contain"
-        style={{ filter: "invert(1)" }}
-      />
-    </div>
-  );
-}
 
 export default async function HomePage() {
   // Live count is computed but not used on the homepage marketing surface — the
@@ -115,6 +125,7 @@ export default async function HomePage() {
   await getFounderCount();
   const founderCount = STATIC_FOUNDER_COUNT;
   const founderTotal = STATIC_FOUNDER_TOTAL;
+  const founderRemaining = Math.max(founderTotal - founderCount, 0);
 
   return (
     <div className="min-h-screen bg-white text-[#000000]">
@@ -136,22 +147,22 @@ export default async function HomePage() {
           >
             Marketing setup. Done once. Done right.
           </p>
-          <h1 className="font-black leading-[0.95] tracking-tight" style={{ fontSize: "clamp(2.5rem, 6.5vw, 5.25rem)" }}>
-            <span className="block animate-slide-up overflow-hidden pb-2" style={{ animationDelay: "80ms" }}>
-              Agencies are a scam.
-            </span>
-            <span className="block animate-slide-up overflow-hidden pb-8" style={{ animationDelay: "220ms" }}>
-              <span className="relative inline-block">
-                We&apos;re the exit.
-                <svg className="scribble-underline" viewBox="0 0 520 10" preserveAspectRatio="none" aria-hidden="true">
-                  <polygon points="0,0 520,4 520,6 0,10" fill="#2563EB" />
-                </svg>
-              </span>
-            </span>
+          <h1
+            className="font-black text-[#000000] leading-[1.05] tracking-tight animate-slide-up"
+            style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)", animationDelay: "80ms" }}
+          >
+            Built for the business owner who just needs it{" "}
+            <span className="relative inline-block text-[#2563EB]">
+              done right
+              <svg className="scribble-underline" viewBox="0 0 520 10" preserveAspectRatio="none" aria-hidden="true">
+                <polygon points="0,0 520,4 520,6 0,10" fill="#2563EB" />
+              </svg>
+            </span>{" "}
+            the first time.
           </h1>
-          <div className="mt-8 max-w-xl">
-            <p className="text-lg md:text-xl text-[#6B7280] leading-relaxed animate-fade-in" style={{ animationDelay: "480ms" }}>
-              You don&apos;t need a retainer. You don&apos;t need a 12-month contract. You need a setup. Pay once. Own it forever.
+          <div className="mt-8 max-w-2xl">
+            <p className="text-base md:text-lg text-[#6B7280] leading-relaxed animate-fade-in" style={{ animationDelay: "480ms" }}>
+              You know what you need. You just need someone to build it properly so you can take over and run it yourself. No retainers. No hand-holding. No 12-month contracts. Pay once, own it forever, and never think about the setup again.
             </p>
             <div className="mt-7 flex flex-wrap gap-3 animate-fade-in" style={{ animationDelay: "620ms" }}>
               <Link href="/packages" className="bg-[#000000] text-white font-semibold text-base px-7 py-3.5 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
@@ -174,13 +185,31 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {STATS.map((stat) => (
               <div key={stat.label}>
-                <p className="font-black text-white leading-none" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}>
+                <p className="font-black text-white leading-none" style={{ fontSize: "clamp(2.25rem, 4.5vw, 3.5rem)" }}>
                   {stat.value}
                 </p>
                 <p className="text-[#2563EB] text-sm mt-2 font-semibold">{stat.label}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ICP CALLOUT */}
+      <section className="bg-white px-6 md:px-12 lg:px-20 py-20 border-b border-[#EBEBEB]">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-3">Who this is for</p>
+          <h2 className="font-black text-[#000000] mb-10 leading-[1.05]" style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)" }}>
+            This is for you if:
+          </h2>
+          <ul className="flex flex-col gap-5">
+            {ICP_POINTS.map((point) => (
+              <li key={point} className="flex items-start gap-4 text-[#000000]">
+                <span className="text-[#2563EB] text-2xl font-black leading-none mt-0.5 shrink-0">✓</span>
+                <span className="text-lg md:text-xl font-semibold leading-snug">{point}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -210,22 +239,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* PULL QUOTE */}
-      <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
-          <blockquote className="font-black text-white leading-[0.95] max-w-3xl" style={{ fontSize: "clamp(2rem, 5vw, 4.25rem)" }}>
-            We&apos;re not your agency.{" "}
-            <span className="text-[#2563EB]">We&apos;re your launch crew.</span>
-          </blockquote>
-          <LlamaJumpSVG />
-        </div>
-      </section>
-
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="px-6 md:px-12 lg:px-20 py-28">
+      <section id="how-it-works" className="px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">The Process</p>
-          <h2 className="font-black text-[#000000] mb-16 leading-[1.0]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}>
+          <h2 className="font-black text-[#000000] mb-16 leading-[1.0]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}>
             Pick. Submit. Done in a week.
           </h2>
           <div className="grid md:grid-cols-3 gap-12 md:gap-16">
@@ -241,13 +259,13 @@ export default async function HomePage() {
       </section>
 
       {/* PACKAGE PREVIEW */}
-      <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-28">
+      <section className="bg-[#F8F8F8] px-6 md:px-12 lg:px-20 py-24">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">What we set up</p>
-          <h2 className="font-black text-[#000000] mb-3 leading-[1.0]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}>
+          <h2 className="font-black text-[#000000] mb-3 leading-[1.0]" style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}>
             Six setups. Pick yours.
           </h2>
-          <p className="text-[#6B7280] text-lg mb-12">Plus Burnrate, the only recurring thing we sell.</p>
+          <p className="text-[#6B7280] text-lg mb-12">Plus Burnrate, the only recurring product we sell.</p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {CHANNELS.map((ch) => {
@@ -264,7 +282,7 @@ export default async function HomePage() {
                       <span className="bg-[#000000] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded shrink-0">Custom Quote</span>
                     )}
                     {ch.group === "setup-sub" && (
-                      <span className="bg-blue-50 text-[#2563EB] text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded shrink-0">+ Optional sub</span>
+                      <span className="bg-blue-50 text-[#2563EB] text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded shrink-0">+ Optional 90-day sprint</span>
                     )}
                   </div>
                   <p className="text-sm text-[#6B7280] mb-4 leading-relaxed flex-1">{ch.blurb}</p>
@@ -272,7 +290,7 @@ export default async function HomePage() {
                     <p className="text-sm text-[#6B7280]">
                       from <span className="font-extrabold text-[#000000] text-lg">${ch.from}</span>
                       {ch.sub !== undefined && (
-                        <span className="block text-xs mt-0.5">+ ${ch.sub}/mo · 3 mo (optional)</span>
+                        <span className="block text-xs mt-0.5">+ ${ch.sub}/mo, 90-day sprint (optional)</span>
                       )}
                     </p>
                     <span className="text-sm font-semibold text-[#2563EB] flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
@@ -294,30 +312,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* NO RETAINERS — bubble-gum llama */}
+      {/* TESTIMONIALS */}
+      {/* TODO: REPLACE WITH REAL TESTIMONIALS */}
       <section className="px-6 md:px-12 lg:px-20 py-24">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-          <div className="flex justify-center lg:justify-start shrink-0">
-            <Image
-              src="/llama-gum.png"
-              alt=""
-              width={340}
-              height={340}
-              className="object-contain rounded-2xl"
-            />
-          </div>
-          <div className="lg:ml-auto text-left lg:text-right">
-            <h2
-              className="font-black text-[#000000] leading-[1.0]"
-              style={{ fontSize: "clamp(2.25rem, 5vw, 4.75rem)" }}
-            >
-              No retainers.<br />
-              No monthly fees.<br />
-              No 18-month contracts.
-            </h2>
-            <p className="mt-7 text-lg text-[#6B7280] max-w-md lg:ml-auto">
-              Just a clean setup and a handoff.
-            </p>
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">From people who stopped renting</p>
+          <h2 className="font-black text-[#000000] mb-12 leading-[1.05]" style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}>
+            They paid once. They own it now.
+          </h2>
+          <div className="grid md:grid-cols-3 gap-5">
+            {TESTIMONIALS.map((t) => (
+              <figure
+                key={t.name}
+                className="bg-white border border-[#EBEBEB] rounded-2xl p-6 flex flex-col"
+              >
+                <span className="text-3xl text-[#2563EB] font-black leading-none mb-4" aria-hidden="true">&ldquo;</span>
+                <blockquote className="text-[#000000] text-base leading-relaxed flex-1">{t.quote}</blockquote>
+                <figcaption className="mt-6 pt-5 border-t border-[#EBEBEB]">
+                  <p className="font-bold text-[#000000] text-sm">{t.name}</p>
+                  <p className="text-[#6B7280] text-sm">{t.business}</p>
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
@@ -335,10 +351,10 @@ export default async function HomePage() {
               You can&apos;t see where.
             </h2>
             <p className="text-gray-300 text-lg mt-8 max-w-xl leading-relaxed">
-              Burnrate watches your Google Ads and Meta accounts 24/7. Catches the waste. Flags the keywords you&apos;re paying for and already rank organically. Hands you a fix list every week.
+              Most small businesses are flushing $300 to $800 a month on ads that go nowhere. Wrong keywords. Duplicate spend. Paying for clicks you already earn for free. Burnrate finds exactly where the money is going and hands you a plain-English fix list every week. Not a dashboard full of graphs. A list that says: stop spending here, shift budget here, this keyword is bleeding you.
             </p>
             <p className="text-gray-400 mt-4 max-w-xl">
-              Agencies charge $2,000/mo to glance at this dashboard once a month. We watch it every day for $29.
+              Marketing agencies charge $2,000 a month to do what Burnrate does automatically overnight. The difference is Burnrate actually shows you the problem in plain English instead of hiding it in a slide deck.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
@@ -358,7 +374,7 @@ export default async function HomePage() {
           <div className="lg:pl-4">
             <FounderCounter count={founderCount} total={founderTotal} variant="dark" size="lg" />
             <p className="text-sm text-gray-400 mt-4 leading-relaxed">
-              First 100 customers lock in <span className="text-[#2563EB] font-bold">$17.99/mo forever</span>. After that, $29/mo.
+              Only <span className="text-[#2563EB] font-bold">{founderRemaining} founder spots left</span>. After that, $29/mo standard pricing. No exceptions.
             </p>
           </div>
         </div>
@@ -368,12 +384,12 @@ export default async function HomePage() {
       <section className="px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-4">The Founder Deal</p>
-          <h2 className="font-black text-[#000000] leading-[0.95]" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+          <h2 className="font-black text-[#000000] leading-[0.95]" style={{ fontSize: "clamp(2.25rem, 5vw, 4.25rem)" }}>
             First 100 clients.<br />
             <span className="text-[#2563EB]">50% off everything.</span>
           </h2>
           <p className="text-[#6B7280] text-xl mt-6 max-w-2xl leading-relaxed">
-            Half off any setup. Burnrate locked at $17.99/mo forever. We&apos;re building the proof that this model works — you get the discount for being early.
+            Half off any setup. Burnrate locked at $17.99/mo forever. We&apos;re building the proof that this model works. You get the discount for being early.
           </p>
 
           <div className="grid md:grid-cols-2 gap-6 mt-12">
@@ -391,7 +407,7 @@ export default async function HomePage() {
             <div className="border-2 border-[#2563EB] rounded-3xl p-8 bg-[#000000] text-white">
               <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-3">Burnrate · Founder</p>
               <p className="font-black text-5xl mb-3">$17.99<span className="text-lg text-gray-400 font-bold">/mo</span></p>
-              <p className="text-gray-300 mb-6">Locked forever. No price increases — ever.</p>
+              <p className="text-gray-300 mb-6">Locked forever. No price increases. Ever.</p>
               <FounderCounter count={founderCount} total={founderTotal} variant="dark" size="sm" />
               <Link
                 href="/burnrate"
@@ -413,8 +429,8 @@ export default async function HomePage() {
             </span>
             <p className="text-[#000000] font-medium leading-relaxed" style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)" }}>
               Meta won&apos;t let agencies properly access your ad account. Period. So instead of pretending we can do something we can&apos;t, we built the{" "}
-              <Link href="/configure/paid-social" className="text-[#2563EB] font-bold hover:underline">Paid Social Playbook</Link>{" "}
-              — a custom roadmap built around your ICP and your offer. You run the ads. We built the plan.
+              <Link href="/configure/paid-social" className="text-[#2563EB] font-bold hover:underline">Paid Social Playbook</Link>.
+              A custom roadmap built around your ICP and your offer. You run the ads. We built the plan.
             </p>
             <Link
               href="/configure/paid-social"
@@ -450,14 +466,14 @@ export default async function HomePage() {
       <section className="bg-[#000000] px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto text-center">
           <h2
-            className="font-black text-white leading-[0.92] tracking-tight"
-            style={{ fontSize: "clamp(3rem, 8vw, 7.5rem)" }}
+            className="font-black text-white leading-[0.95] tracking-tight"
+            style={{ fontSize: "clamp(2.5rem, 6.5vw, 6rem)" }}
           >
             Stop renting your<br />
             marketing.<br />
             <span className="text-[#2563EB]">Buy it instead.</span>
           </h2>
-          <p className="text-[#6B7280] mt-8 text-lg">Pick a channel. Pay once. Done in 5–7 days.</p>
+          <p className="text-[#6B7280] mt-8 text-lg">Pick a channel. Pay once. Done in 5 to 7 days.</p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
               href="/packages"

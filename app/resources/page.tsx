@@ -3,14 +3,14 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Resources — Loud Llamas",
+  title: "Resources | Loud Llamas",
   description: "Free marketing checklists, templates, and guides for small business owners.",
 };
 
 const GUIDES = [
   {
     title: "The Marketing Setup Checklist",
-    description: "Everything a small business needs to have in place before spending a dollar on ads. GA4, GSC, email list, pixel, social profiles — all covered.",
+    description: "Everything a small business needs to have in place before spending a dollar on ads. GA4, GSC, email list, pixel, social profiles. All covered.",
     category: "Checklist",
     icon: "✅",
     cta: "View checklist",
@@ -75,7 +75,7 @@ const FAQS = [
   },
   {
     q: "Do you work with any industry or niche?",
-    a: "Yes. We've set up marketing systems for e-commerce, professional services, local businesses, SaaS, and more. The setup process is the same — the intake questions help us tailor it to your context.",
+    a: "Yes. We've set up marketing systems for e-commerce, professional services, local businesses, SaaS, and more. The setup process is the same. The intake questions help us tailor it to your context.",
   },
   {
     q: "What if I don't have brand assets yet?",
@@ -101,8 +101,8 @@ export default function ResourcesPage() {
         <div className="max-w-6xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Resources</h1>
           <p className="text-xl text-gray-300 max-w-2xl">
-            Free guides, checklists, and templates to help you set up your marketing right —
-            whether you use us or do it yourself.
+            Free guides, checklists, and templates to help you set up your marketing right.
+            Whether you use us or do it yourself.
           </p>
         </div>
       </section>

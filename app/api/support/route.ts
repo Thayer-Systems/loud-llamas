@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     from: "Loud Llamas Support <hello@loudllamas.org>",
     to: fulfillmentEmail,
     replyTo: email,
-    subject: `Support request${orderId ? ` — Order #${orderId}` : ""} — ${name}`,
+    subject: `Support request${orderId ? ` · Order #${orderId}` : ""} · ${name}`,
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
         <div style="background:#000000;padding:24px 32px;">
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         </div>
         <div style="padding:40px 32px;">
           <h2 style="margin-bottom:8px;">We got your message, ${name.split(" ")[0]}.</h2>
-          <p style="color:#6B7280;">We reply within 1 business day — usually faster.</p>
+          <p style="color:#6B7280;">We reply within 1 business day. Usually faster.</p>
           <hr style="border:none;border-top:1px solid #EBEBEB;margin:32px 0;" />
           <p style="color:#9CA3AF;font-size:13px;">Loud Llamas · A Thayer Systems Company</p>
         </div>

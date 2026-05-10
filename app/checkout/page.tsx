@@ -29,7 +29,7 @@ const CHANNEL_NAMES: Record<string, string> = {
 
 const ADD_ON_PRICES: Record<string, number> = { rush: 299, automation: 499, playbook: 99 };
 
-// Optional 3-month management subscription per channel/tier (USD/month)
+// Optional 90-day sprint price per channel/tier (USD/month)
 const MGMT_SUB_PRICES: Record<string, Record<string, number>> = {
   "sem-google-ads":     { starter: 99, growth: 149, pro: 199 },
   "analytics-tracking": { starter: 49, growth: 79,  pro: 99  },
@@ -83,7 +83,7 @@ function CheckoutContent() {
     basePackages.forEach((_, i) => { init[i] = new Set(); });
     return init;
   });
-  // 3-month management subscription opt-in per package
+  // 90-day sprint opt-in per package
   const [mgmtSubs, setMgmtSubs] = useState<Record<number, boolean>>(() => {
     const init: Record<number, boolean> = {};
     basePackages.forEach((_, i) => { init[i] = false; });
@@ -248,7 +248,7 @@ function CheckoutContent() {
                         </div>
                       )}
 
-                      {/* 3-mo management subscription toggle (eligible channels only) */}
+                      {/* 90-day sprint toggle (eligible channels only) */}
                       {isMgmtEligible(pkg) && (
                         <div className="px-5 pb-5">
                           <button
@@ -261,16 +261,16 @@ function CheckoutContent() {
                           >
                             <div>
                               <p className={`text-sm font-bold ${mgmtSubs[i] ? "text-[#2563EB]" : "text-[#000000]"}`}>
-                                {mgmtSubs[i] ? "✓ " : "+ "}Add 3-month management
+                                {mgmtSubs[i] ? "✓ " : "+ "}Add 90-day sprint
                               </p>
                               <p className="text-xs text-[#6B7280] mt-0.5">{MGMT_SUB_INCLUDES[pkg.channel]}</p>
                               <p className="text-[10px] text-[#9CA3AF] mt-1 uppercase tracking-widest font-semibold">
-                                Auto-cancels after 3 months · billed monthly
+                                Auto-cancels at day 90 · billed monthly · no renewal
                               </p>
                             </div>
                             <p className={`text-sm font-bold shrink-0 ml-4 text-right ${mgmtSubs[i] ? "text-[#2563EB]" : "text-[#6B7280]"}`}>
                               +${mgmtSubPrice(pkg)}
-                              <span className="block text-xs font-normal">/mo · 3 mo</span>
+                              <span className="block text-xs font-normal">/mo · 90 days</span>
                             </p>
                           </button>
                         </div>
@@ -314,15 +314,15 @@ function CheckoutContent() {
                   {hasAnyMgmtSub && (
                     <>
                       <div className="flex justify-between items-center mt-3 text-[#2563EB]">
-                        <span className="font-bold">Management</span>
-                        <span className="font-black text-lg">${monthlyTotal.toLocaleString()}/mo · 3 mo</span>
+                        <span className="font-bold">90-day sprint</span>
+                        <span className="font-black text-lg">${monthlyTotal.toLocaleString()}/mo · 90 days</span>
                       </div>
                       <div className="flex justify-between items-center mt-3 pt-3 border-t border-[#EBEBEB]">
                         <span className="text-sm text-[#6B7280]">Charged today (setup + first month)</span>
                         <span className="font-bold">${firstChargeTotal.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center mt-1 text-xs text-[#9CA3AF]">
-                        <span>Total over 3 months</span>
+                        <span>Total over 90 days</span>
                         <span>${threeMonthTotal.toLocaleString()}</span>
                       </div>
                     </>
@@ -331,10 +331,10 @@ function CheckoutContent() {
               </div>
 
               <div className="space-y-2 text-sm text-[#6B7280]">
-                {!hasAnyMgmtSub && <p>✓ One-time payment — no subscriptions, no retainers</p>}
-                {hasAnyMgmtSub && <p>✓ Setup is one-time. Management auto-cancels after 3 months.</p>}
+                {!hasAnyMgmtSub && <p>✓ One-time payment. No subscriptions. No retainers.</p>}
+                {hasAnyMgmtSub && <p>✓ Setup is one-time. Sprint auto-cancels at day 90.</p>}
                 <p>✓ Full setup + handoff in {deliveryDays} business days</p>
-                <p>✓ You own everything — credentials, assets, accounts</p>
+                <p>✓ You own everything. Credentials, assets, accounts.</p>
                 <p>✓ $79 flat break-fix if anything ever goes sideways</p>
               </div>
             </div>
@@ -373,7 +373,7 @@ function CheckoutContent() {
                 <div className="mt-5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm">
                   <p className="font-semibold text-[#2563EB] mb-1">After you pay</p>
                   <p className="text-[#6B7280]">
-                    You&apos;ll fill out a short intake form for each package — one at a time.
+                    You&apos;ll fill out a short intake form for each package, one at a time.
                     Takes about 5 minutes each. We kick off all of them in parallel.
                   </p>
                 </div>

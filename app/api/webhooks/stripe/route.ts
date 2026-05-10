@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
 
               <div style="background: #F8F8F8; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
                 <p style="margin: 0 0 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #6B7280;">Your order</p>
-                <p style="margin: 0; font-size: 18px; font-weight: bold;">${order.channel.replace(/-/g, " ")} — ${order.tier.charAt(0).toUpperCase() + order.tier.slice(1)}</p>
+                <p style="margin: 0; font-size: 18px; font-weight: bold;">${order.channel.replace(/-/g, " ")} · ${order.tier.charAt(0).toUpperCase() + order.tier.slice(1)}</p>
                 <p style="margin: 8px 0 0; color: #6B7280;">$${order.price} · Estimated delivery by ${deliveryStr}</p>
               </div>
 

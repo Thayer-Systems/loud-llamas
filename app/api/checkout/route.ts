@@ -30,7 +30,7 @@ const PRICES: Record<string, Record<string, number>> = {
   "automation":        { starter: 79,  growth: 199, pro: 399 },
 };
 
-// Optional 3-month management subscription per channel/tier (USD/month)
+// Optional 90-day sprint per channel/tier (USD/month)
 const MGMT_SUB_PRICES: Record<string, Record<string, number>> = {
   "sem-google-ads":     { starter: 99, growth: 149, pro: 199 },
   "analytics-tracking": { starter: 49, growth: 79,  pro: 99  },
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       }
       if (pkg.mgmtSub && !MGMT_SUB_PRICES[pkg.channel]?.[pkg.tier]) {
         return NextResponse.json(
-          { error: `Channel ${pkg.channel} doesn't offer a management subscription` },
+          { error: `Channel ${pkg.channel} doesn't offer a 90-day sprint` },
           { status: 400 }
         );
       }
@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: "usd",
             product_data: {
-              name: `${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}`,
+              name: `${CHANNEL_NAMES[o.channel]}: ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}`,
               description: `Full setup handoff in ${o.deliveryDays} business days. You own it forever.`,
             },
             unit_amount: o.basePrice * 100,
@@ -207,7 +207,7 @@ export async function POST(req: NextRequest) {
         cancel_url: `${appUrl}/packages`,
       });
     } else {
-      // ---- Subscription flow (one or more 3-mo mgmt subs + one-time setups on first invoice) ----
+      // ---- Subscription flow (one or more 90-day sprints + one-time setups on first invoice) ----
       // Recurring line items: each mgmt sub is its own line item
       const lineItems: LineItem[] = [];
       const mgmtSubsMeta: Array<{ orderId: string; channel: string; tier: string; monthly: number }> = [];
@@ -218,8 +218,8 @@ export async function POST(req: NextRequest) {
             price_data: {
               currency: "usd",
               product_data: {
-                name: `${CHANNEL_NAMES[o.channel]} — Management (3 mo)`,
-                description: `3-month optional management for ${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}. Auto-cancels after 3 charges.`,
+                name: `${CHANNEL_NAMES[o.channel]}: 90-day sprint`,
+                description: `Optional 90-day sprint for ${CHANNEL_NAMES[o.channel]} (${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)}). Auto-cancels at day 90.`,
               },
               unit_amount: o.mgmtSubMonthly * 100,
               recurring: { interval: "month" },
@@ -242,7 +242,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: "usd",
             product_data: {
-              name: `${CHANNEL_NAMES[o.channel]} — ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)} (Setup)`,
+              name: `${CHANNEL_NAMES[o.channel]}: ${o.tier.charAt(0).toUpperCase() + o.tier.slice(1)} (Setup)`,
             },
             unit_amount: o.basePrice * 100,
           },

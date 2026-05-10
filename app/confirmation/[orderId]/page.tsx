@@ -109,7 +109,7 @@ export default async function ConfirmationPage({
             </div>
 
             <div className="mt-8 space-y-2 text-sm text-[#6B7280]">
-              <p>Questions? <Link href="/support" className="text-[#2563EB] hover:underline">Contact us</Link> — we reply within 1 business day.</p>
+              <p>Questions? <Link href="/support" className="text-[#2563EB] hover:underline">Contact us</Link>. We reply within 1 business day.</p>
               <p>Something goes sideways after handoff? $79 flat break-fix fee. No drama.</p>
             </div>
           </div>

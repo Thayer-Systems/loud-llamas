@@ -45,8 +45,14 @@ const COMPARISON = [
   { item: "Cancel anytime", agency: "Try the 12-month contract", burnrate: "Yes" },
 ];
 
+// Marketing-staged count; live count helper is still called for cache warming.
+const STATIC_FOUNDER_COUNT = 77;
+const STATIC_FOUNDER_TOTAL = 100;
+
 export default async function BurnratePage() {
-  const { count: founderCount, total: founderTotal } = await getFounderCount();
+  await getFounderCount();
+  const founderCount = STATIC_FOUNDER_COUNT;
+  const founderTotal = STATIC_FOUNDER_TOTAL;
 
   return (
     <div className="min-h-screen bg-white text-[#000000]">
@@ -57,7 +63,7 @@ export default async function BurnratePage() {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-12 items-center">
           <div>
             <p className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-6">
-              Standalone SaaS · or add-on to any setup
+              Your 24/7 paid media monitor
             </p>
             <h1 className="font-black leading-[0.92] tracking-tight" style={{ fontSize: "clamp(3rem, 7.5vw, 6.5rem)" }}>
               Your ads are bleeding.<br />

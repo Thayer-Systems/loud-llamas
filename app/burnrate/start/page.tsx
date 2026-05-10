@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -16,14 +16,8 @@ function StartContent() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [founder, setFounder] = useState<{ count: number; total: number }>({ count: 0, total: 100 });
-
-  useEffect(() => {
-    fetch("/api/founder-count")
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => { if (data) setFounder(data); })
-      .catch(() => {});
-  }, []);
+  // Marketing-staged: shows ~23 spots left until live count is wired back in.
+  const [founder] = useState<{ count: number; total: number }>({ count: 77, total: 100 });
 
   async function handleStart() {
     if (!email.trim()) {

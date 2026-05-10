@@ -49,8 +49,13 @@ const STATS = [
   { value: "5–7", label: "Day Turnaround" },
   { value: "$0", label: "Retainers" },
   { value: "0", label: "Discovery Calls" },
-  { value: "$79", label: "Break Fix Fee" },
+  { value: "100%", label: "Yours Forever" },
 ];
+
+// Marketing-staged founder count for the front of the funnel.
+// Shows "23 spots left" until we wire the live count back in.
+const STATIC_FOUNDER_COUNT = 77;
+const STATIC_FOUNDER_TOTAL = 100;
 
 const FAQS = [
   {
@@ -105,33 +110,37 @@ function LlamaJumpSVG() {
 }
 
 export default async function HomePage() {
-  const { count: founderCount, total: founderTotal } = await getFounderCount();
+  // Live count is computed but not used on the homepage marketing surface — the
+  // displayed counter is staged. Keep the call so any cache warming still happens.
+  await getFounderCount();
+  const founderCount = STATIC_FOUNDER_COUNT;
+  const founderTotal = STATIC_FOUNDER_TOTAL;
 
   return (
     <div className="min-h-screen bg-white text-[#000000]">
       <Nav />
 
       {/* HERO */}
-      <section className="relative min-h-[92vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-16 pb-8 overflow-hidden">
+      <section className="relative min-h-[78vh] flex flex-col justify-center px-6 md:px-12 lg:px-20 pt-12 pb-6 overflow-hidden">
         <div
-          className="absolute right-0 top-0 h-full pointer-events-none select-none hidden lg:flex items-center pr-8"
+          className="absolute top-1/2 -translate-y-1/2 right-[6vw] pointer-events-none select-none hidden lg:flex items-center"
           aria-hidden="true"
         >
-          <Image src="/logo-dark.png" alt="" width={560} height={560} className="object-contain" />
+          <Image src="/logo-dark.png" alt="" width={380} height={380} className="object-contain" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10 lg:pr-[520px]">
+        <div className="max-w-7xl mx-auto w-full relative z-10 lg:pr-[360px]">
           <p
-            className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-8 animate-fade-in"
+            className="text-sm font-bold tracking-widest uppercase text-[#2563EB] mb-6 animate-fade-in"
             style={{ animationDelay: "0ms" }}
           >
             Marketing setup. Done once. Done right.
           </p>
-          <h1 className="font-black leading-[0.92] tracking-tight" style={{ fontSize: "clamp(3.5rem, 9.5vw, 8.5rem)" }}>
-            <span className="block animate-slide-up overflow-hidden pb-3" style={{ animationDelay: "80ms" }}>
+          <h1 className="font-black leading-[0.95] tracking-tight" style={{ fontSize: "clamp(2.5rem, 6.5vw, 5.25rem)" }}>
+            <span className="block animate-slide-up overflow-hidden pb-2" style={{ animationDelay: "80ms" }}>
               Agencies are a scam.
             </span>
-            <span className="block animate-slide-up overflow-hidden pb-10" style={{ animationDelay: "220ms" }}>
+            <span className="block animate-slide-up overflow-hidden pb-8" style={{ animationDelay: "220ms" }}>
               <span className="relative inline-block">
                 We&apos;re the exit.
                 <svg className="scribble-underline" viewBox="0 0 520 10" preserveAspectRatio="none" aria-hidden="true">
@@ -140,21 +149,21 @@ export default async function HomePage() {
               </span>
             </span>
           </h1>
-          <div className="mt-10 max-w-xl">
-            <p className="text-xl text-[#6B7280] leading-relaxed animate-fade-in" style={{ animationDelay: "480ms" }}>
+          <div className="mt-8 max-w-xl">
+            <p className="text-lg md:text-xl text-[#6B7280] leading-relaxed animate-fade-in" style={{ animationDelay: "480ms" }}>
               You don&apos;t need a retainer. You don&apos;t need a 12-month contract. You need a setup. Pay once. Own it forever.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: "620ms" }}>
-              <Link href="/packages" className="bg-[#000000] text-white font-semibold text-base px-8 py-4 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
+            <div className="mt-7 flex flex-wrap gap-3 animate-fade-in" style={{ animationDelay: "620ms" }}>
+              <Link href="/packages" className="bg-[#000000] text-white font-semibold text-base px-7 py-3.5 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
                 See Packages
               </Link>
-              <Link href="/burnrate" className="text-[#000000] font-semibold text-base px-8 py-4 rounded-full border border-[#DEDEDE] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors duration-300">
+              <Link href="/burnrate" className="text-[#000000] font-semibold text-base px-7 py-3.5 rounded-full border border-[#DEDEDE] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors duration-300">
                 What is Burnrate?
               </Link>
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto w-full mt-20 relative z-10">
+        <div className="max-w-7xl mx-auto w-full mt-12 relative z-10">
           <div className="h-px bg-[#EBEBEB]" />
         </div>
       </section>
@@ -285,23 +294,51 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* NO RETAINERS — bubble-gum llama */}
+      <section className="px-6 md:px-12 lg:px-20 py-24">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+          <div className="flex justify-center lg:justify-start shrink-0">
+            <Image
+              src="/llama-gum.png"
+              alt=""
+              width={340}
+              height={340}
+              className="object-contain rounded-2xl"
+            />
+          </div>
+          <div className="lg:ml-auto text-left lg:text-right">
+            <h2
+              className="font-black text-[#000000] leading-[1.0]"
+              style={{ fontSize: "clamp(2.25rem, 5vw, 4.75rem)" }}
+            >
+              No retainers.<br />
+              No monthly fees.<br />
+              No 18-month contracts.
+            </h2>
+            <p className="mt-7 text-lg text-[#6B7280] max-w-md lg:ml-auto">
+              Just a clean setup and a handoff.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* BURNRATE CALLOUT */}
       <section className="bg-[#000000] text-white px-6 md:px-12 lg:px-20 py-28">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-12 items-center">
           <div>
             <span className="inline-block bg-[#2563EB] text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-8">
-              Recurring · SaaS · $29/mo
+              Your 24/7 paid media monitor · $29/mo
             </span>
-            <h2 className="font-black leading-[0.95]" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
-              You set it up.<br />
-              <span className="text-[#2563EB]">Now it&apos;s leaking money</span><br />
-              and you don&apos;t know it.
+            <h2 className="font-black leading-[0.95]" style={{ fontSize: "clamp(2.25rem, 5.5vw, 4.5rem)" }}>
+              Your paid ads are<br />
+              <span className="text-[#2563EB]">bleeding money.</span><br />
+              You can&apos;t see where.
             </h2>
             <p className="text-gray-300 text-lg mt-8 max-w-xl leading-relaxed">
-              Burnrate connects to Google Ads and Meta. Runs weekly waste detection. Spots paid/organic keyword overlap. Hands you a prioritized fix list.
+              Burnrate watches your Google Ads and Meta accounts 24/7. Catches the waste. Flags the keywords you&apos;re paying for and already rank organically. Hands you a fix list every week.
             </p>
             <p className="text-gray-400 mt-4 max-w-xl">
-              Agencies charge $2,000/mo for this. We charge $29.
+              Agencies charge $2,000/mo to glance at this dashboard once a month. We watch it every day for $29.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link

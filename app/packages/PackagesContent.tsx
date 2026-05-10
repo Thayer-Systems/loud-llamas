@@ -59,7 +59,7 @@ const ONE_TIME_CHANNELS: SetupChannel[] = [
         "GA4 connected",
       ],
     },
-    mostPopular: "growth",
+    mostPopular: "pro",
   },
   {
     name: "Paid Social Playbook",
@@ -98,7 +98,7 @@ const ONE_TIME_CHANNELS: SetupChannel[] = [
         "Sequencing guide",
       ],
     },
-    mostPopular: "growth",
+    mostPopular: "starter",
   },
 ];
 
@@ -127,6 +127,7 @@ const SETUP_PLUS_SUB_CHANNELS: SetupChannel[] = [
   },
   {
     name: "Analytics & Tracking",
+    // (varied: pro is the popular pick — dashboard is the value)
     slug: "analytics-tracking",
     emoji: "📈",
     description: "GA4, conversion events, dashboards. Know what's actually driving sales.",
@@ -144,7 +145,7 @@ const SETUP_PLUS_SUB_CHANNELS: SetupChannel[] = [
     starter: { price: 99, sub: 49, features: [] },
     growth: { price: 179, sub: 79, features: [] },
     pro: { price: 279, sub: 99, features: [] },
-    mostPopular: "growth",
+    mostPopular: "pro",
   },
   {
     name: "Email / Lifecycle",
@@ -165,7 +166,7 @@ const SETUP_PLUS_SUB_CHANNELS: SetupChannel[] = [
     starter: { price: 99, sub: 49, features: [] },
     growth: { price: 179, sub: 79, features: [] },
     pro: { price: 279, sub: 99, features: [] },
-    mostPopular: "growth",
+    mostPopular: "starter",
   },
 ];
 
@@ -201,6 +202,7 @@ type Selection = { slug: string; tier: Tier; name: string; price: number };
 export default function PackagesContent() {
   const router = useRouter();
   const [selected, setSelected] = useState<Selection[]>([]);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   function toggle(channel: SetupChannel, tier: Tier) {
     const data = channel[tier];
@@ -209,6 +211,20 @@ export default function PackagesContent() {
       if (exists) return prev.filter((p) => !(p.slug === channel.slug && p.tier === tier));
       const filtered = prev.filter((p) => p.slug !== channel.slug);
       return [...filtered, { slug: channel.slug, tier, name: channel.name, price: data.price }];
+    });
+    // Auto-expand the channel when a tier inside it is selected
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.add(channel.slug);
+      return next;
+    });
+  }
+
+  function toggleExpanded(slug: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug); else next.add(slug);
+      return next;
     });
   }
 
@@ -270,13 +286,15 @@ export default function PackagesContent() {
         description="Pay once. Get it. Own it. No subscription. No monthly invoice. Done."
       />
       <section className="pb-16">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col gap-16">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col gap-3">
           {ONE_TIME_CHANNELS.map((ch) => (
             <ChannelBlock
               key={ch.slug}
               channel={ch}
               isSelected={isSelected}
               onToggle={toggle}
+              isExpanded={expanded.has(ch.slug)}
+              onToggleExpanded={toggleExpanded}
             />
           ))}
         </div>
@@ -291,13 +309,15 @@ export default function PackagesContent() {
           dark
         />
         <section className="pb-16">
-          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-16">
+          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-3">
             {SETUP_PLUS_SUB_CHANNELS.map((ch) => (
               <ChannelBlock
                 key={ch.slug}
                 channel={ch}
                 isSelected={isSelected}
                 onToggle={toggle}
+                isExpanded={expanded.has(ch.slug)}
+                onToggleExpanded={toggleExpanded}
               />
             ))}
           </div>
@@ -350,15 +370,15 @@ export default function PackagesContent() {
       <div className="bg-[#000000] text-white">
         <GroupHeader
           eyebrow="Group 4"
-          title="Recurring — Burnrate"
-          description="The only thing on this site you pay monthly. Worth it."
+          title="Your 24/7 paid media monitor — Burnrate"
+          description="The one thing on this site you pay monthly. Watches your ads while you sleep so you stop bleeding budget."
           dark
         />
         <section className="pb-24">
           <div className="max-w-6xl mx-auto px-6">
             <div className="bg-[#0A0A0A] border-2 border-[#2563EB] rounded-3xl p-8 md:p-12 grid md:grid-cols-2 gap-10 items-center">
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-3">SaaS · Standalone or add-on</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-3">24/7 ad monitor · Standalone or add-on</p>
                 <h2 className="text-4xl md:text-5xl font-black mb-4 leading-[0.95]">Burnrate</h2>
                 <p className="text-gray-300 mb-6 text-lg leading-relaxed">
                   Connects Google Ads and Meta. Runs weekly waste detection. Flags paid/organic keyword overlap. Sends you a prioritized fix list.
@@ -485,53 +505,84 @@ function ChannelBlock({
   channel,
   isSelected,
   onToggle,
+  isExpanded,
+  onToggleExpanded,
 }: {
   channel: SetupChannel;
   isSelected: (slug: string, tier: Tier) => boolean;
   onToggle: (channel: SetupChannel, tier: Tier) => void;
+  isExpanded: boolean;
+  onToggleExpanded: (slug: string) => void;
 }) {
   const hasSub = !!channel.starter.sub;
+  const minPrice = Math.min(channel.starter.price, channel.growth.price, channel.pro.price);
+  const maxPrice = Math.max(channel.starter.price, channel.growth.price, channel.pro.price);
+  const priceRange = minPrice === maxPrice ? `$${minPrice}` : `$${minPrice}–$${maxPrice}`;
 
   return (
-    <div id={channel.slug}>
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2 flex-wrap">
-          <span className="text-3xl">{channel.emoji}</span>
-          <h2 className="text-2xl font-extrabold">{channel.name}</h2>
+    <div
+      id={channel.slug}
+      className={`bg-white border rounded-2xl overflow-hidden transition-colors ${isExpanded ? "border-[#2563EB]" : "border-[#E5E7EB]"}`}
+    >
+      {/* Accordion header */}
+      <button
+        onClick={() => onToggleExpanded(channel.slug)}
+        aria-expanded={isExpanded}
+        aria-controls={`${channel.slug}-panel`}
+        className="w-full flex items-center justify-between gap-4 p-5 text-left hover:bg-[#FAFAFA] transition-colors"
+      >
+        <div className="flex items-center gap-3 flex-wrap min-w-0">
+          <span className="text-2xl shrink-0">{channel.emoji}</span>
+          <h2 className="text-lg sm:text-xl font-extrabold">{channel.name}</h2>
           {hasSub && (
-            <span className="bg-blue-50 text-[#2563EB] text-xs font-bold uppercase tracking-widest px-2.5 py-1 rounded">
-              Setup + optional 3-mo sub
+            <span className="bg-blue-50 text-[#2563EB] text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
+              + Optional 3-mo sub
             </span>
           )}
         </div>
-        <p className="text-[#000000] mb-1 font-medium">{channel.description}</p>
-        <p className="text-sm text-[#6B7280]">{channel.pitch}</p>
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="text-right hidden sm:block">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">From</p>
+            <p className="font-extrabold text-[#000000]">{priceRange}</p>
+          </div>
+          <span
+            className={`text-2xl text-[#6B7280] transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+            aria-hidden="true"
+          >
+            ⌄
+          </span>
+        </div>
+      </button>
 
-        {channel.setupIncludes.length > 0 && (
-          <div className="mt-4 grid md:grid-cols-2 gap-4">
-            <div className="bg-white border border-[#E5E7EB] rounded-xl p-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#000000] mb-2">Setup includes</p>
-              <ul className="text-sm text-[#6B7280] space-y-1">
-                {channel.setupIncludes.map((s) => (
-                  <li key={s} className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span>{s}</li>
-                ))}
-              </ul>
-            </div>
-            {channel.subIncludes && (
-              <div className="bg-white border border-[#2563EB] rounded-xl p-4">
-                <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-2">3-month management includes</p>
+      {isExpanded && (
+        <div id={`${channel.slug}-panel`} className="border-t border-[#E5E7EB] p-5 md:p-6">
+          <p className="text-[#000000] mb-1 font-medium">{channel.description}</p>
+          <p className="text-sm text-[#6B7280]">{channel.pitch}</p>
+
+          {channel.setupIncludes.length > 0 && (
+            <div className="mt-5 grid md:grid-cols-2 gap-4">
+              <div className="bg-white border border-[#E5E7EB] rounded-xl p-4">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#000000] mb-2">Setup includes</p>
                 <ul className="text-sm text-[#6B7280] space-y-1">
-                  {channel.subIncludes.map((s) => (
+                  {channel.setupIncludes.map((s) => (
                     <li key={s} className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span>{s}</li>
                   ))}
                 </ul>
               </div>
-            )}
-          </div>
-        )}
-      </div>
+              {channel.subIncludes && (
+                <div className="bg-white border border-[#2563EB] rounded-xl p-4">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-2">3-month management includes</p>
+                  <ul className="text-sm text-[#6B7280] space-y-1">
+                    {channel.subIncludes.map((s) => (
+                      <li key={s} className="flex items-start gap-2"><span className="text-[#2563EB]">✓</span>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
 
-      <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-5 mt-6">
         {(["starter", "growth", "pro"] as const).map((tier) => {
           const data = channel[tier];
           const isPopular = channel.mostPopular === tier;
@@ -603,7 +654,9 @@ function ChannelBlock({
             </div>
           );
         })}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

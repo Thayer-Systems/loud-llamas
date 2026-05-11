@@ -285,7 +285,7 @@ export default function IntakeForm({
           {loading ? "Submitting…" : "Submit intake →"}
         </button>
         <p className="text-xs text-[#9CA3AF] mt-3">
-          Stuck on something? Mark it &ldquo;Let The Llamas Decide&rdquo; &mdash; we&apos;ll figure it out.
+          Stuck on something? Mark it &ldquo;Let The Llamas Decide&rdquo;. We&apos;ll figure it out.
         </p>
       </div>
     </div>

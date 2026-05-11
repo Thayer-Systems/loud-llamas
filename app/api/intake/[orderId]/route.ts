@@ -63,18 +63,18 @@ export async function POST(
 
   // Send fulfillment email to team
   const answerRows = rows
-    .map((r) => `<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#6B7280;font-size:13px;">${r.question_key}</td><td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;">${r.llamas_decide ? "<em>Let The Llamas Decide</em>" : (r.answer ?? "—")}</td></tr>`)
+    .map((r) => `<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;color:#6B7280;font-size:13px;">${r.question_key}</td><td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;">${r.llamas_decide ? "<em>Let The Llamas Decide</em>" : (r.answer ?? "(no answer)")}</td></tr>`)
     .join("");
 
   await resend.emails.send({
     from: "Loud Llamas <hello@loudllamas.org>",
     to: fulfillmentEmail,
-    subject: `New order ready — ${order.channel} ${order.tier} — ${order.customer_name ?? order.customer_email ?? "Unknown"}`,
+    subject: `New order ready · ${order.channel} ${order.tier} · ${order.customer_name ?? order.customer_email ?? "Unknown"}`,
     html: `
       <div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto;color:#000000;">
         <div style="background:#000000;padding:24px 32px;display:flex;align-items:center;gap:16px;">
           <div>
-            <h1 style="color:white;margin:0;font-size:20px;">New order — ready to build</h1>
+            <h1 style="color:white;margin:0;font-size:20px;">New order, ready to build</h1>
             <p style="color:#2563EB;margin:4px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:1px;">Loud Llamas Fulfillment</p>
           </div>
         </div>
@@ -85,8 +85,8 @@ export async function POST(
             <tr><td style="padding:8px 12px;background:#F8F8F8;font-weight:bold;font-size:13px;">Price</td><td style="padding:8px 12px;background:#F8F8F8;">$${order.price}</td></tr>
             <tr><td style="padding:8px 12px;font-weight:bold;font-size:13px;">Add-ons</td><td style="padding:8px 12px;">${Array.isArray(order.add_ons) && order.add_ons.length ? order.add_ons.join(", ") : "None"}</td></tr>
             <tr><td style="padding:8px 12px;background:#F8F8F8;font-weight:bold;font-size:13px;">Delivery</td><td style="padding:8px 12px;background:#F8F8F8;">${order.delivery_days} business days</td></tr>
-            <tr><td style="padding:8px 12px;font-weight:bold;font-size:13px;">Customer</td><td style="padding:8px 12px;">${order.customer_name ?? "—"}</td></tr>
-            <tr><td style="padding:8px 12px;background:#F8F8F8;font-weight:bold;font-size:13px;">Email</td><td style="padding:8px 12px;background:#F8F8F8;">${order.customer_email ?? "—"}</td></tr>
+            <tr><td style="padding:8px 12px;font-weight:bold;font-size:13px;">Customer</td><td style="padding:8px 12px;">${order.customer_name ?? "(not provided)"}</td></tr>
+            <tr><td style="padding:8px 12px;background:#F8F8F8;font-weight:bold;font-size:13px;">Email</td><td style="padding:8px 12px;background:#F8F8F8;">${order.customer_email ?? "(not provided)"}</td></tr>
             <tr><td style="padding:8px 12px;font-weight:bold;font-size:13px;">Order ID</td><td style="padding:8px 12px;">${orderId}</td></tr>
           </table>
 

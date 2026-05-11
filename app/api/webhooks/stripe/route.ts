@@ -32,6 +32,88 @@ export async function POST(req: NextRequest) {
   const fulfillmentEmail = process.env.FULFILLMENT_EMAIL ?? "team@loudllamas.org";
 
   // ─────────────────────────────────────────────────────────────────────
+  // Checkout session expired (abandoned cart) — mark the order so it
+  // doesn't sit in "pending" forever and skew reporting.
+  // ─────────────────────────────────────────────────────────────────────
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    let orderIds: string[] = [];
+    if (session.metadata?.order_ids) {
+      try { orderIds = JSON.parse(session.metadata.order_ids); } catch {}
+    } else if (session.metadata?.order_id) {
+      orderIds = [session.metadata.order_id];
+    }
+    if (orderIds.length) {
+      const { error } = await supabase
+        .from("orders")
+        .update({ status: "expired", updated_at: new Date().toISOString() })
+        .in("id", orderIds)
+        .eq("status", "pending"); // don't clobber paid orders
+      if (error) console.error("Failed to expire orders:", error);
+    }
+    return NextResponse.json({ received: true, event: "session_expired" });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Subscription invoice failed (renewal couldn't be charged) — alert team.
+  // ─────────────────────────────────────────────────────────────────────
+  if (event.type === "invoice.payment_failed") {
+    const invoice = event.data.object as Stripe.Invoice;
+    const subscriptionId = typeof (invoice as unknown as { subscription?: string }).subscription === "string"
+      ? (invoice as unknown as { subscription: string }).subscription
+      : null;
+    const customerEmail = invoice.customer_email ?? null;
+    const amountDue = ((invoice.amount_due ?? 0) / 100).toFixed(2);
+    const attemptCount = invoice.attempt_count ?? 0;
+
+    // Try to identify which product/sub this belongs to for the alert.
+    let context = "Unknown subscription";
+    if (subscriptionId) {
+      const { data: br } = await supabase
+        .from("burnrate_subscriptions")
+        .select("plan, customer_email")
+        .eq("stripe_subscription_id", subscriptionId)
+        .maybeSingle();
+      if (br) {
+        context = `Burnrate (${br.plan})`;
+      } else {
+        const { data: ms } = await supabase
+          .from("management_subscriptions")
+          .select("channel, tier, order_id")
+          .eq("stripe_subscription_id", subscriptionId)
+          .limit(1)
+          .maybeSingle();
+        if (ms) context = `90-day sprint · ${ms.channel} ${ms.tier}`;
+      }
+    }
+
+    await resend.emails.send({
+      from: "Loud Llamas <hello@loudllamas.org>",
+      to: fulfillmentEmail,
+      subject: `⚠️ Payment failed · ${context} · ${customerEmail ?? "no email"}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: #DC2626; padding: 20px 24px;">
+            <h1 style="color: white; margin: 0; font-size: 18px;">Subscription payment failed</h1>
+          </div>
+          <div style="padding: 24px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 8px 12px; background: #F8F8F8; font-weight: bold;">Product</td><td style="padding: 8px 12px; background: #F8F8F8;">${context}</td></tr>
+              <tr><td style="padding: 8px 12px; font-weight: bold;">Customer</td><td style="padding: 8px 12px;">${customerEmail ?? "(unknown)"}</td></tr>
+              <tr><td style="padding: 8px 12px; background: #F8F8F8; font-weight: bold;">Amount due</td><td style="padding: 8px 12px; background: #F8F8F8;">$${amountDue}</td></tr>
+              <tr><td style="padding: 8px 12px; font-weight: bold;">Attempt</td><td style="padding: 8px 12px;">${attemptCount}</td></tr>
+              <tr><td style="padding: 8px 12px; background: #F8F8F8; font-weight: bold;">Stripe sub</td><td style="padding: 8px 12px; background: #F8F8F8; font-family: monospace; font-size: 12px;">${subscriptionId ?? "—"}</td></tr>
+            </table>
+            <p style="color: #6B7280; font-size: 13px; margin-top: 16px;">Stripe will retry automatically. Reach out if the customer needs help updating their card.</p>
+          </div>
+        </div>
+      `,
+    }).catch((e) => console.error("Payment-failed alert email failed:", e));
+
+    return NextResponse.json({ received: true, event: "payment_failed" });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
   // Subscription canceled (Burnrate or 90-day sprint hitting its cancel_at)
   // ─────────────────────────────────────────────────────────────────────
   if (event.type === "customer.subscription.deleted") {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -16,8 +16,37 @@ function StartContent() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // Marketing-staged: shows 86/100 taken (14 left) until live count is wired back in.
-  const [founder] = useState<{ count: number; total: number }>({ count: 86, total: 100 });
+  // Start with marketing-staged display. Live count overwrites this on mount.
+  const [founder, setFounder] = useState<{ count: number; total: number }>({ count: 86, total: 100 });
+
+  // Fetch live count so the cap can be enforced visually.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/founder-count")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled && data && typeof data.count === "number" && typeof data.total === "number") {
+          // Display the higher of the staged number or the real count so the
+          // counter never moves backward when staged data is replaced.
+          setFounder({
+            count: Math.max(86, data.count),
+            total: data.total,
+          });
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const founderRemaining = Math.max(founder.total - founder.count, 0);
+  const founderSoldOut = founderRemaining <= 0;
+
+  // If founder is sold out and the user landed with ?plan=founder, force them to standard.
+  useEffect(() => {
+    if (founderSoldOut && plan === "founder") setPlan("standard");
+  }, [founderSoldOut, plan]);
 
   async function handleStart() {
     if (!email.trim()) {
@@ -33,7 +62,14 @@ function StartContent() {
         body: JSON.stringify({ plan, customerEmail: email }),
       });
       const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error ?? "Checkout failed");
+      if (!res.ok || !data.url) {
+        // If founder was sold out between page load and submit, switch the UI to standard.
+        if (data.code === "FOUNDER_FULL") {
+          setPlan("standard");
+          setFounder((f) => ({ count: f.total, total: f.total }));
+        }
+        throw new Error(data.error ?? "Checkout failed");
+      }
       window.location.href = data.url;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong. Try again.");
@@ -74,23 +110,36 @@ function StartContent() {
               <p className="text-[#6B7280] text-sm">Cancel anytime. No annual lock-in.</p>
             </button>
             <button
-              onClick={() => setPlan("founder")}
+              onClick={() => !founderSoldOut && setPlan("founder")}
+              disabled={founderSoldOut}
               className={`text-left rounded-2xl p-6 border-2 transition-all ${
-                plan === "founder"
-                  ? "border-[#2563EB] bg-blue-50"
-                  : "border-[#E5E7EB] hover:border-[#BEBEBE]"
+                founderSoldOut
+                  ? "border-[#E5E7EB] bg-[#F8F8F8] opacity-60 cursor-not-allowed"
+                  : plan === "founder"
+                    ? "border-[#2563EB] bg-blue-50"
+                    : "border-[#E5E7EB] hover:border-[#BEBEBE]"
               }`}
             >
               <div className="flex items-start justify-between gap-2 mb-2">
-                <p className="text-xs font-bold uppercase tracking-widest text-[#2563EB]">Founder</p>
-                <span className="bg-[#2563EB] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded">First 100</span>
+                <p className={`text-xs font-bold uppercase tracking-widest ${founderSoldOut ? "text-[#9CA3AF]" : "text-[#2563EB]"}`}>Founder</p>
+                <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded ${
+                  founderSoldOut ? "bg-[#E5E7EB] text-[#6B7280]" : "bg-[#2563EB] text-white"
+                }`}>
+                  {founderSoldOut ? "Sold out" : "First 100"}
+                </span>
               </div>
-              <p className="font-black text-3xl mb-1 text-[#2563EB]">$17.99<span className="text-base text-[#2563EB] font-bold">/mo</span></p>
-              <p className="text-[#6B7280] text-sm">Locked forever. No price increases. Ever.</p>
+              <p className={`font-black text-3xl mb-1 ${founderSoldOut ? "text-[#9CA3AF] line-through" : "text-[#2563EB]"}`}>
+                $17.99<span className="text-base font-bold">/mo</span>
+              </p>
+              <p className="text-[#6B7280] text-sm">
+                {founderSoldOut
+                  ? "All 100 founder spots are gone. Standard pricing only from here."
+                  : "Locked forever. No price increases. Ever."}
+              </p>
             </button>
           </div>
 
-          {plan === "founder" && (
+          {plan === "founder" && !founderSoldOut && (
             <div className="mb-10">
               <FounderCounter count={founder.count} total={founder.total} variant="light" size="md" />
             </div>

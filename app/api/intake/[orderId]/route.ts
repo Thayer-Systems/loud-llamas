@@ -104,14 +104,51 @@ export async function POST(
     `,
   }).catch(console.error);
 
-  // Trigger n8n webhook if configured
+  // Trigger n8n webhook if configured. Retry on transient failures so a
+  // brief n8n outage doesn't drop the fulfillment trigger. If all retries
+  // fail, alert the team so they can manually replay it.
   const n8nUrl = process.env.N8N_WEBHOOK_URL;
   if (n8nUrl) {
-    await fetch(n8nUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderId, order, answers }),
-    }).catch(console.error);
+    const n8nPayload = JSON.stringify({ orderId, order, answers });
+    let n8nOk = false;
+    let lastErr: unknown = null;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const r = await fetch(n8nUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: n8nPayload,
+        });
+        if (r.ok) { n8nOk = true; break; }
+        lastErr = new Error(`n8n returned ${r.status}`);
+      } catch (e) {
+        lastErr = e;
+      }
+      // Exponential backoff: 400ms, 1.2s before the next attempt.
+      if (attempt < 3) await new Promise((res) => setTimeout(res, 400 * attempt * attempt));
+    }
+
+    if (!n8nOk) {
+      console.error("n8n webhook failed after 3 attempts:", lastErr);
+      await resend.emails.send({
+        from: "Loud Llamas <hello@loudllamas.org>",
+        to: fulfillmentEmail,
+        subject: `⚠️ n8n trigger failed for order ${orderId.slice(0, 8).toUpperCase()}`,
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+            <div style="background:#DC2626;padding:20px 24px;">
+              <h1 style="color:white;margin:0;font-size:18px;">n8n trigger failed</h1>
+            </div>
+            <div style="padding:24px;">
+              <p>The intake was submitted and saved to Supabase, but the n8n fulfillment webhook didn't accept it after 3 attempts.</p>
+              <p style="margin-top:16px;"><strong>Order:</strong> ${orderId}<br/><strong>Channel:</strong> ${order.channel} ${order.tier}<br/><strong>Customer:</strong> ${order.customer_name ?? order.customer_email ?? "(unknown)"}</p>
+              <p style="margin-top:16px;">Manually replay the workflow in n8n or check that the webhook URL is reachable. The order details and intake answers are already in the database.</p>
+              <p style="margin-top:16px;"><a href="${appUrl}/confirmation/${orderId}" style="color:#2563EB;">View order</a></p>
+            </div>
+          </div>
+        `,
+      }).catch((e) => console.error("n8n failure alert email also failed:", e));
+    }
   }
 
   return NextResponse.json({ success: true });

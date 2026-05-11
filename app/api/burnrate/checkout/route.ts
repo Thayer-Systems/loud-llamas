@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
+import { getFounderCount } from "@/lib/founder-count";
 
 const BURNRATE_PLANS = {
   standard: { name: "Burnrate · Standard", unitAmountCents: 2900, description: "Weekly waste detection. Cancel anytime." },
@@ -16,6 +17,19 @@ export async function POST(req: NextRequest) {
 
     if (!(plan in BURNRATE_PLANS)) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+    }
+
+    // Enforce the founder cap. If the founder pool is full, reject so the
+    // customer can switch to standard. The frontend also disables the option,
+    // this is the backstop.
+    if (plan === "founder") {
+      const { count, total } = await getFounderCount();
+      if (count >= total) {
+        return NextResponse.json(
+          { error: "Founder pricing is sold out. Please choose Standard at $29/mo.", code: "FOUNDER_FULL" },
+          { status: 409 }
+        );
+      }
     }
 
     const config = BURNRATE_PLANS[plan as PlanKey];

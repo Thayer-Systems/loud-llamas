@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
@@ -27,6 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Tracking/analytics script (CloudFront-hosted). Loaded with async semantics
+            via next/script's afterInteractive strategy so it never blocks render
+            but still fires on every page view across client navigations. */}
+        <Script
+          src="https://d2mvefebd70kbz.cloudfront.net/scripts/019e698d-a710-7453-9dfd-fdaabcddaf7a.js"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${geist.variable} antialiased`}>{children}</body>
     </html>
   );

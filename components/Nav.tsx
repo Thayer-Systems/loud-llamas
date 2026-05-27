@@ -19,16 +19,19 @@ export default function Nav() {
           <Link href="/packages" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
             Packages
           </Link>
+          <Link href="/calculator" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
+            Calculator
+          </Link>
           <Link href="/burnrate" className="text-sm font-bold text-[#2563EB] hover:text-blue-700 transition-colors hidden md:block">
             Burnrate
           </Link>
-          <Link href="/how-it-works" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
+          <Link href="/how-it-works" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden lg:block">
             How It Works
           </Link>
-          <Link href="/faq" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
+          <Link href="/faq" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden lg:block">
             FAQ
           </Link>
-          <Link href="/blog" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden md:block">
+          <Link href="/blog" className="text-sm font-medium text-[#6B7280] hover:text-[#000000] transition-colors hidden lg:block">
             Blog
           </Link>
           <Link href="/packages" className="bg-[#000000] text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-[#2563EB] transition-colors duration-300">
